@@ -5,6 +5,10 @@ function method_delete($class, $delete) {
 		case 'company':
 		$data = Company::onDelete($delete);
 		break;
+		case 'user':
+		$data = User::onDelete($delete);
+		break;
+
 		case 'nation':
 		$data = Nation::onDelete($delete);
 		break;

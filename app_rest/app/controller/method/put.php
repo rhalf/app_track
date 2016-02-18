@@ -4,6 +4,10 @@ function method_put($class, $put) {
 		case 'company':
 		$data = Company::onUpdate($put);
 		break;
+		case 'user':
+		$data = User::onUpdate($put);
+		break;
+
 		case 'nation':
 		$data = Nation::onUpdate($put);
 		break;

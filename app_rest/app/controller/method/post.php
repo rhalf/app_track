@@ -6,6 +6,11 @@ function method_post($class, $post) {
 		case 'company':
 		$data = Company::onInsert($post);
 		break;
+		case 'user':
+		$data = User::onInsert($post);
+		break;
+
+
 		case 'nation':
 		$data = Nation::onInsert($post);
 		break;

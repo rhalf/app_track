@@ -11,6 +11,7 @@ require_once('/app/model/class/company.php');
 require_once('/app/model/class/nation.php');
 require_once('/app/model/class/privilege.php');
 require_once('/app/model/class/user.php');
+
 //System Functions
 require_once('app/controller/system/function.php');
 require_once('app/controller/method/get.php');
