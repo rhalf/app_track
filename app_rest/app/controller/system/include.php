@@ -11,6 +11,10 @@ require_once('/app/model/class/company.php');
 require_once('/app/model/class/nation.php');
 require_once('/app/model/class/privilege.php');
 require_once('/app/model/class/user.php');
+require_once('/app/model/class/vehicle.php');
+require_once('/app/model/class/model.php');
+
+
 
 //System Functions
 require_once('app/controller/system/function.php');

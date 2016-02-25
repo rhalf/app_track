@@ -8,6 +8,11 @@ function method_delete($class, $delete) {
 		case 'user':
 		$data = User::onDelete($delete);
 		break;
+		case 'model':
+		$data = Model::onDelete($delete);
+		break;
+
+
 
 		case 'nation':
 		$data = Nation::onDelete($delete);

@@ -9,6 +9,9 @@ function method_post($class, $post) {
 		case 'user':
 		$data = User::onInsert($post);
 		break;
+		case 'model':
+		$data = Model::onInsert($post);
+		break;
 
 
 		case 'nation':

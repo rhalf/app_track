@@ -8,8 +8,13 @@ function method_get($class, $get) {
 		case 'user':
 		$data = User::onSelect($get);
 		break;
+		case 'vehicle':
+		$data = Vehicle::onSelect($get);
+		break;
+		case 'model':
+		$data = Model::onSelect($get);
+		break;
 
-		
 		case 'nation':
 		$data = Nation::onSelect($get);
 		break;

@@ -7,6 +7,10 @@ function method_put($class, $put) {
 		case 'user':
 		$data = User::onUpdate($put);
 		break;
+		case 'model':
+		$data = Model::onUpdate($put);
+		break;
+
 
 		case 'nation':
 		$data = Nation::onUpdate($put);
