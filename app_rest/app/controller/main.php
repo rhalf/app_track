@@ -11,14 +11,16 @@ Flight::set('database1', $database1);
 Flight::set('database2', $database2);
 
 //Main Entry Point
-Flight::route('/(@version(/@category(/@class)))', function($version, $category, $class){
+Flight::route('/(@version(/@category(/@class(/@id:[0-9]+))))', function($version, $category, $class, $id){
 
 	if (empty($version) || empty($category) || empty($class)) {
 		Flight::notFound("Not found.");
 	}
+
 	if ($version != "v1"){
 		Flight::notFound("Not found.");
 	}
+
 	$data = null;
 	$result = null;
 

@@ -1,15 +1,17 @@
 <?php 
 
 require_once('/app/model/interface/iquery.php');
+require_once('/app/model/class/coordinate.php');
 
-class Model implements IQuery {
+class Address implements IQuery {
 
 	public $Id;
 	public $Name;
-	public $Brand;
-	public $Desc;
-	public $Type;
-	public $Category;
+	public $Full;
+	public $Coordinate;
+	public $Country;
+	public $City;
+	public $Area;
 
 	public function __construct() {
 	}
@@ -21,14 +23,14 @@ class Model implements IQuery {
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
 		$array['result'] = array();
-		$array['model'] = array();
+		$array['address'] = array();
 
 
 		try {
 			if (isset($get['id'])) {
-				$sql = "SELECT * FROM model WHERE id = :id;";
+				$sql = "SELECT * FROM address WHERE id = :id;";
 			} else {
-				$sql = "SELECT * FROM model;";
+				$sql = "SELECT * FROM address;";
 			}
 			
 
@@ -44,15 +46,16 @@ class Model implements IQuery {
 			}
 
 			foreach ($rows as $row) {	
-				$model = new Model();
-				$model->Id = (int) $row['id'];
-				$model->Name = $row['model_name'];
-				$model->Desc = $row['model_desc'];
-				$model->Brand = $row['model_brand'];
-				$model->Type = $row['model_type'];
-				$model->Category = (int) $row['model_category'];
-	
-				array_push($array['model'], $model);
+				$address = new Address();
+				$address->Id = (int) $row['id'];
+				$address->Name = $row['address_name'];
+				$address->Full = $row['address_full'];
+				$address->Coordinate = new Coordinate((double)$row['address_latitude'],(double)$row['address_longitude'],(double)$row['address_altitude']);
+				$address->Country = $row['address_country'];
+				$address->City = $row['address_city'];
+				$address->Area = $row['address_area'];
+
+				array_push($array['address'], $address);
 			}
 
 			$result = new Result(0, RESULT::PDO, "Success");
@@ -89,22 +92,25 @@ class Model implements IQuery {
 
 			$object = json_decode($json);
 
-			$model = $object->model[0];
+			$address = $object->address[0];
 
 			$sql = "
-			INSERT INTO model 
-			(model_name, model_desc, model_brand, model_type, model_category)
+			INSERT INTO address 
+			(address_name, address_full, address_latitude, address_longitude, address_country, address_city, address_area)
 			VALUES
-			(:model_name, :model_desc, :model_brand, :model_type, :model_category);";
+			(:address_name, :address_full, :address_latitude, :address_longitude, :address_country, :address_city, :address_area);";
 
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':model_name', $model->Name, PDO::PARAM_STR);
-			$query->bindParam(':model_desc', $model->Desc, PDO::PARAM_STR);
-			$query->bindParam(':model_brand', $model->Brand, PDO::PARAM_STR);
-			$query->bindParam(':model_type', $model->Type, PDO::PARAM_STR);
-			$query->bindParam(':model_category', $model->Info, PDO::PARAM_INT);
+			$query->bindParam(':address_name', $address->Name, PDO::PARAM_STR);
+			$query->bindParam(':address_full', $address->Full, PDO::PARAM_STR);
+			$query->bindParam(':address_latitude', $address->Coordinate->Latitude, PDO::PARAM_STR);
+			$query->bindParam(':address_longitude', $address->Coordinate->Longitude, PDO::PARAM_STR);
+			$query->bindParam(':address_country', $address->Country, PDO::PARAM_STR);
+			$query->bindParam(':address_city', $address->City, PDO::PARAM_STR);
+			$query->bindParam(':address_area', $address->Area, PDO::PARAM_STR);
+
 
 			$query->execute();
 
@@ -142,17 +148,19 @@ class Model implements IQuery {
 			$id = $put['id'];
 			$object = json_decode($put['object']);
 
-			$model = $object->model[0];
+			$address = $object->address[0];
 
 
 			$sql = "
-			UPDATE model 
+			UPDATE address 
 			SET 
-			model_name = :model_name,
-			model_desc = :model_desc, 
-			model_brand = :model_brand,
-			model_type = :model_type, 
-			model_category = :model_category
+			address_name = :address_name,
+			address_desc = :address_desc, 
+			address_dt_created = :address_dt_created,
+			e_status_id = :e_status_id, 
+			info_id = :info_id, 
+			e_field_id = :e_field_id, 
+			setting_id = :setting_id
 			WHERE
 			id = :id;";
 
@@ -160,12 +168,13 @@ class Model implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':model_name', $model->Name, PDO::PARAM_STR);
-			$query->bindParam(':model_desc', $model->Desc, PDO::PARAM_STR);
-			$query->bindParam(':model_brand', $model->Brand, PDO::PARAM_STR);
-			$query->bindParam(':model_type', $model->Type, PDO::PARAM_STR);
-			$query->bindParam(':model_category', $model->Category, PDO::PARAM_INT);
-
+			$query->bindParam(':address_name', $address->Name, PDO::PARAM_STR);
+			$query->bindParam(':address_desc', $address->Desc, PDO::PARAM_STR);
+			$query->bindParam(':address_dt_created', $address->DtCreated, PDO::PARAM_STR);
+			$query->bindParam(':e_status_id', $address->Status, PDO::PARAM_INT);
+			$query->bindParam(':info_id', $address->Info, PDO::PARAM_INT);
+			$query->bindParam(':e_field_id', $address->Field, PDO::PARAM_INT);
+			$query->bindParam(':setting_id', $address->Setting, PDO::PARAM_INT);
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 
@@ -208,7 +217,7 @@ class Model implements IQuery {
 			$id = $delete['id'];
 			
 			$sql = "
-			DELETE FROM model 
+			DELETE FROM address 
 			WHERE
 			id = :id";
 

@@ -12,6 +12,9 @@ function method_put($class, $put) {
 		break;
 
 
+		
+
+
 		case 'nation':
 		$data = Nation::onUpdate($put);
 		break;

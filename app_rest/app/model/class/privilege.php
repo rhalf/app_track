@@ -23,18 +23,20 @@ class Privilege implements IQuery {
 		$array['privilege'] = array();
 
 
+
 		try {
+
 			if (isset($get['id'])) {
 				$sql = "SELECT * FROM e_privilege WHERE id = :id;";
+			} else if (isset($get['name'])) {
+				$sql = "SELECT * FROM e_privilege WHERE privilege_name LIKE :name;";
 			} else {
 				$sql = "SELECT * FROM e_privilege;";
 			}
-			
 
 			$query = $connection->prepare($sql);
-			$query->bindParam(':id', $get['id'], PDO::PARAM_INT);
+			$query->execute($get);
 
-			$query->execute();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -48,7 +50,7 @@ class Privilege implements IQuery {
 				$privilege->Name = $row['privilege_name'];
 				$privilege->Desc = $row['privilege_desc'];
 				$privilege->Value = (int) $row['privilege_value'];
-			
+
 
 				array_push($array['privilege'], $privilege);
 			}

@@ -14,6 +14,12 @@ function method_get($class, $get) {
 		case 'model':
 		$data = Model::onSelect($get);
 		break;
+		case 'address':
+		$data = Address::onSelect($get);
+		break;
+
+
+
 
 		case 'nation':
 		$data = Nation::onSelect($get);

@@ -29,7 +29,7 @@ class Company implements IQuery {
 
 		try {
 			if (isset($get['id'])) {
-				$sql = "SELECT * FROM company WHERE id = :id;";
+				$sql = "SELECT * FROM company WHERE id  in  (:id);";
 			} else {
 				$sql = "SELECT * FROM company;";
 			}
@@ -55,7 +55,6 @@ class Company implements IQuery {
 				$company->Status = (int) $row['e_status_id'];
 				$company->Info = (int) $row['info_id'];
 				$company->Field = (int) $row['e_field_id'];
-				$company->Setting = (int) $row['setting_id'];
 
 				array_push($array['company'], $company);
 			}
@@ -98,9 +97,9 @@ class Company implements IQuery {
 
 			$sql = "
 			INSERT INTO company 
-			(company_name, company_desc, company_dt_created, e_status_id, info_id, e_field_id, setting_id)
+			(company_name, company_desc, company_dt_created, e_status_id, info_id, e_field_id)
 			VALUES
-			(:company_name, :company_desc, :company_dt_created, :e_status_id, :info_id, :e_field_id, :setting_id);";
+			(:company_name, :company_desc, :company_dt_created, :e_status_id, :info_id, :e_field_id);";
 
 
 			$query = $connection->prepare($sql);
@@ -111,7 +110,6 @@ class Company implements IQuery {
 			$query->bindParam(':e_status_id', $company->Status, PDO::PARAM_INT);
 			$query->bindParam(':info_id', $company->Info, PDO::PARAM_INT);
 			$query->bindParam(':e_field_id', $company->Field, PDO::PARAM_INT);
-			$query->bindParam(':setting_id', $company->Setting, PDO::PARAM_INT);
 
 			$query->execute();
 
@@ -160,8 +158,7 @@ class Company implements IQuery {
 			company_dt_created = :company_dt_created,
 			e_status_id = :e_status_id, 
 			info_id = :info_id, 
-			e_field_id = :e_field_id, 
-			setting_id = :setting_id
+			e_field_id = :e_field_id
 			WHERE
 			id = :id;";
 
@@ -175,7 +172,6 @@ class Company implements IQuery {
 			$query->bindParam(':e_status_id', $company->Status, PDO::PARAM_INT);
 			$query->bindParam(':info_id', $company->Info, PDO::PARAM_INT);
 			$query->bindParam(':e_field_id', $company->Field, PDO::PARAM_INT);
-			$query->bindParam(':setting_id', $company->Setting, PDO::PARAM_INT);
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 
