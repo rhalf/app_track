@@ -1,24 +1,24 @@
 <?php
-function method_delete($class, $delete) {
+function method_delete(Url $url, $delete) {
 
-	switch ($class) {
+	switch ($url->Class) {
 		case 'company':
-		$data = Company::onDelete($delete);
+		$data = Company::onDelete($url, $delete);
 		break;
 		case 'user':
-		$data = User::onDelete($delete);
+		$data = User::onDelete($url, $delete);
 		break;
 		case 'model':
-		$data = Model::onDelete($delete);
+		$data = Model::onDelete($url, $delete);
 		break;
 
 
 
 		case 'nation':
-		$data = Nation::onDelete($delete);
+		$data = Nation::onDelete($url, $delete);
 		break;
 		case 'privilege':
-		$data = Privilege::onDelete($delete);
+		$data = Privilege::onDelete($url, $delete);
 		break;
 		default:
 		Flight::notFound("Class $class not found.");

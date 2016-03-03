@@ -1,31 +1,36 @@
 <?php
-function method_get($class, $get) {
-	$data = null;
-	switch ($class) {
+function method_get(Url $url, $get) {
+	switch ($url->Class) {
+
 		case 'company':
-		$data = Company::onSelect($get);
+		return Company::onSelect($url, $get);
 		break;
+
 		case 'user':
-		$data = User::onSelect($get);
+		return User::onSelect($url, $get);
 		break;
+
 		case 'vehicle':
-		$data = Vehicle::onSelect($get);
+		return Vehicle::onSelect($url, $get);
 		break;
+
 		case 'model':
-		$data = Model::onSelect($get);
+		return Model::onSelect($url, $get);
 		break;
+
 		case 'address':
-		$data = Address::onSelect($get);
+		return Address::onSelect($url, $get);
 		break;
 
 
 
-
+		//Enumerations
 		case 'nation':
-		$data = Nation::onSelect($get);
+		return Nation::onSelect($url, $get);
 		break;
+
 		case 'privilege':
-		$data = Privilege::onSelect($get);
+		return Privilege::onSelect($url, $get);
 		break;
 
 		default:

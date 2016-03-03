@@ -2,10 +2,10 @@
 
 interface IQuery
 {
-    public static function onSelect($get);
-    public static function onInsert($post);
-    public static function onUpdate($put);
-    public static function onDelete($delete);
+    public static function onSelect(Url $url, $get);
+    public static function onInsert(Url $url, $post);
+    public static function onUpdate(Url $url, $put);
+    public static function onDelete(Url $url, $delete);
 
 }
 

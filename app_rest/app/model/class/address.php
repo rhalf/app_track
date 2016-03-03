@@ -16,34 +16,35 @@ class Address implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect($get) {
+	public static function onSelect(Url $url, $get) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
-		$array['result'] = array();
-		$array['address'] = array();
-
+		$result = new Result();
 
 		try {
-			if (isset($get['id'])) {
+			if (!empty($url->Id)) {
 				$sql = "SELECT * FROM address WHERE id = :id;";
+				$query = $connection->prepare($sql);
+				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
+			} else if (isset($get['name'])) {
+				$sql = "SELECT * FROM address WHERE address_name LIKE :name;";
+				$query = $connection->prepare($sql);
+				$query->bindParam(':name',$get['name'], PDO::PARAM_STR);
 			} else {
 				$sql = "SELECT * FROM address;";
+				$query = $connection->prepare($sql);
 			}
-			
-
-			$query = $connection->prepare($sql);
-			$query->bindParam(':id', $get['id'], PDO::PARAM_INT);
 
 			$query->execute();
 
+			$result->Item = $query->rowCount();
+			$result->Object = array();
+
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
-			if (!$rows) {
-				throw new PDOException( "Object with id " . $get['id'] ." doesn't exist.", '02000');
-			}
 
 			foreach ($rows as $row) {	
 				$address = new Address();
@@ -55,26 +56,27 @@ class Address implements IQuery {
 				$address->City = $row['address_city'];
 				$address->Area = $row['address_area'];
 
-				array_push($array['address'], $address);
+				array_push($result->Object, $address);
 			}
 
-			$result = new Result(0, RESULT::PDO, "Success");
-			$array['result'] = $result;
+			$result->Status = Result::SUCCESS;
+			$result->Message = 'SUCCESS';
 
 		} catch (PDOException $pdoException) {
-			$result = new Result($pdoException->getCode(), RESULT::PDO, $pdoException->getMessage());
-			$array['result'] = $result;
+			$result = new Result();
+			$result->Status = Result::ERROR;
+			$result->Message = $pdoException->getMessage();
 		} catch (Exception $exception) {
-			$result = new Result(1, RESULT::SYSTEM, $exception->getMessage());
-			$array['result'] = $result;
+			$result = new Result();
+			$result->Status = Result::ERROR;
+			$result->Message = $exception->getMessage();
 		}
-
 
 		$connection = null;
 
-		return $array;
+		return $result;
 	}
-	public static function onInsert($post) {
+	public static function onInsert(Url $url, $post) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -82,7 +84,7 @@ class Address implements IQuery {
 
 		try {
 
-			$array['result'] = array();
+			$result = new Result();
 
 			if(!isset($post['object'])) {
 				throw new Exception("Input object is null", 1);
@@ -113,23 +115,26 @@ class Address implements IQuery {
 
 
 			$query->execute();
-
-			$result = new Result(0, RESULT::PDO, "Success");
-			$array['result'] = $result;
+			
+			
+			$result->Status = Result::SUCCESS;
+			$result->Message = 'SUCCESS';
 
 		} catch (PDOException $pdoException) {
-			$result = new Result($pdoException->getCode(), RESULT::PDO, $pdoException->getMessage());
-			$array['result'] = $result;
+			$result = new Result();
+			$result->Status = Result::ERROR;
+			$result->Message = $pdoException->getMessage();
 		} catch (Exception $exception) {
-			$result = new Result(1, RESULT::SYSTEM, $exception->getMessage());
-			$array['result'] = $result;
+			$result = new Result();
+			$result->Status = Result::ERROR;
+			$result->Message = $exception->getMessage();
 		}
 
 		$connection = null;
 
-		return $array;
+		return $result;
 	}
-	public static function onUpdate($put) {
+	public static function onUpdate(Url $url, $put) {
 		$database = Flight::get('database');
 
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
@@ -180,26 +185,25 @@ class Address implements IQuery {
 
 			$query->execute();
 
-			//$connection->commit();
-
-			$result = new Result(0, RESULT::PDO, "Success");
-			$array['result'] = $result;
+			
+			$result->Status = Result::SUCCESS;
+			$result->Message = 'SUCCESS';
 
 		} catch (PDOException $pdoException) {
-			//$connection->rollback();
-			$result = new Result($pdoException->getCode(), RESULT::PDO, $pdoException->getMessage());
-			$array['result'] = $result;
+			$result = new Result();
+			$result->Status = Result::ERROR;
+			$result->Message = $pdoException->getMessage();
 		} catch (Exception $exception) {
-			//$connection->rollback();
-			$result = new Result(1, RESULT::SYSTEM, $exception->getMessage());
-			$array['result'] = $result;
+			$result = new Result();
+			$result->Status = Result::ERROR;
+			$result->Message = $exception->getMessage();
 		}
 
 		$connection = null;
 
-		return $array;
+		return $result;
 	}
-	public static function onDelete($delete) {
+	public static function onDelete(Url $url, $delete) {
 		$database = Flight::get('database');
 
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
@@ -227,20 +231,23 @@ class Address implements IQuery {
 
 			$query->execute();
 
-			$result = new Result(0, RESULT::PDO, "Success");
-			$array['result'] = $result;
+			
+			$result->Status = Result::SUCCESS;
+			$result->Message = 'SUCCESS';
 
 		} catch (PDOException $pdoException) {
-			$result = new Result($pdoException->getCode(), RESULT::PDO, $pdoException->getMessage());
-			$array['result'] = $result;
+			$result = new Result();
+			$result->Status = Result::ERROR;
+			$result->Message = $pdoException->getMessage();
 		} catch (Exception $exception) {
-			$result = new Result(1, RESULT::SYSTEM, $exception->getMessage());
-			$array['result'] = $result;
+			$result = new Result();
+			$result->Status = Result::ERROR;
+			$result->Message = $exception->getMessage();
 		}
 
 		$connection = null;
 
-		return $array;
+		return $result;
 	}
 }
 

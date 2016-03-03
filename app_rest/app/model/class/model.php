@@ -14,7 +14,7 @@ class Model implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect($get) {
+	public static function onSelect(Url $url, $get) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -71,7 +71,7 @@ class Model implements IQuery {
 
 		return $array;
 	}
-	public static function onInsert($post) {
+	public static function onInsert(Url $url, $post) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -123,7 +123,7 @@ class Model implements IQuery {
 
 		return $array;
 	}
-	public static function onUpdate($put) {
+	public static function onUpdate(Url $url, $put) {
 		$database = Flight::get('database');
 
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
@@ -190,7 +190,7 @@ class Model implements IQuery {
 
 		return $array;
 	}
-	public static function onDelete($delete) {
+	public static function onDelete(Url $url, $delete) {
 		$database = Flight::get('database');
 
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);

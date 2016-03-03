@@ -1,34 +1,37 @@
 <?php
-function method_post($class, $post) {
+function method_post(Url $url, $post) {
+	switch ($url->Class) {
 
-	$data = null;
-	switch ($class) {
 		case 'company':
-		$data = Company::onInsert($post);
+		return Company::onInsert($url, $post);
 		break;
+
 		case 'user':
-		$data = User::onInsert($post);
+		return User::onInsert($url, $post);
 		break;
+
 		case 'model':
-		$data = Model::onInsert($post);
+		return Model::onInsert($url, $post);
 		break;
+
 		case 'address':
-		$data = Address::onInsert($post);
+		return Address::onInsert($url, $post);
 		break;
 
 
+		//Enumerations
 		case 'nation':
-		$data = Nation::onInsert($post);
+		return Nation::onInsert($url, $post);
 		break;
+		
 		case 'privilege':
-		$data = Privilege::onInsert($post);
+		return Privilege::onInsert($url, $post);
 		break;
+		
 		default:
 		Flight::notFound("Class $class not found.");
 		break;
 	}
-
-	return $data;
 }
 
 

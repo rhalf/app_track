@@ -1,26 +1,30 @@
 <?php
-function method_put($class, $put) {
-	switch ($class) {
+function method_put(Url $url, $put) {
+	switch ($url->Class) {
 		case 'company':
-		$data = Company::onUpdate($put);
+		return Company::onUpdate($url, $put);
 		break;
+
 		case 'user':
-		$data = User::onUpdate($put);
+		return User::onUpdate($url, $put);
 		break;
+		
 		case 'model':
-		$data = Model::onUpdate($put);
+		return Model::onUpdate($url, $put);
 		break;
 
 
 		
 
-
+		//Enumerations
 		case 'nation':
-		$data = Nation::onUpdate($put);
+		return Nation::onUpdate($url, $put);
 		break;
+
 		case 'privilege':
-		$data = Privilege::onUpdate($put);
+		return Privilege::onUpdate($url, $put);
 		break;
+
 		default:
 		Flight::notFound("Class $class not found.");
 		break;

@@ -1,19 +1,15 @@
 <?php
 
 class Result {
-	public $Code = 0;
-	public $Type = "";
-	public $Message = "";
+	public $Status = null;
+	public $Item = null;
+	public $Message = null;
+	public $Object = null;
+	
+	const SUCCESS = 0;
+	const ERROR = 1;
 
-	const SYSTEM = 1;
-	const PDO = 2;
-	const SERVER = 3;
-
-	public function __construct($code, $type, $message) {
-		$this->Code = $code;
-		$this->Message = $message;
-		$this->Type = $type;
-
+	public function __construct() {
 	}
 }
 

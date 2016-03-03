@@ -5,6 +5,7 @@ $root = $_SERVER['DOCUMENT_ROOT'];
 require_once('/library/flight/flight/Flight.php');
 //System Classes
 require_once('/app/model/class/database.php');
+require_once('/app/model/class/url.php');
 require_once('/app/model/class/result.php');
 require_once('/app/model/class/coordinate.php');
 
