@@ -4,34 +4,46 @@ function method_post(Url $url, $post) {
 
 		case 'company':
 		return Company::onInsert($url, $post);
-		break;
 
 		case 'user':
 		return User::onInsert($url, $post);
-		break;
+
+		case 'vehicle':
+		return Vehicle::onInsert($url, $post);
 
 		case 'model':
 		return Model::onInsert($url, $post);
-		break;
 
 		case 'address':
 		return Address::onInsert($url, $post);
-		break;
+
+		case 'unit':
+		return Unit::onInsert($url, $post);
 
 
 		//Enumerations
 		case 'nation':
 		return Nation::onInsert($url, $post);
-		break;
-		
+
 		case 'privilege':
 		return Privilege::onInsert($url, $post);
-		break;
-		
+
+		case 'field':
+		return Field::onInsert($url, $post);
+
+		case 'status':
+		return Status::onInsert($url, $post);
+
+		case 'unittype':
+		return UnitType::onInsert($url, $post);	
+
+		case 'simvendor':
+		return SimVendor::onInsert($url, $post);
+	
+
 		default:
-		Flight::notFound("Class $class not found.");
-		break;
+		Flight::notFound("Class not found.");
+		
 	}
 }
-
-
+?>

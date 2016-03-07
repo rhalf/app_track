@@ -3,13 +3,10 @@
 class Coordinate {
 	public $Latitude;
 	public $Longitude;
-	public $Altitude;
 
-	public function __construct($latitude, $longitude, $altitude) {
+	public function __construct($latitude, $longitude) {
 		$this->Latitude = (double) $latitude;
 		$this->Longitude = (double) $longitude;
-		$this->Altitude = (double) $altitude;
-
 	}
 }
 

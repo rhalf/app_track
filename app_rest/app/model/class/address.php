@@ -12,6 +12,7 @@ class Address implements IQuery {
 	public $Country;
 	public $City;
 	public $Area;
+	public $Info;
 
 	public function __construct() {
 	}
@@ -21,8 +22,6 @@ class Address implements IQuery {
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-
-		$result = new Result();
 
 		try {
 			if (!empty($url->Id)) {
@@ -40,8 +39,9 @@ class Address implements IQuery {
 
 			$query->execute();
 
+			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object = array();
+			$result->Object['address'] = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -51,16 +51,16 @@ class Address implements IQuery {
 				$address->Id = (int) $row['id'];
 				$address->Name = $row['address_name'];
 				$address->Full = $row['address_full'];
-				$address->Coordinate = new Coordinate((double)$row['address_latitude'],(double)$row['address_longitude'],(double)$row['address_altitude']);
+				$address->Coordinate = new Coordinate((double)$row['address_latitude'],(double)$row['address_longitude']);
 				$address->Country = $row['address_country'];
 				$address->City = $row['address_city'];
 				$address->Area = $row['address_area'];
-
-				array_push($result->Object, $address);
+				$address->Info = (int) $row['info_id'];
+				array_push($result->Object['address'] , $address);
 			}
 
 			$result->Status = Result::SUCCESS;
-			$result->Message = 'SUCCESS';
+			$result->Message = 'Done.';
 
 		} catch (PDOException $pdoException) {
 			$result = new Result();
@@ -84,8 +84,6 @@ class Address implements IQuery {
 
 		try {
 
-			$result = new Result();
-
 			if(!isset($post['object'])) {
 				throw new Exception("Input object is null", 1);
 			}
@@ -98,9 +96,9 @@ class Address implements IQuery {
 
 			$sql = "
 			INSERT INTO address 
-			(address_name, address_full, address_latitude, address_longitude, address_country, address_city, address_area)
+			(address_name, address_full, address_latitude, address_longitude, address_country, address_city, address_area, info_id)
 			VALUES
-			(:address_name, :address_full, :address_latitude, :address_longitude, :address_country, :address_city, :address_area);";
+			(:address_name, :address_full, :address_latitude, :address_longitude, :address_country, :address_city, :address_area, :info_id);";
 
 
 			$query = $connection->prepare($sql);
@@ -112,13 +110,16 @@ class Address implements IQuery {
 			$query->bindParam(':address_country', $address->Country, PDO::PARAM_STR);
 			$query->bindParam(':address_city', $address->City, PDO::PARAM_STR);
 			$query->bindParam(':address_area', $address->Area, PDO::PARAM_STR);
+			$query->bindParam(':info_id', $address->Info, PDO::PARAM_INT);
+
 
 
 			$query->execute();
 			
-			
+			$result = new Result();
 			$result->Status = Result::SUCCESS;
-			$result->Message = 'SUCCESS';
+			$result->Item = $query->rowCount();
+			$result->Message = 'Done.';
 
 		} catch (PDOException $pdoException) {
 			$result = new Result();
@@ -146,48 +147,51 @@ class Address implements IQuery {
 		$array['result'] = array();
 
 		try {
-			if (!isset($put['id']) || !isset($put['object'])) {
-				throw new Exception("Input object and id are null.", 1);
+			if (empty($url->Id)) {
+				throw new Exception("Input id is empty.", 1);
 			}
 
-			$id = $put['id'];
+			if (!isset($put['object'])) {
+				throw new Exception("Input object is not set.");
+			}
+
 			$object = json_decode($put['object']);
-
 			$address = $object->address[0];
-
 
 			$sql = "
 			UPDATE address 
 			SET 
 			address_name = :address_name,
-			address_desc = :address_desc, 
-			address_dt_created = :address_dt_created,
-			e_status_id = :e_status_id, 
-			info_id = :info_id, 
-			e_field_id = :e_field_id, 
-			setting_id = :setting_id
+			address_full = :address_full, 
+			address_latitude = :address_latitude, 
+			address_longitude = :address_longitude, 
+			address_country = :address_country, 
+			address_city = :address_city,
+			address_area = :address_area,
+			info_id = :info_id
+
 			WHERE
 			id = :id;";
-
-			
 
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':address_name', $address->Name, PDO::PARAM_STR);
-			$query->bindParam(':address_desc', $address->Desc, PDO::PARAM_STR);
-			$query->bindParam(':address_dt_created', $address->DtCreated, PDO::PARAM_STR);
-			$query->bindParam(':e_status_id', $address->Status, PDO::PARAM_INT);
+			$query->bindParam(':address_full', $address->Full, PDO::PARAM_STR);
+			$query->bindParam(':address_latitude', $address->Coordinate->Latitude, PDO::PARAM_STR);
+			$query->bindParam(':address_longitude', $address->Coordinate->Longitude, PDO::PARAM_STR);
+			$query->bindParam(':address_country', $address->Country, PDO::PARAM_STR);
+			$query->bindParam(':address_city', $address->City, PDO::PARAM_STR);
+			$query->bindParam(':address_area', $address->Area, PDO::PARAM_STR);
 			$query->bindParam(':info_id', $address->Info, PDO::PARAM_INT);
-			$query->bindParam(':e_field_id', $address->Field, PDO::PARAM_INT);
-			$query->bindParam(':setting_id', $address->Setting, PDO::PARAM_INT);
-			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
+			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
 
 			$query->execute();
 
-			
+			$result = new Result();
 			$result->Status = Result::SUCCESS;
-			$result->Message = 'SUCCESS';
+			$result->Item = $query->rowCount();
+			$result->Message = 'Done.';
 
 		} catch (PDOException $pdoException) {
 			$result = new Result();
@@ -200,7 +204,6 @@ class Address implements IQuery {
 		}
 
 		$connection = null;
-
 		return $result;
 	}
 	public static function onDelete(Url $url, $delete) {
@@ -209,17 +212,13 @@ class Address implements IQuery {
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-
-		$array['result'] = array();
-
 		
 		try {
-			if (!isset($delete['id'])) {
-				throw new Exception("Input id is null", 1);
+			
+			if (empty($url->Id)) {
+				throw new Exception("Input id is empty", 1);
 			}
 
-			$id = $delete['id'];
-			
 			$sql = "
 			DELETE FROM address 
 			WHERE
@@ -227,13 +226,14 @@ class Address implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':id', $id, PDO::PARAM_INT);
+			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
 
 			$query->execute();
 
-			
+			$result = new Result();
 			$result->Status = Result::SUCCESS;
-			$result->Message = 'SUCCESS';
+			$result->Item = $query->rowCount();
+			$result->Message = 'Done.';
 
 		} catch (PDOException $pdoException) {
 			$result = new Result();
@@ -246,7 +246,6 @@ class Address implements IQuery {
 		}
 
 		$connection = null;
-
 		return $result;
 	}
 }

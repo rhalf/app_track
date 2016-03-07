@@ -11,15 +11,19 @@ require_once('/app/model/class/coordinate.php');
 
 //Database Classes
 require_once('/app/model/class/company.php');
-require_once('/app/model/class/nation.php');
-require_once('/app/model/class/privilege.php');
 require_once('/app/model/class/user.php');
 require_once('/app/model/class/vehicle.php');
 require_once('/app/model/class/model.php');
 require_once('/app/model/class/address.php');
+require_once('/app/model/class/unit.php');
 
-
-
+//Database Enumeration Classes
+require_once('/app/model/class/nation.php');
+require_once('/app/model/class/privilege.php');
+require_once('/app/model/class/field.php');
+require_once('/app/model/class/status.php');
+require_once('/app/model/class/unittype.php');
+require_once('/app/model/class/simvendor.php');
 
 
 //System Functions

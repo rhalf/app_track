@@ -2,12 +2,15 @@
 
 require_once('/app/model/interface/iquery.php');
 
-class Privilege implements IQuery {
+class Unit implements IQuery {
 
 	public $Id;
-	public $Name;
-	public $Desc;
-	public $Value;
+	public $Imei;
+	public $DtCreated;
+	public $SerialNumber;
+	public $DataSize;
+	public $Sim;
+	public $UnitType;
 	
 	public function __construct() {
 	}
@@ -21,15 +24,15 @@ class Privilege implements IQuery {
 		try {
 
 			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM e_privilege WHERE id = :id;";
+				$sql = "SELECT * FROM unit WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($get['name'])) {
-				$sql = "SELECT * FROM e_privilege WHERE privilege_name LIKE :name;";
+			} else if (isset($get['imei'])) {
+				$sql = "SELECT * FROM unit WHERE unit_imei LIKE :imei;";
 				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$get['name'], PDO::PARAM_STR);
+				$query->bindParam(':imei',$get['imei'], PDO::PARAM_STR);
 			} else {
-				$sql = "SELECT * FROM e_privilege;";
+				$sql = "SELECT * FROM unit;";
 				$query = $connection->prepare($sql);
 			}
 
@@ -37,17 +40,21 @@ class Privilege implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['privilege'] = array();
+			$result->Object['unit'] = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
 			foreach ($rows as $row) {	
-				$privilege = new Privilege();
-				$privilege->Id = (int) $row['id'];
-				$privilege->Name = $row['privilege_name'];
-				$privilege->Desc = $row['privilege_desc'];
-				$privilege->Value = (int) $row['privilege_value'];
-				array_push($result->Object['privilege'], $privilege);
+				$unit = new Unit();
+				$unit->Id = (int) $row['id'];
+				$unit->Imei = (int)$row['unit_imei'];
+				$unit->DtCreated = $row['unit_dt_created'];
+				$unit->SerialNumber = $row['unit_serial_number'];
+				$unit->DataSize = $row['unit_data_size'];
+				$unit->Sim = (int) $row['sim_id'];
+				$unit->UnitType = (int) $row['unit_type_id'];
+				
+				array_push($result->Object['unit'], $unit);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -80,20 +87,25 @@ class Privilege implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$privilege = $object->privilege[0];
+			$unit = $object->unit[0];
 
+			
 			$sql = "
-			INSERT INTO e_privilege 
-			(privilege_name, privilege_desc, privilege_value)
+			INSERT INTO unit 
+			(unit_imei, unit_dt_created, unit_serial_number, unit_data_size, sim_id, unit_type_id)
 			VALUES
-			(:privilege_name, :privilege_desc, :privilege_value);";
+			(:unit_imei, :unit_dt_created, :unit_serial_number, :unit_data_size, :sim_id, :unit_type_id);";
+
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':privilege_name', $privilege->Name, PDO::PARAM_STR);
-			$query->bindParam(':privilege_desc', $privilege->Desc, PDO::PARAM_STR);
-			$query->bindParam(':privilege_value', $privilege->Value, PDO::PARAM_STR);
-
+			$query->bindParam(':unit_imei', $unit->Imei, PDO::PARAM_INT);
+			$query->bindParam(':unit_dt_created', $unit->DtCreated, PDO::PARAM_STR);
+			$query->bindParam(':unit_serial_number', $unit->SerialNumber, PDO::PARAM_STR);
+			$query->bindParam(':unit_data_size', $unit->DataSize, PDO::PARAM_INT);
+			$query->bindParam(':sim_id', $unit->Sim, PDO::PARAM_INT);
+			$query->bindParam(':unit_type_id', $unit->UnitType, PDO::PARAM_INT);
+			
 			$query->execute();
 
 			$result = new Result();
@@ -131,23 +143,27 @@ class Privilege implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$privilege = $object->privilege[0];
+			$unit = $object->unit[0];
 
 			$sql = "
-			UPDATE e_privilege 
+			UPDATE unit 
 			SET 
-			privilege_name = :privilege_name,
-			privilege_desc = :privilege_desc, 
-			privilege_value = :privilege_value
+			unit_imei = :unit_imei,
+			unit_dt_created = :unit_dt_created, 
+			unit_serial_number = :unit_serial_number,
+			unit_data_size = :unit_data_size,
+			sim_id = :sim_id, 
+			unit_type_id = :unit_type_id
 			WHERE
 			id = :id;";
 
-			
 			$query = $connection->prepare($sql);
-
-			$query->bindParam(':privilege_name', $privilege->Name, PDO::PARAM_STR);
-			$query->bindParam(':privilege_desc', $privilege->Desc, PDO::PARAM_STR);
-			$query->bindParam(':privilege_value', $privilege->Value, PDO::PARAM_INT);
+			$query->bindParam(':unit_imei', $unit->Imei, PDO::PARAM_STR);
+			$query->bindParam(':unit_dt_created', $unit->DtCreated, PDO::PARAM_STR);
+			$query->bindParam(':unit_serial_number', $unit->SerialNumber, PDO::PARAM_STR);
+			$query->bindParam(':unit_data_size', $unit->DataSize, PDO::PARAM_STR);
+			$query->bindParam(':sim_id', $unit->Sim, PDO::PARAM_INT);
+			$query->bindParam(':unit_type_id', $unit->UnitType, PDO::PARAM_BOOL);
 			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
 
 			$query->execute();
@@ -172,6 +188,7 @@ class Privilege implements IQuery {
 	}
 	public static function onDelete(Url $url, $delete) {
 		$database = Flight::get('database');
+		
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
@@ -183,7 +200,7 @@ class Privilege implements IQuery {
 			}
 
 			$sql = "
-			DELETE FROM e_privilege 
+			DELETE FROM unit 
 			WHERE
 			id = :id";
 

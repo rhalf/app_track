@@ -2,11 +2,10 @@
 
 require_once('/app/model/interface/iquery.php');
 
-class Privilege implements IQuery {
+class Field implements IQuery {
 
 	public $Id;
 	public $Name;
-	public $Desc;
 	public $Value;
 	
 	public function __construct() {
@@ -21,15 +20,15 @@ class Privilege implements IQuery {
 		try {
 
 			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM e_privilege WHERE id = :id;";
+				$sql = "SELECT * FROM e_field WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
 			} else if (isset($get['name'])) {
-				$sql = "SELECT * FROM e_privilege WHERE privilege_name LIKE :name;";
+				$sql = "SELECT * FROM e_field WHERE field_name LIKE :name;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':name',$get['name'], PDO::PARAM_STR);
 			} else {
-				$sql = "SELECT * FROM e_privilege;";
+				$sql = "SELECT * FROM e_field;";
 				$query = $connection->prepare($sql);
 			}
 
@@ -37,17 +36,17 @@ class Privilege implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['privilege'] = array();
+			$result->Object['field'] = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
 			foreach ($rows as $row) {	
-				$privilege = new Privilege();
-				$privilege->Id = (int) $row['id'];
-				$privilege->Name = $row['privilege_name'];
-				$privilege->Desc = $row['privilege_desc'];
-				$privilege->Value = (int) $row['privilege_value'];
-				array_push($result->Object['privilege'], $privilege);
+				$field = new Field();
+				$field->Id = (int) $row['id'];
+				$field->Name = $row['field_name'];
+				$field->Value = $row['field_value'];
+				
+				array_push($result->Object['field'], $field);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -80,19 +79,19 @@ class Privilege implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$privilege = $object->privilege[0];
+			$field = $object->field[0];
 
 			$sql = "
-			INSERT INTO e_privilege 
-			(privilege_name, privilege_desc, privilege_value)
+			INSERT INTO e_field 
+			(field_name, field_value)
 			VALUES
-			(:privilege_name, :privilege_desc, :privilege_value);";
+			(:field_name, :field_value);";
+
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':privilege_name', $privilege->Name, PDO::PARAM_STR);
-			$query->bindParam(':privilege_desc', $privilege->Desc, PDO::PARAM_STR);
-			$query->bindParam(':privilege_value', $privilege->Value, PDO::PARAM_STR);
+			$query->bindParam(':field_name', $field->Name, PDO::PARAM_STR);
+			$query->bindParam(':field_value', $field->Value, PDO::PARAM_STR);
 
 			$query->execute();
 
@@ -131,23 +130,20 @@ class Privilege implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$privilege = $object->privilege[0];
+			$field = $object->field[0];
 
 			$sql = "
-			UPDATE e_privilege 
+			UPDATE e_field 
 			SET 
-			privilege_name = :privilege_name,
-			privilege_desc = :privilege_desc, 
-			privilege_value = :privilege_value
+			field_name = :field_name,
+			field_value = :field_value
 			WHERE
 			id = :id;";
 
-			
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':privilege_name', $privilege->Name, PDO::PARAM_STR);
-			$query->bindParam(':privilege_desc', $privilege->Desc, PDO::PARAM_STR);
-			$query->bindParam(':privilege_value', $privilege->Value, PDO::PARAM_INT);
+			$query->bindParam(':field_name', $field->Name, PDO::PARAM_STR);
+			$query->bindParam(':field_value', $field->Value, PDO::PARAM_STR);
 			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
 
 			$query->execute();
@@ -172,6 +168,7 @@ class Privilege implements IQuery {
 	}
 	public static function onDelete(Url $url, $delete) {
 		$database = Flight::get('database');
+		
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
@@ -183,7 +180,7 @@ class Privilege implements IQuery {
 			}
 
 			$sql = "
-			DELETE FROM e_privilege 
+			DELETE FROM e_field 
 			WHERE
 			id = :id";
 

@@ -5,72 +5,89 @@ require_once 'app/controller/system/setting.php';
 
 //Main Entry Point
 Flight::route('/(@version(/@category(/@class(/@format(/@id:[0-9]+)))))', function($version, $category, $class, $format, $id){
+	try {
+		$url = new Url();
+		$url->Version = $version;
+		$url->Category = $category;
+		$url->Class = $class;
+		$url->Format = $format;
+		$url->Id = $id;
 
-	$url = new Url();
-	$url->Version = $version;
-	$url->Category = $category;
-	$url->Class = $class;
-	$url->Format = $format;
-	$url->Id = $id;
+		$request = Flight::request();
+
+		//Checking content-type 
+		// if ($request->type != 'application/json'){
+		// 	Flight::notFound("The content-type not found.");
+		// 	return;
+		// }
+
+		//Checking if api_key is valid
+		// $key = $request->query->api_key;
+		// $keys = Flight::get('api_key');
+		// if (!isset($keys[$key])){
+		// 	Flight::notAuthorized("Unauthorized api key.");
+		// 	return;
+		// } 
+
+		//Checking version, category, class, format if empty
+		if (empty($url->Version)) {
+			Flight::notFound("Parameter api version not found.");
+			return;
+		}
+		if (empty($url->Category)) {
+			Flight::notFound("Parameter api category not found.");
+			return;
+		}
+		if (empty($url->Class)) {
+			Flight::notFound("Parameter api class not found.");
+			return;
+		}
+		if (empty($url->Format)) {
+			Flight::notFound("Parameter api format not found.");
+			return;
+		}
+
+		//Checking version if correct
+		if ($url->Version != Flight::get('api_version')){
+			Flight::notFound("Api version not found.");
+			return;
+		}
+		//Checking format if correct 
+		if (!($url->Format=='json') && !($url->Format=='xml')){
+			Flight::notFound("Format not supported.");
+			return;
+		}
 
 
-	$request = Flight::request();
+		$result = null;
 
-	//Checking content-type 
-	// if ($request->type != 'application/json'){
-	// 	Flight::notFound("The content-type not found.");
-	// 	return;
-	// }
+		//Checking category if exist
+		switch ($url->Category) {
 
-	//Checking if api_key is valid
-	$key = $request->query->api_key;
-	$keys = Flight::get('api_key');
-	if (!isset($keys[$key])){
-		Flight::notAuthorized("Unauthorized api key.");
-		return;
-	} 
-	
-	//Checking version, category and class if empty
-	if (empty($url->Version) || empty($url->Category) || empty($url->Class) || empty($url->Format)) {
-		Flight::notFound("Parameter not found.");
-		return;
-	}
+			case 'main':
+			Flight::set('database', Flight::get('db1'));
+			$result = Flight::process($url);
+			break;
 
-	//Checking version if correct
-	if ($url->Version != Flight::get('api_version')){
-		Flight::notFound("Api version not found.");
-		return;
-	}
-	//Checking format if correct 
-	if (!($url->Format=='json') && !($url->Format=='xml')){
-		Flight::notFound("Format not supported.");
-		return;
-	}
+			case 'data':
+			Flight::set('database', Flight::get('db2'));
+			$result = Flight::process($url);
+			break;
 
+			default:
+			Flight::notFound("Category not found.");
+			break;
+		}
 
-	$result = null;
+		if ($url->Format == 'json') {
+			Flight::sendJson($result);
+		}
 
-	//Checking category if exist
-	switch ($url->Category) {
-		case 'main':
-		Flight::set('database', Flight::get('db1'));
-		$result = Flight::process($url);
-		break;
-		case 'data':
-		Flight::set('database', Flight::get('db2'));
-		$result = Flight::process($url);
-		break;
-		default:
-		Flight::notFound("Category $category not found.");
-		break;
-	}
-
-	if ($url->Format == 'json') {
-		Flight::sendJson($result);
-	}
-
-	if ($url->Format == 'xml') {
-		Flight::sendXml($result);
+		if ($url->Format == 'xml') {
+			Flight::sendXml($result);
+		}
+	} catch (Exception $exception) {
+		Flight::error($exception);
 	}
 });
 
@@ -78,21 +95,26 @@ Flight::route('/(@version(/@category(/@class(/@format(/@id:[0-9]+)))))', functio
 Flight::map('process', function($url) {
 	$request = Flight::request();
 	switch ($request->method) {
+
 		case 'GET':
 		return method_get($url, $_GET);
 		break;
+
 		case 'POST':
 		return method_post($url, $_POST);
 		break;
+
 		case 'PUT':
 		parse_str(file_get_contents("php://input"),$put);
 		return method_put($url, $put);
 		break;
+		
 		case 'DELETE':
 		parse_str(file_get_contents("php://input"),$delete);
 		return method_delete($url, $delete);
 		break;
 	}
+	Flight::notFound("Method verbs not recognized.");
 });
 
 
@@ -109,29 +131,17 @@ Flight::map('sendXml', function(Result $result) {
 
 
 //Status Codes
-Flight::map('noContent', function(){
-	$result = new Result();
-	$result->Status = Result::ERROR;
-	$result->Message = "No content!";
-	Flight::halt(204, json_indent(json_encode($result)));
+Flight::map('noContent', function($message){
+	Flight::halt(204, $message);
 });
 Flight::map('notAuthorized', function($message){
-	$result = new Result();
-	$result->Status = Result::ERROR;
-	$result->Message = $message;
-	Flight::halt(401, json_indent(json_encode($result)));
+	Flight::halt(401, $message);
 });
 Flight::map('notFound', function($message){
-	$result = new Result();
-	$result->Status = Result::ERROR;
-	$result->Message = $message;
-	Flight::halt(404, json_indent(json_encode($result)));
+	Flight::halt(404, $message);
 });
 Flight::map('error', function(Exception $exception){
-	$result = new Result();
-	$result->Status = Result::ERROR;
-	$result->Message = $exception->getMessage();
-	Flight::halt(501, json_indent(json_encode($result)));
+	Flight::halt(501, $exception->getMessage());
 });
 
 Flight::set('flight.log_errors', true);

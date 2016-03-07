@@ -6,7 +6,7 @@ class Vehicle implements IQuery {
 
 	public $Id;
 	public $DtSubscribed;
-	public $Registration;
+	public $Plate;
 	public $MaInitial;
 	public $MaLimit;
 	public $MaMaintenance;
@@ -18,45 +18,46 @@ class Vehicle implements IQuery {
 	public $Unit;
 	public $Company;
 
-
+	
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $get){
+	public static function onSelect(Url $url, $get) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
-		$array['result'] = array();
-		$array['vehicle'] = array();
-
-
 		try {
-			if (isset($get['id'])) {
+
+			if (!empty($url->Id)) {
 				$sql = "SELECT * FROM vehicle WHERE id = :id;";
+				$query = $connection->prepare($sql);
+				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
+			} else if (isset($get['name'])) {
+				$sql = "SELECT * FROM vehicle WHERE vehicle_plate LIKE :vehicle_plate;";
+				$query = $connection->prepare($sql);
+				$query->bindParam(':vehicle_plate',$get['plate'], PDO::PARAM_STR);
 			} else {
 				$sql = "SELECT * FROM vehicle;";
+				$query = $connection->prepare($sql);
 			}
-			
-
-			$query = $connection->prepare($sql);
-			$query->bindParam(':id', $get['id'], PDO::PARAM_INT);
 
 			$query->execute();
 
+			$result = new Result();
+			$result->Item = $query->rowCount();
+			$result->Object['vehicle'] = array();
+
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
-			if (!$rows) {
-				throw new PDOException( "Object with id " . $get['id'] ." doesn't exist.", '02000');
-			}
-
 			foreach ($rows as $row) {	
-				$vehicle = new User();
+				$vehicle = new Vehicle();
 				$vehicle->Id = (int) $row['id'];
 				$vehicle->DtSubscribed = $row['vehicle_dt_subscribed'];
-				$vehicle->Registration = $row['vehicle_registration'];
+				$vehicle->Plate = $row['vehicle_plate'];
 				$vehicle->MaInitial = $row['vehicle_ma_initial'];
+				$vehicle->MaLimit = $row['vehicle_ma_limit'];
 				$vehicle->MaMaintenance = $row['vehicle_ma_maintenance'];
 				$vehicle->SpeedMax = $row['vehicle_speed_max'];
 				$vehicle->Status = $row['e_status_id'];
@@ -67,202 +68,227 @@ class Vehicle implements IQuery {
 				$vehicle->Company = (int) $row['company_id'];
 
 
-				array_push($array['vehicle'], $vehicle);
+				array_push($result->Object['vehicle'], $vehicle);
 			}
 
-			$result = new Result(0, RESULT::PDO, "Success");
-			$array['result'] = $result;
+			$result->Status = Result::SUCCESS;
+			$result->Message = 'Done.';
 
 		} catch (PDOException $pdoException) {
-			$result = new Result($pdoException->getCode(), RESULT::PDO, $pdoException->getMessage());
-			$array['result'] = $result;
+			$result = new Result();
+			$result->Status = Result::ERROR;
+			$result->Message = $pdoException->getMessage();
 		} catch (Exception $exception) {
-			$result = new Result(1, RESULT::SYSTEM, $exception->getMessage());
-			$array['result'] = $result;
+			$result = new Result();
+			$result->Status = Result::ERROR;
+			$result->Message = $exception->getMessage();
 		}
-
 
 		$connection = null;
 
-		return $array;
+		return $result;
 	}
-	public static function onInsert(Url $url, $post){
+	public static function onInsert(Url $url, $post) {
 		$database = Flight::get('database');
+
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
 		try {
 
-			$array['result'] = array();
-
-			if(!isset($post['object'])) {
-				throw new Exception("Input object is null", 1);
+			if (!isset($post['object'])) {
+				throw new Exception("Input object is not set.");
 			}
 
-			$json = $post['object'];
-
-			$object = json_decode($json);
-
+			$object = json_decode($post['object']);
 			$vehicle = $object->vehicle[0];
 
 			$sql = "
 			INSERT INTO vehicle 
-			(vehicle_name, vehicle_password, vehicle_hash, vehicle_dt_created, vehicle_dt_expired, vehicle_dt_login, vehicle_dt_active, e_privilege_id, e_status_id, company_id)
-			VALUES
-			(:vehicle_name, :vehicle_password, :vehicle_hash, :vehicle_dt_created, :vehicle_dt_expired, :vehicle_dt_login, :vehicle_dt_active, :e_privilege_id, :e_status_id, :company_id);";
+			(
+				vehicle_dt_subscribed, 
+				vehicle_plate, 
+				vehicle_ma_initial, 
+				vehicle_ma_limit, 
+				vehicle_ma_maintenance, 
+				vehicle_speed_max, 
+				e_status_id, 
+				vehicle_fuel, 
+				model_id, 
+				driver_id,
+				unit_id, 
+				company_id
+				)
+VALUES
+(
+	:vehicle_dt_subscribed, 
+	:vehicle_plate, 
+	:vehicle_ma_initial, 
+	:vehicle_ma_limit, 
+	:vehicle_ma_maintenance, 
+	:vehicle_speed_max, 
+	:e_status_id, 
+	:vehicle_fuel, 
+	:model_id, 
+	:driver_id,
+	:unit_id, 
+	:company_id
+	);";
 
 
-			$query = $connection->prepare($sql);
+$query = $connection->prepare($sql);
 
-			$query->bindParam(':vehicle_name', $vehicle->Name, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_password', $vehicle->Password, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_hash', $vehicle->Hash, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_dt_created', $vehicle->DtCreated, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_dt_expired', $vehicle->DtExpired, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_dt_login', $vehicle->DtLogin, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_dt_active', $vehicle->DtActive, PDO::PARAM_STR);
-			$query->bindParam(':e_privilege_id', $vehicle->Privilege, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $vehicle->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $vehicle->Company, PDO::PARAM_INT);
+$query->bindParam(':vehicle_dt_subscribed', $vehicle->DtSubscribed, PDO::PARAM_STR);
+$query->bindParam(':vehicle_plate', $vehicle->Plate, PDO::PARAM_STR);
+$query->bindParam(':vehicle_ma_initial', $vehicle->MaInitial, PDO::PARAM_INT);
+$query->bindParam(':vehicle_ma_limit', $vehicle->MaLimit, PDO::PARAM_INT);
+$query->bindParam(':vehicle_ma_maintenance', $vehicle->MaMaintenance, PDO::PARAM_INT);
+$query->bindParam(':vehicle_speed_max', $vehicle->SpeedMax, PDO::PARAM_INT);
+$query->bindParam(':e_status_id', $vehicle->Status, PDO::PARAM_INT);
+$query->bindParam(':vehicle_fuel', $vehicle->Fuel, PDO::PARAM_INT);
+$query->bindParam(':model_id', $vehicle->Model, PDO::PARAM_INT);
+$query->bindParam(':driver_id', $vehicle->Driver, PDO::PARAM_INT);
+$query->bindParam(':unit_id', $vehicle->Unit, PDO::PARAM_INT);
+$query->bindParam(':company_id', $vehicle->Company, PDO::PARAM_INT);
 
+$query->execute();
 
-			$query->execute();
+$result = new Result();
+$result->Status = Result::SUCCESS;
+$result->Item = $query->rowCount();
+$result->Message = 'Done.';
 
-			$result = new Result(0, RESULT::PDO, "Success");
-			$array['result'] = $result;
+} catch (PDOException $pdoException) {
+	$result = new Result();
+	$result->Status = Result::ERROR;
+	$result->Message = $pdoException->getMessage();
+} catch (Exception $exception) {
+	$result = new Result();
+	$result->Status = Result::ERROR;
+	$result->Message = $exception->getMessage();
+}
 
-		} catch (PDOException $pdoException) {
-			$result = new Result($pdoException->getCode(), RESULT::PDO, $pdoException->getMessage());
-			$array['result'] = $result;
-		} catch (Exception $exception) {
-			$result = new Result(1, RESULT::SYSTEM, $exception->getMessage());
-			$array['result'] = $result;
+$connection = null;
+
+return $result;
+}
+public static function onUpdate(Url $url, $put) {
+	$database = Flight::get('database');
+	$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
+	$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+
+	try {
+		if (empty($url->Id)) {
+			throw new Exception("Input id is empty.");
 		}
 
-		$connection = null;
-
-		return $array;
-	}
-	public static function onUpdate(Url $url, $put){
-		$database = Flight::get('database');
-
-		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
-		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-
-		//$connection->beginTransaction();
-
-		$array['result'] = array();
-
-		try {
-			if (!isset($put['id']) || !isset($put['object'])) {
-				throw new Exception("Input object and id are null.", 1);
-			}
-
-			$id = $put['id'];
-			$object = json_decode($put['object']);
-
-			$vehicle = $object->vehicle[0];
-
-			$sql = "
-			UPDATE vehicle 
-			SET 
-			vehicle_name = :vehicle_name,
-			vehicle_password = :vehicle_password, 
-			vehicle_hash = :vehicle_hash,
-			vehicle_dt_created = :vehicle_dt_created,
-			vehicle_dt_expired = :vehicle_dt_expired,
-			vehicle_dt_login = :vehicle_dt_login,
-			vehicle_dt_active = :vehicle_dt_active,
-			e_privilege_id = :e_privilege_id,
-			e_status_id = :e_status_id,
-			company_id = :company_id
-			WHERE
-			id = :id;";
-
-			$query = $connection->prepare($sql);
-
-			$query->bindParam(':vehicle_name', $vehicle->Name, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_password', $vehicle->Password, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_hash', $vehicle->Hash, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_dt_created', $vehicle->DtCreated, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_dt_expired', $vehicle->DtExpired, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_dt_login', $vehicle->DtLogin, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_dt_active', $vehicle->DtActive, PDO::PARAM_STR);
-			$query->bindParam(':e_privilege_id', $vehicle->Privilege , PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $vehicle->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $vehicle->Company, PDO::PARAM_INT);
-
-			$query->bindParam(':id', $id, PDO::PARAM_INT);
-
-			$query->execute();
-
-
-			//$connection->commit();
-
-			$result = new Result(0, RESULT::PDO, "Success");
-			$array['result'] = $result;
-
-		} catch (PDOException $pdoException) {
-			//$connection->rollback();
-			$result = new Result($pdoException->getCode(), RESULT::PDO, $pdoException->getMessage());
-			$array['result'] = $result;
-		} catch (Exception $exception) {
-			//$connection->rollback();
-			$result = new Result(1, RESULT::SYSTEM, $exception->getMessage());
-			$array['result'] = $result;
+		if (!isset($put['object'])) {
+			throw new Exception("Input object is not set.");
 		}
 
-		$connection = null;
+		$object = json_decode($put['object']);
+		$vehicle = $object->vehicle[0];
 
-		return $array;
+		$sql = "
+		UPDATE vehicle 
+		SET 
+		vehicle_dt_subscribed = :vehicle_dt_subscribed,
+		vehicle_plate = :vehicle_plate, 
+		vehicle_ma_initial = :vehicle_ma_initial,
+		vehicle_ma_limit = :vehicle_ma_limit,
+		vehicle_ma_maintenance = :vehicle_ma_maintenance,
+		vehicle_speed_max = :vehicle_speed_max,
+		e_status_id = :e_status_id,
+		vehicle_fuel = :vehicle_fuel,
+		model_id = :model_id,
+		driver_id = :driver_id,
+		unit_id = :unit_id,
+		company_id = :company_id
+
+		WHERE
+		id = :id;";
+
+		$query = $connection->prepare($sql);
+
+		$query->bindParam(':vehicle_dt_subscribed', $vehicle->DtSubscribed, PDO::PARAM_STR);
+		$query->bindParam(':vehicle_plate', $vehicle->Plate, PDO::PARAM_STR);
+		$query->bindParam(':vehicle_ma_initial', $vehicle->MaInitial, PDO::PARAM_INT);
+		$query->bindParam(':vehicle_ma_limit', $vehicle->MaLimit, PDO::PARAM_INT);
+		$query->bindParam(':vehicle_ma_maintenance', $vehicle->MaMaintenance, PDO::PARAM_INT);
+		$query->bindParam(':vehicle_speed_max', $vehicle->SpeedMax, PDO::PARAM_INT);
+		$query->bindParam(':e_status_id', $vehicle->Status, PDO::PARAM_INT);
+		$query->bindParam(':vehicle_fuel', $vehicle->Fuel, PDO::PARAM_INT);
+		$query->bindParam(':model_id', $vehicle->Model, PDO::PARAM_INT);
+		$query->bindParam(':driver_id', $vehicle->Driver, PDO::PARAM_INT);
+		$query->bindParam(':unit_id', $vehicle->Unit, PDO::PARAM_INT);
+		$query->bindParam(':company_id', $vehicle->Company, PDO::PARAM_INT);
+
+		$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+
+		$query->execute();
+
+		$result = new Result();
+		$result->Status = Result::SUCCESS;
+		$result->Item = $query->rowCount();
+		$result->Message = 'Done.';
+
+	} catch (PDOException $pdoException) {
+		$result = new Result();
+		$result->Status = Result::ERROR;
+		$result->Message = $pdoException->getMessage();
+	} catch (Exception $exception) {
+		$result = new Result();
+		$result->Status = Result::ERROR;
+		$result->Message = $exception->getMessage();
 	}
 
-	public static function onDelete(Url $url, $delete){
-		$database = Flight::get('database');
+	$connection = null;
+	return $result;
+}
+public static function onDelete(Url $url, $delete) {
+	$database = Flight::get('database');
 
-		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
-		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+	$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
+	$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
-		$array['result'] = array();
+	try {
 
-
-		try {
-			if (!isset($delete['id'])) {
-				throw new Exception("Input id is null", 1);
-			}
-
-			$id = $delete['id'];
-
-			$sql = "
-			DELETE FROM vehicle 
-			WHERE
-			id = :id";
-
-			$query = $connection->prepare($sql);
-
-			$query->bindParam(':id', $id, PDO::PARAM_INT);
-
-			$query->execute();
-
-			$result = new Result(0, RESULT::PDO, "Success");
-			$array['result'] = $result;
-
-		} catch (PDOException $pdoException) {
-			$result = new Result($pdoException->getCode(), RESULT::PDO, $pdoException->getMessage());
-			$array['result'] = $result;
-		} catch (Exception $exception) {
-			$result = new Result(1, RESULT::SYSTEM, $exception->getMessage());
-			$array['result'] = $result;
+		if (empty($url->Id)) {
+			throw new Exception("Input id is empty");
 		}
 
-		$connection = null;
+		$sql = "
+		DELETE FROM vehicle 
+		WHERE
+		id = :id";
 
-		return $array;
+		$query = $connection->prepare($sql);
+
+		$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+
+		$query->execute();
+
+		$result = new Result();
+		$result->Status = Result::SUCCESS;
+		$result->Item = $query->rowCount();
+		$result->Message = 'Done.';
+
+	} catch (PDOException $pdoException) {
+		$result = new Result();
+		$result->Status = Result::ERROR;
+		$result->Message = $pdoException->getMessage();
+	} catch (Exception $exception) {
+		$result = new Result();
+		$result->Status = Result::ERROR;
+		$result->Message = $exception->getMessage();
 	}
 
+	$connection = null;
+	return $result;
+}
 }
 
 ?>

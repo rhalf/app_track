@@ -1,30 +1,49 @@
 <?php
 function method_delete(Url $url, $delete) {
-
 	switch ($url->Class) {
+
 		case 'company':
-		$data = Company::onDelete($url, $delete);
-		break;
+		return Company::onDelete($url, $delete);
+
 		case 'user':
-		$data = User::onDelete($url, $delete);
-		break;
+		return User::onDelete($url, $delete);
+	
+		case 'vehicle':
+		return Vehicle::onDelete($url, $delete);
+
 		case 'model':
-		$data = Model::onDelete($url, $delete);
-		break;
+		return Model::onDelete($url, $delete);
+	
+		case 'address':
+		return Address::onDelete($url, $delete);
+	
+		case 'unit':
+		return Unit::onDelete($url, $delete);
+	
 
-
-
+		//Enumerations
 		case 'nation':
-		$data = Nation::onDelete($url, $delete);
-		break;
+		return Nation::onDelete($url, $delete);
+	
 		case 'privilege':
-		$data = Privilege::onDelete($url, $delete);
-		break;
-		default:
-		Flight::notFound("Class $class not found.");
-		break;
-	}
+		return Privilege::onDelete($url, $delete);
 
-	return $data;
+		case 'field':
+		return Field::onDelete($url, $delete);
+
+		case 'status':
+		return Status::onDelete($url, $delete);
+
+		case 'unittype':
+		return UnitType::onDelete($url, $delete);	
+
+		case 'simvendor':
+		return SimVendor::onDelete($url, $delete);
+	
+
+		default:
+		Flight::notFound("Class not found.");
+		
+	}
 }
 ?>
