@@ -1,7 +1,5 @@
 <?php 
 
-require_once('/app/model/interface/iquery.php');
-
 class SimVendor implements IQuery {
 
 	public $Id;
@@ -38,7 +36,7 @@ class SimVendor implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['simvendor'] = array();
+			$result->Object['SimVendor'] = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -47,10 +45,10 @@ class SimVendor implements IQuery {
 				$simVendor->Id = (int) $row['id'];
 				$simVendor->Name = $row['sim_vendor_name'];
 				$simVendor->Desc = $row['sim_vendor_desc'];
-				$simVendor->Nation = (int) $row['sim_vendor_nation'];
+				$simVendor->Nation = (int) $row['e_nation_id'];
 				
 
-				array_push($result->Object['simvendor'], $simVendor);
+				array_push($result->Object['SimVendor'], $simVendor);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -83,20 +81,20 @@ class SimVendor implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$simVendor = $object->simvendor[0];
+			$simVendor = $object->SimVendor[0];
 
 		
 			$sql = "
 			INSERT INTO e_sim_vendor 
-			(sim_vendor_name, sim_vendor_desc, sim_vendor_nation)
+			(sim_vendor_name, sim_vendor_desc, e_nation_id)
 			VALUES
-			(:sim_vendor_name, :sim_vendor_desc, :sim_vendor_nation);";
+			(:sim_vendor_name, :sim_vendor_desc, :e_nation_id);";
 
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':sim_vendor_name', $simVendor->Name, PDO::PARAM_STR);
 			$query->bindParam(':sim_vendor_desc', $simVendor->Desc, PDO::PARAM_STR);
-			$query->bindParam(':sim_vendor_nation', $simVendor->Nation, PDO::PARAM_INT);
+			$query->bindParam(':e_nation_id', $simVendor->Nation, PDO::PARAM_INT);
 			
 			$query->execute();
 
@@ -135,14 +133,14 @@ class SimVendor implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$simVendor = $object->simvendor[0];
+			$simVendor = $object->SimVendor[0];
 			
 			$sql = "
 			UPDATE e_sim_vendor 
 			SET 
 			sim_vendor_name = :sim_vendor_name,
 			sim_vendor_desc = :sim_vendor_desc, 
-			sim_vendor_nation = :sim_vendor_nation
+			e_nation_id = :e_nation_id
 			WHERE
 			id = :id;";
 
@@ -150,7 +148,7 @@ class SimVendor implements IQuery {
 
 			$query->bindParam(':sim_vendor_name', $simVendor->Name, PDO::PARAM_STR);
 			$query->bindParam(':sim_vendor_desc', $simVendor->Desc, PDO::PARAM_STR);
-			$query->bindParam(':sim_vendor_nation', $simVendor->Nation, PDO::PARAM_INT);
+			$query->bindParam(':e_nation_id', $simVendor->Nation, PDO::PARAM_INT);
 			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
 
 			$query->execute();

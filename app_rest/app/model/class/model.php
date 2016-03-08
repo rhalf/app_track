@@ -1,7 +1,5 @@
 <?php 
 
-require_once('/app/model/interface/iquery.php');
-
 class Model implements IQuery {
 
 	public $Id;
@@ -39,7 +37,7 @@ class Model implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['model'] = array();
+			$result->Object['Model'] = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -52,7 +50,7 @@ class Model implements IQuery {
 				$model->Type = $row['model_type'];
 				$model->Categ = (int) $row['model_category'];
 
-				array_push($result->Object['model'], $model);
+				array_push($result->Object['Model'], $model);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -86,7 +84,7 @@ class Model implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$model = $object->model[0];
+			$model = $object->Model[0];
 
 			$sql = "
 			INSERT INTO model 
@@ -140,7 +138,7 @@ class Model implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$model = $object->model[0];
+			$model = $object->Model[0];
 
 			$sql = "
 			UPDATE model 

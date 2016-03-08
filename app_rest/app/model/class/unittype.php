@@ -1,7 +1,5 @@
 <?php 
 
-require_once('/app/model/interface/iquery.php');
-
 class UnitType implements IQuery {
 
 	public $Id;
@@ -38,7 +36,7 @@ class UnitType implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['unittype'] = array();
+			$result->Object['UnitType'] = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -49,7 +47,7 @@ class UnitType implements IQuery {
 				$unitType->Desc = $row['unit_type_desc'];
 				$unitType->Brand = $row['unit_type_brand'];
 				
-				array_push($result->Object['unittype'], $unitType);
+				array_push($result->Object['UnitType'], $unitType);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -82,7 +80,7 @@ class UnitType implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$unitType = $object->unittype[0];
+			$unitType = $object->UnitType[0];
 
 			$sql = "
 			INSERT INTO e_unit_type 
@@ -134,7 +132,7 @@ class UnitType implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$unitType = $object->unittype[0];
+			$unitType = $object->UnitType[0];
 			
 			$sql = "
 			UPDATE e_unit_type 

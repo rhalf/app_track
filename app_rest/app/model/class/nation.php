@@ -1,7 +1,5 @@
 <?php 
 
-require_once('/app/model/interface/iquery.php');
-
 class Nation implements IQuery {
 
 	public $Id;
@@ -46,7 +44,7 @@ class Nation implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['nation'] = array();
+			$result->Object['Nation']= array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -65,7 +63,7 @@ class Nation implements IQuery {
 				$nation->Ethnic = $row['nation_ethnic'];
 				$nation->Currency = $row['nation_currency'];
 
-				array_push($result->Object['nation'], $nation);
+				array_push($result->Object['Nation'], $nation);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -99,7 +97,7 @@ class Nation implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$nation = $object->nation[0];
+			$nation = $object->Nation[0];
 
 			$sql = "
 			INSERT INTO e_nation 
@@ -160,7 +158,7 @@ class Nation implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$nation = $object->nation[0];
+			$nation = $object->Nation[0];
 
 			$sql = "
 			UPDATE e_nation 

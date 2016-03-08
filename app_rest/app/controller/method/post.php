@@ -20,6 +20,31 @@ function method_post(Url $url, $post) {
 		case 'unit':
 		return Unit::onInsert($url, $post);
 
+		//20160308
+		case 'driver':
+		return Driver::onInsert($url, $post);
+		
+		case 'companysetting':
+		return CompanySetting::onInsert($url, $post);
+
+		case 'unitsim':
+		return UnitSim::onInsert($url, $post);
+
+		case 'usersim':
+		return UserSim::onInsert($url, $post);
+		
+		case 'userinfo':
+		return UserInfo::onInsert($url, $post);
+		
+		case 'route':
+		return Route::onInsert($url, $post);
+		
+		case 'poi':
+		return Poi::onInsert($url, $post);
+
+		case 'geofence':
+		return Geofence::onInsert($url, $post);
+
 
 		//Enumerations
 		case 'nation':

@@ -20,6 +20,31 @@ function method_put(Url $url, $put) {
 		case 'unit':
 		return Unit::onUpdate($url, $put);
 		
+		//20160308
+		case 'driver':
+		return Driver::onUpdate($url, $put);
+		
+		case 'companysetting':
+		return CompanySetting::onUpdate($url, $put);
+		
+		case 'unitsim':
+		return UnitSim::onUpdate($url, $put);
+
+		case 'usersim':
+		return UserSim::onUpdate($url, $put);
+		
+		case 'userinfo':
+		return UserInfo::onUpdate($url, $put);
+		
+		case 'route':
+		return Route::onUpdate($url, $put);
+		
+		case 'poi':
+		return Poi::onUpdate($url, $put);
+
+		case 'geofence':
+		return Geofence::onUpdate($url, $put);
+
 
 		//Enumerations
 		case 'nation':

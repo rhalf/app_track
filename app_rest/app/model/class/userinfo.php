@@ -1,10 +1,16 @@
 <?php 
 
-class Field implements IQuery {
+class UserInfo implements IQuery {
 
 	public $Id;
-	public $Name;
-	public $Value;
+	public $DtCreated;
+	public $Email;
+	public $Website;
+	public $Telephone;
+	public $UserSim;
+	public $Address;
+
+
 	
 	public function __construct() {
 	}
@@ -18,15 +24,15 @@ class Field implements IQuery {
 		try {
 
 			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM e_field WHERE id = :id;";
+				$sql = "SELECT * FROM user_info WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($get['name'])) {
-				$sql = "SELECT * FROM e_field WHERE field_name LIKE :name;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$get['name'], PDO::PARAM_STR);
+			// } else if (isset($get['name'])) {
+			// 	$sql = "SELECT * FROM user_info WHERE field_name LIKE :name;";
+			// 	$query = $connection->prepare($sql);
+			// 	$query->bindParam(':name',$get['name'], PDO::PARAM_STR);
 			} else {
-				$sql = "SELECT * FROM e_field;";
+				$sql = "SELECT * FROM user_info;";
 				$query = $connection->prepare($sql);
 			}
 
@@ -34,17 +40,21 @@ class Field implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['Field'] = array();
+			$result->Object['UserInfo'] = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
 			foreach ($rows as $row) {	
-				$field = new Field();
-				$field->Id = (int) $row['id'];
-				$field->Name = $row['field_name'];
-				$field->Value = $row['field_value'];
-				
-				array_push($result->Object['Field'], $field);
+				$userInfo = new UserInfo();
+				$userInfo->Id = (int) $row['id'];
+				$userInfo->DtCreated = $row['info_dt_created'];
+				$userInfo->Email = $row['info_email'];
+				$userInfo->Website = $row['info_website'];
+				$userInfo->Telephone = $row['info_telephone'];
+				$userInfo->UserSim = (int)$row['sim_id'];
+				$userInfo->Address = (int)$row['address_id'];
+
+				array_push($result->Object['UserInfo'], $userInfo);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -77,19 +87,24 @@ class Field implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$field = $object->Field[0];
+			$userInfo = $object->UserInfo[0];
 
 			$sql = "
-			INSERT INTO e_field 
-			(field_name, field_value)
+			INSERT INTO user_info 
+			(info_dt_created, info_email, info_website, info_telephone, sim_id, address_id)
 			VALUES
-			(:field_name, :field_value);";
+			(:info_dt_created, :info_email, :info_website, :info_telephone, :sim_id, :address_id);";
 
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':field_name', $field->Name, PDO::PARAM_STR);
-			$query->bindParam(':field_value', $field->Value, PDO::PARAM_STR);
+			$query->bindParam(':info_dt_created', $userInfo->DtCreated, PDO::PARAM_STR);
+			$query->bindParam(':info_email', $userInfo->Email, PDO::PARAM_STR);
+			$query->bindParam(':info_website', $userInfo->Website, PDO::PARAM_STR);
+			$query->bindParam(':info_telephone', $userInfo->Telephone, PDO::PARAM_STR);
+			$query->bindParam(':sim_id', $userInfo->UserSim, PDO::PARAM_INT);
+			$query->bindParam(':address_id', $userInfo->Address, PDO::PARAM_INT);
+
 
 			$query->execute();
 
@@ -128,20 +143,31 @@ class Field implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$field = $object->Field[0];
+			$userInfo = $object->UserInfo[0];
 
 			$sql = "
-			UPDATE e_field 
+			UPDATE user_info 
 			SET 
-			field_name = :field_name,
-			field_value = :field_value
+			info_dt_created = :info_dt_created,
+			info_email = :info_email,
+			info_website = :info_website,
+			info_telephone = :info_telephone,
+			sim_id = :sim_id,
+			address_id = :address_id
+
 			WHERE
 			id = :id;";
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':field_name', $field->Name, PDO::PARAM_STR);
-			$query->bindParam(':field_value', $field->Value, PDO::PARAM_STR);
+			$query->bindParam(':info_dt_created', $userInfo->DtCreated, PDO::PARAM_STR);
+			$query->bindParam(':info_email', $userInfo->Email, PDO::PARAM_STR);
+			$query->bindParam(':info_website', $userInfo->Website, PDO::PARAM_STR);
+			$query->bindParam(':info_telephone', $userInfo->Telephone, PDO::PARAM_STR);
+			$query->bindParam(':sim_id', $userInfo->UserSim, PDO::PARAM_INT);
+			$query->bindParam(':address_id', $userInfo->Address, PDO::PARAM_INT);
+
+
 			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
 
 			$query->execute();
@@ -178,7 +204,7 @@ class Field implements IQuery {
 			}
 
 			$sql = "
-			DELETE FROM e_field 
+			DELETE FROM user_info 
 			WHERE
 			id = :id";
 

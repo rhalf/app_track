@@ -1,7 +1,5 @@
 <?php 
 
-require_once('/app/model/interface/iquery.php');
-
 class User implements IQuery {
 
 	public $Id;
@@ -46,7 +44,7 @@ class User implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['user'] = array();
+			$result->Object['User'] = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -65,7 +63,7 @@ class User implements IQuery {
 				$user->Company = (int) $row['company_id'];
 				$user->Info = (int) $row['info_id'];
 
-				array_push($result->Object['user'], $user);
+				array_push($result->Object['User'], $user);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -99,7 +97,7 @@ class User implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$user = $object->user[0];
+			$user = $object->User[0];
 
 			$sql = "
 			INSERT INTO user 
@@ -159,7 +157,7 @@ class User implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$user = $object->user[0];
+			$user = $object->User[0];
 
 			$sql = "
 			UPDATE user 

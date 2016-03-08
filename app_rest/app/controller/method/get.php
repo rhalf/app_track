@@ -16,15 +16,39 @@ function method_get(Url $url, $get) {
 
 		case 'address':
 		return Address::onSelect($url, $get);
-	
+
 		case 'unit':
 		return Unit::onSelect($url, $get);
-	
-	
+
+		//20160308
+		case 'driver':
+		return Driver::onSelect($url, $get);
+		
+		case 'companysetting':
+		return CompanySetting::onSelect($url, $get);
+		
+		case 'unitsim':
+		return UnitSim::onSelect($url, $get);
+
+		case 'usersim':
+		return UserSim::onSelect($url, $get);
+		
+		case 'userinfo':
+		return UserInfo::onSelect($url, $get);
+		
+		case 'route':
+		return Route::onSelect($url, $get);
+		
+		case 'poi':
+		return Poi::onSelect($url, $get);
+
+		case 'geofence':
+		return Geofence::onSelect($url, $get);
+
 		//Enumerations
 		case 'nation':
 		return Nation::onSelect($url, $get);
-	
+
 		case 'privilege':
 		return Privilege::onSelect($url, $get);
 
@@ -39,7 +63,7 @@ function method_get(Url $url, $get) {
 
 		case 'simvendor':
 		return SimVendor::onSelect($url, $get);
-	
+
 
 		default:
 		Flight::notFound("Class not found.");

@@ -1,8 +1,5 @@
 <?php 
 
-require_once('/app/model/interface/iquery.php');
-
-
 class Company implements IQuery {
 
 	public $Id;
@@ -40,7 +37,7 @@ class Company implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['company'] = array();
+			$result->Object['Company'] = array();
 
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -55,7 +52,7 @@ class Company implements IQuery {
 				$company->Info = (int) $row['info_id'];
 				$company->Field = (int) $row['e_field_id'];
 
-				array_push($result->Object['company'], $company);
+				array_push($result->Object['Company'], $company);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -89,7 +86,7 @@ class Company implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$company = $object->company[0];
+			$company = $object->Company[0];
 
 			$sql = "
 			INSERT INTO company 
@@ -145,7 +142,7 @@ class Company implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$company = $object->company[0];
+			$company = $object->Company[0];
 
 			$sql = "
 			UPDATE company 

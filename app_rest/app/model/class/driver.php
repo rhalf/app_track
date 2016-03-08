@@ -1,11 +1,18 @@
 <?php 
 
-class Field implements IQuery {
+class Driver implements IQuery {
 
 	public $Id;
-	public $Name;
-	public $Value;
-	
+	public $DriverId;
+	public $NameFirst;
+	public $NameMiddle;
+	public $NameLast;
+	public $Info;
+	public $Rfid;
+	public $Company;
+	public $Status;
+
+
 	public function __construct() {
 	}
 
@@ -16,17 +23,16 @@ class Field implements IQuery {
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
 		try {
-
 			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM e_field WHERE id = :id;";
+				$sql = "SELECT * FROM driver WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
 			} else if (isset($get['name'])) {
-				$sql = "SELECT * FROM e_field WHERE field_name LIKE :name;";
+				$sql = "SELECT * FROM driver WHERE driver_name_f LIKE :name OR  driver_name_m LIKE :name OR driver_name_l LIKE :name ;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':name',$get['name'], PDO::PARAM_STR);
 			} else {
-				$sql = "SELECT * FROM e_field;";
+				$sql = "SELECT * FROM driver;";
 				$query = $connection->prepare($sql);
 			}
 
@@ -34,17 +40,24 @@ class Field implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['Field'] = array();
+			$result->Object['Driver'] = array();
+
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
 			foreach ($rows as $row) {	
-				$field = new Field();
-				$field->Id = (int) $row['id'];
-				$field->Name = $row['field_name'];
-				$field->Value = $row['field_value'];
-				
-				array_push($result->Object['Field'], $field);
+				$driver = new Driver();
+				$driver->Id = (int) $row['id'];
+				$driver->DriverId = $row['driver_id'];
+				$driver->NameFirst = $row['driver_name_f'];
+				$driver->NameMiddle = $row['driver_name_m'];
+				$driver->NameLast = $row['driver_name_l'];
+				$driver->Rfid = (int) $row['driver_id'];
+				$driver->Status = (int) $row['e_status_id'];
+				$driver->Company = (int) $row['company_id'];
+				$driver->Info = (int) $row['info_id'];
+
+				array_push($result->Object['Driver'], $driver);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -64,6 +77,7 @@ class Field implements IQuery {
 
 		return $result;
 	}
+
 	public static function onInsert(Url $url, $post) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
@@ -77,19 +91,25 @@ class Field implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$field = $object->Field[0];
+			$driver = $object->Driver[0];
 
 			$sql = "
-			INSERT INTO e_field 
-			(field_name, field_value)
+			INSERT INTO driver 
+			(driver_id, driver_name_f, driver_name_m, driver_name_l, driver_rfid, e_status_id, company_id, info_id)
 			VALUES
-			(:field_name, :field_value);";
+			(:driver_id, :driver_name_f, :driver_name_m, :driver_name_l, :driver_rfid, :e_status_id, :company_id, :info_id);";
 
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':field_name', $field->Name, PDO::PARAM_STR);
-			$query->bindParam(':field_value', $field->Value, PDO::PARAM_STR);
+			$query->bindParam(':driver_id', $driver->DriverId, PDO::PARAM_STR);
+			$query->bindParam(':driver_name_f', $driver->NameFirst, PDO::PARAM_STR);
+			$query->bindParam(':driver_name_m', $driver->NameMiddle, PDO::PARAM_STR);
+			$query->bindParam(':driver_name_l', $driver->NameLast, PDO::PARAM_STR);
+			$query->bindParam(':driver_rfid', $driver->Rfid, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $driver->Status, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $driver->Company, PDO::PARAM_INT);
+			$query->bindParam(':info_id', $driver->Info, PDO::PARAM_INT);
 
 			$query->execute();
 
@@ -109,7 +129,6 @@ class Field implements IQuery {
 		}
 
 		$connection = null;
-
 		return $result;
 	}
 	public static function onUpdate(Url $url, $put) {
@@ -118,6 +137,7 @@ class Field implements IQuery {
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
+		//$connection->beginTransaction();
 		try {
 			if (empty($url->Id)) {
 				throw new Exception("Input id is empty.");
@@ -128,23 +148,40 @@ class Field implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$field = $object->Field[0];
+			$driver = $object->Driver[0];
 
 			$sql = "
-			UPDATE e_field 
-			SET 
-			field_name = :field_name,
-			field_value = :field_value
+			UPDATE driver 
+			SET
+			driver_id = :driver_id,
+			driver_name_f = :driver_name_f,
+			driver_name_m = :driver_name_m,
+			driver_name_l = :driver_name_l,
+			driver_rfid = :driver_rfid,
+			e_status_id = :e_status_id,
+			company_id = :company_id,
+			info_id = :info_id
+
 			WHERE
 			id = :id;";
 
+
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':field_name', $field->Name, PDO::PARAM_STR);
-			$query->bindParam(':field_value', $field->Value, PDO::PARAM_STR);
+			$query->bindParam(':driver_id', $driver->DriverId, PDO::PARAM_STR);
+			$query->bindParam(':driver_name_f', $driver->NameFirst, PDO::PARAM_STR);
+			$query->bindParam(':driver_name_m', $driver->NameMiddle, PDO::PARAM_STR);
+			$query->bindParam(':driver_name_l', $driver->NameLast, PDO::PARAM_STR);
+			$query->bindParam(':driver_rfid', $driver->Rfid, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $driver->Status, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $driver->Company, PDO::PARAM_INT);
+			$query->bindParam(':info_id', $driver->Info, PDO::PARAM_INT);
+
 			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
 
 			$query->execute();
+
+			//$connection->commit();
 
 			$result = new Result();
 			$result->Status = Result::SUCCESS;
@@ -162,11 +199,11 @@ class Field implements IQuery {
 		}
 
 		$connection = null;
+
 		return $result;
 	}
 	public static function onDelete(Url $url, $delete) {
 		$database = Flight::get('database');
-		
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
@@ -178,7 +215,7 @@ class Field implements IQuery {
 			}
 
 			$sql = "
-			DELETE FROM e_field 
+			DELETE FROM driver 
 			WHERE
 			id = :id";
 
@@ -207,5 +244,4 @@ class Field implements IQuery {
 		return $result;
 	}
 }
-
 ?>

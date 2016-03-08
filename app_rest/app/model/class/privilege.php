@@ -1,7 +1,5 @@
 <?php 
 
-require_once('/app/model/interface/iquery.php');
-
 class Privilege implements IQuery {
 
 	public $Id;
@@ -37,7 +35,7 @@ class Privilege implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['privilege'] = array();
+			$result->Object['Privilege'] = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -47,7 +45,7 @@ class Privilege implements IQuery {
 				$privilege->Name = $row['privilege_name'];
 				$privilege->Desc = $row['privilege_desc'];
 				$privilege->Value = (int) $row['privilege_value'];
-				array_push($result->Object['privilege'], $privilege);
+				array_push($result->Object['Privilege'], $privilege);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -80,7 +78,7 @@ class Privilege implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$privilege = $object->privilege[0];
+			$privilege = $object->Privilege[0];
 
 			$sql = "
 			INSERT INTO e_privilege 
@@ -131,7 +129,7 @@ class Privilege implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$privilege = $object->privilege[0];
+			$privilege = $object->Privilege[0];
 
 			$sql = "
 			UPDATE e_privilege 

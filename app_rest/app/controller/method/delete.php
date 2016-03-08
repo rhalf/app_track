@@ -7,24 +7,49 @@ function method_delete(Url $url, $delete) {
 
 		case 'user':
 		return User::onDelete($url, $delete);
-	
+		
 		case 'vehicle':
 		return Vehicle::onDelete($url, $delete);
 
 		case 'model':
 		return Model::onDelete($url, $delete);
-	
+		
 		case 'address':
 		return Address::onDelete($url, $delete);
-	
+		
 		case 'unit':
 		return Unit::onDelete($url, $delete);
-	
+
+		//20160308
+		case 'driver':
+		return Driver::onDelete($url, $delete);
+		
+		case 'companysetting':
+		return CompanySetting::onDelete($url, $delete);
+		
+		case 'unitsim':
+		return UnitSim::onDelete($url, $delete);
+
+		case 'usersim':
+		return UserSim::onDelete($url, $delete);
+		
+		case 'userinfo':
+		return UserInfo::onDelete($url, $delete);
+		
+		case 'route':
+		return Route::onDelete($url, $delete);
+		
+		case 'poi':
+		return Poi::onDelete($url, $delete);
+
+		case 'geofence':
+		return Geofence::onDelete($url, $delete);
+
 
 		//Enumerations
 		case 'nation':
 		return Nation::onDelete($url, $delete);
-	
+		
 		case 'privilege':
 		return Privilege::onDelete($url, $delete);
 
@@ -39,7 +64,7 @@ function method_delete(Url $url, $delete) {
 
 		case 'simvendor':
 		return SimVendor::onDelete($url, $delete);
-	
+		
 
 		default:
 		Flight::notFound("Class not found.");

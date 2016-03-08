@@ -1,11 +1,14 @@
 <?php 
 
-class Field implements IQuery {
+class CompanySetting implements IQuery {
 
 	public $Id;
-	public $Name;
-	public $Value;
-	
+	public $Logo;
+	public $Alert;
+	public $Notify;
+	public $Theme;
+	public $Company;
+
 	public function __construct() {
 	}
 
@@ -16,17 +19,16 @@ class Field implements IQuery {
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
 		try {
-
 			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM e_field WHERE id = :id;";
+				$sql = "SELECT * FROM company_setting WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($get['name'])) {
-				$sql = "SELECT * FROM e_field WHERE field_name LIKE :name;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$get['name'], PDO::PARAM_STR);
+			//} else if (isset($get['name'])) {
+				// $sql = "SELECT * FROM company_setting WHERE company_setting_name_f LIKE :name OR  company_setting_name_m LIKE :name OR company_setting_name_l LIKE :name ;";
+				// $query = $connection->prepare($sql);
+				// $query->bindParam(':name',$get['name'], PDO::PARAM_STR);
 			} else {
-				$sql = "SELECT * FROM e_field;";
+				$sql = "SELECT * FROM company_setting;";
 				$query = $connection->prepare($sql);
 			}
 
@@ -34,17 +36,22 @@ class Field implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['Field'] = array();
+			$result->Object['CompanySetting'] = array();
+
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
 			foreach ($rows as $row) {	
-				$field = new Field();
-				$field->Id = (int) $row['id'];
-				$field->Name = $row['field_name'];
-				$field->Value = $row['field_value'];
+				$companySetting = new CompanySetting();
+				$companySetting->Id = (int) $row['id'];
+				$companySetting->Logo = $row['setting_logo'];
+				$companySetting->Alert = (int)$row['setting_alert'];
+				$companySetting->Notify = (int) $row['setting_noti'];
+				$companySetting->Theme = $row['setting_theme'];
+				$companySetting->Company = $row['company_id'];
 				
-				array_push($result->Object['Field'], $field);
+
+				array_push($result->Object['CompanySetting'], $companySetting);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -64,6 +71,7 @@ class Field implements IQuery {
 
 		return $result;
 	}
+
 	public static function onInsert(Url $url, $post) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
@@ -77,19 +85,26 @@ class Field implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$field = $object->Field[0];
+			$companySetting = $object->CompanySetting[0];
 
 			$sql = "
-			INSERT INTO e_field 
-			(field_name, field_value)
+			INSERT INTO company_setting 
+			(setting_id, setting_name_f, setting_name_m, setting_name_l, setting_rfid, e_status_id, id, sim_id, info_id)
 			VALUES
-			(:field_name, :field_value);";
+			(:setting_id, :setting_name_f, :setting_name_m, :setting_name_l, :setting_rfid, :e_status_id, :id, :sim_id, :info_id);";
 
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':field_name', $field->Name, PDO::PARAM_STR);
-			$query->bindParam(':field_value', $field->Value, PDO::PARAM_STR);
+			$query->bindParam(':company_setting_id', $companySetting->DriverId, PDO::PARAM_STR);
+			$query->bindParam(':company_setting_name_f', $companySetting->NameFirst, PDO::PARAM_STR);
+			$query->bindParam(':company_setting_name_m', $companySetting->NameMiddle, PDO::PARAM_STR);
+			$query->bindParam(':company_setting_name_l', $companySetting->NameLast, PDO::PARAM_STR);
+			$query->bindParam(':company_setting_rfid', $companySetting->Rfid, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $companySetting->Status, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $companySetting->Company, PDO::PARAM_INT);
+			$query->bindParam(':sim_id', $companySetting->Sim, PDO::PARAM_INT);
+			$query->bindParam(':info_id', $companySetting->Info, PDO::PARAM_INT);
 
 			$query->execute();
 
@@ -109,7 +124,6 @@ class Field implements IQuery {
 		}
 
 		$connection = null;
-
 		return $result;
 	}
 	public static function onUpdate(Url $url, $put) {
@@ -118,6 +132,7 @@ class Field implements IQuery {
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
+		//$connection->beginTransaction();
 		try {
 			if (empty($url->Id)) {
 				throw new Exception("Input id is empty.");
@@ -128,23 +143,42 @@ class Field implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$field = $object->Field[0];
+			$companySetting = $object->company_setting[0];
 
 			$sql = "
-			UPDATE e_field 
-			SET 
-			field_name = :field_name,
-			field_value = :field_value
+			UPDATE company_setting 
+			SET
+			company_setting_id = :company_setting_id,
+			company_setting_name_f = :company_setting_name_f,
+			company_setting_name_m = :company_setting_name_m,
+			company_setting_name_l = :company_setting_name_l,
+			company_setting_rfid = :company_setting_rfid,
+			e_status_id = :e_status_id,
+			company_id = :company_id,
+			sim_id = :sim_id,
+			info_id = :info_id
+
 			WHERE
 			id = :id;";
 
+
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':field_name', $field->Name, PDO::PARAM_STR);
-			$query->bindParam(':field_value', $field->Value, PDO::PARAM_STR);
+			$query->bindParam(':company_setting_id', $companySetting->DriverId, PDO::PARAM_STR);
+			$query->bindParam(':company_setting_name_f', $companySetting->NameFirst, PDO::PARAM_STR);
+			$query->bindParam(':company_setting_name_m', $companySetting->NameMiddle, PDO::PARAM_STR);
+			$query->bindParam(':company_setting_name_l', $companySetting->NameLast, PDO::PARAM_STR);
+			$query->bindParam(':company_setting_rfid', $companySetting->Rfid, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $companySetting->Status, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $companySetting->Company, PDO::PARAM_INT);
+			$query->bindParam(':sim_id', $companySetting->Sim, PDO::PARAM_INT);
+			$query->bindParam(':info_id', $companySetting->Info, PDO::PARAM_INT);
+
 			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
 
 			$query->execute();
+
+			//$connection->commit();
 
 			$result = new Result();
 			$result->Status = Result::SUCCESS;
@@ -162,11 +196,11 @@ class Field implements IQuery {
 		}
 
 		$connection = null;
+
 		return $result;
 	}
 	public static function onDelete(Url $url, $delete) {
 		$database = Flight::get('database');
-		
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
@@ -178,7 +212,7 @@ class Field implements IQuery {
 			}
 
 			$sql = "
-			DELETE FROM e_field 
+			DELETE FROM company_setting 
 			WHERE
 			id = :id";
 
@@ -207,5 +241,4 @@ class Field implements IQuery {
 		return $result;
 	}
 }
-
 ?>

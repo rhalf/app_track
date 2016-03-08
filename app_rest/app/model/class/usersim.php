@@ -1,11 +1,15 @@
 <?php 
 
-class Field implements IQuery {
+class UserSim implements IQuery {
 
 	public $Id;
-	public $Name;
-	public $Value;
-	
+	public $Imei;
+	public $Number;
+	public $Roaming;
+	public $AreaCode;
+	public $SimVendor;
+
+
 	public function __construct() {
 	}
 
@@ -16,17 +20,16 @@ class Field implements IQuery {
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
 		try {
-
 			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM e_field WHERE id = :id;";
+				$sql = "SELECT * FROM user_sim WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($get['name'])) {
-				$sql = "SELECT * FROM e_field WHERE field_name LIKE :name;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$get['name'], PDO::PARAM_STR);
+			// } else if (isset($get['name'])) {
+			// 	$sql = "SELECT * FROM user_sim WHERE sim_name_f LIKE :name OR  sim_name_m LIKE :name OR sim_name_l LIKE :name ;";
+			// 	$query = $connection->prepare($sql);
+			// 	$query->bindParam(':name',$get['name'], PDO::PARAM_STR);
 			} else {
-				$sql = "SELECT * FROM e_field;";
+				$sql = "SELECT * FROM user_sim;";
 				$query = $connection->prepare($sql);
 			}
 
@@ -34,17 +37,21 @@ class Field implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['Field'] = array();
+			$result->Object['UserSim'] = array();
+
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
 			foreach ($rows as $row) {	
-				$field = new Field();
-				$field->Id = (int) $row['id'];
-				$field->Name = $row['field_name'];
-				$field->Value = $row['field_value'];
-				
-				array_push($result->Object['Field'], $field);
+				$userSim = new UserSim();
+				$userSim->Id = (int) $row['id'];
+				$userSim->Imei = (int) $row['sim_imei'];
+				$userSim->Number = (int) $row['sim_number'];
+				$userSim->Roaming = (bool) $row['sim_roaming'];
+				$userSim->AreaCode = (int) $row['sim_area_code'];
+				$userSim->SimVendor = (int) $row['e_sim_vendor_id'];
+
+				array_push($result->Object['UserSim'], $userSim);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -64,6 +71,7 @@ class Field implements IQuery {
 
 		return $result;
 	}
+
 	public static function onInsert(Url $url, $post) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
@@ -77,19 +85,22 @@ class Field implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$field = $object->Field[0];
+			$userSim = $object->UserSim[0];
 
 			$sql = "
-			INSERT INTO e_field 
-			(field_name, field_value)
+			INSERT INTO user_sim 
+			(sim_imei, sim_number, sim_roaming, sim_area_code, e_sim_vendor_id)
 			VALUES
-			(:field_name, :field_value);";
+			(:sim_imei, :sim_number, :sim_roaming, :sim_area_code, :e_sim_vendor_id);";
 
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':field_name', $field->Name, PDO::PARAM_STR);
-			$query->bindParam(':field_value', $field->Value, PDO::PARAM_STR);
+			$query->bindParam(':sim_imei', $userSim->Imei, PDO::PARAM_INT);
+			$query->bindParam(':sim_number', $userSim->Number, PDO::PARAM_INT);
+			$query->bindParam(':sim_roaming', $userSim->Roaming, PDO::PARAM_BOOL);
+			$query->bindParam(':sim_area_code', $userSim->AreaCode, PDO::PARAM_INT);
+			$query->bindParam(':e_sim_vendor_id', $userSim->SimVendor, PDO::PARAM_INT);
 
 			$query->execute();
 
@@ -109,15 +120,16 @@ class Field implements IQuery {
 		}
 
 		$connection = null;
-
 		return $result;
 	}
+
 	public static function onUpdate(Url $url, $put) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
+		//$connection->beginTransaction();
 		try {
 			if (empty($url->Id)) {
 				throw new Exception("Input id is empty.");
@@ -128,23 +140,38 @@ class Field implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$field = $object->Field[0];
+			$userSim = $object->UserSim[0];
+
+
 
 			$sql = "
-			UPDATE e_field 
-			SET 
-			field_name = :field_name,
-			field_value = :field_value
+
+			UPDATE user_sim 
+			SET
+			sim_imei = :sim_imei,
+			sim_number = :sim_number,
+			sim_roaming = :sim_roaming,
+			sim_area_code = :sim_area_code,
+			e_sim_vendor_id = :e_sim_vendor_id
+
 			WHERE
 			id = :id;";
 
+
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':field_name', $field->Name, PDO::PARAM_STR);
-			$query->bindParam(':field_value', $field->Value, PDO::PARAM_STR);
+			$query->bindParam(':sim_imei', $userSim->Imei, PDO::PARAM_INT);
+			$query->bindParam(':sim_number', $userSim->Number, PDO::PARAM_INT);
+			$query->bindParam(':sim_roaming', $userSim->Roaming, PDO::PARAM_BOOL);
+			$query->bindParam(':sim_area_code', $userSim->AreaCode, PDO::PARAM_INT);
+			$query->bindParam(':e_sim_vendor_id', $userSim->SimVendor, PDO::PARAM_INT);
+
+
 			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
 
 			$query->execute();
+
+			//$connection->commit();
 
 			$result = new Result();
 			$result->Status = Result::SUCCESS;
@@ -162,11 +189,11 @@ class Field implements IQuery {
 		}
 
 		$connection = null;
+
 		return $result;
 	}
 	public static function onDelete(Url $url, $delete) {
 		$database = Flight::get('database');
-		
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
@@ -178,7 +205,7 @@ class Field implements IQuery {
 			}
 
 			$sql = "
-			DELETE FROM e_field 
+			DELETE FROM user_sim 
 			WHERE
 			id = :id";
 
@@ -207,5 +234,4 @@ class Field implements IQuery {
 		return $result;
 	}
 }
-
 ?>

@@ -1,7 +1,5 @@
 <?php 
 
-require_once('/app/model/interface/iquery.php');
-
 class Status implements IQuery {
 
 	public $Id;
@@ -37,7 +35,7 @@ class Status implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['status'] = array();
+			$result->Object['Status'] = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -49,7 +47,7 @@ class Status implements IQuery {
 				$e_status->Desc = $row['status_desc'];
 				$e_status->Value = (int)$row['status_value'];
 				
-				array_push($result->Object['status'], $e_status);
+				array_push($result->Object['Status'], $e_status);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -82,7 +80,7 @@ class Status implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$status = $object->status[0];
+			$status = $object->Status[0];
 
 			$sql = "
 			INSERT INTO e_status 
@@ -133,7 +131,7 @@ class Status implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$status = $object->status[0];
+			$status = $object->Status[0];
 			
 			$sql = "
 			UPDATE e_status 

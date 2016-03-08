@@ -1,7 +1,5 @@
 <?php 
 
-require_once('/app/model/interface/iquery.php');
-
 class Unit implements IQuery {
 
 	public $Id;
@@ -9,7 +7,7 @@ class Unit implements IQuery {
 	public $DtCreated;
 	public $SerialNumber;
 	public $DataSize;
-	public $Sim;
+	public $UnitSim;
 	public $UnitType;
 	
 	public function __construct() {
@@ -40,7 +38,7 @@ class Unit implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['unit'] = array();
+			$result->Object['Unit'] = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -51,10 +49,10 @@ class Unit implements IQuery {
 				$unit->DtCreated = $row['unit_dt_created'];
 				$unit->SerialNumber = $row['unit_serial_number'];
 				$unit->DataSize = $row['unit_data_size'];
-				$unit->Sim = (int) $row['sim_id'];
+				$unit->UnitSim = (int) $row['sim_id'];
 				$unit->UnitType = (int) $row['unit_type_id'];
 				
-				array_push($result->Object['unit'], $unit);
+				array_push($result->Object['Unit'], $unit);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -87,7 +85,7 @@ class Unit implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$unit = $object->unit[0];
+			$unit = $object->Unit[0];
 
 			
 			$sql = "
@@ -103,7 +101,7 @@ class Unit implements IQuery {
 			$query->bindParam(':unit_dt_created', $unit->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':unit_serial_number', $unit->SerialNumber, PDO::PARAM_STR);
 			$query->bindParam(':unit_data_size', $unit->DataSize, PDO::PARAM_INT);
-			$query->bindParam(':sim_id', $unit->Sim, PDO::PARAM_INT);
+			$query->bindParam(':sim_id', $unit->UnitSim, PDO::PARAM_INT);
 			$query->bindParam(':unit_type_id', $unit->UnitType, PDO::PARAM_INT);
 			
 			$query->execute();
@@ -143,7 +141,7 @@ class Unit implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$unit = $object->unit[0];
+			$unit = $object->Unit[0];
 
 			$sql = "
 			UPDATE unit 
@@ -162,7 +160,7 @@ class Unit implements IQuery {
 			$query->bindParam(':unit_dt_created', $unit->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':unit_serial_number', $unit->SerialNumber, PDO::PARAM_STR);
 			$query->bindParam(':unit_data_size', $unit->DataSize, PDO::PARAM_STR);
-			$query->bindParam(':sim_id', $unit->Sim, PDO::PARAM_INT);
+			$query->bindParam(':sim_id', $unit->UnitSim, PDO::PARAM_INT);
 			$query->bindParam(':unit_type_id', $unit->UnitType, PDO::PARAM_BOOL);
 			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
 

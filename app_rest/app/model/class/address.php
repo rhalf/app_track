@@ -1,8 +1,5 @@
 <?php 
 
-require_once('/app/model/interface/iquery.php');
-require_once('/app/model/class/coordinate.php');
-
 class Address implements IQuery {
 
 	public $Id;
@@ -12,7 +9,9 @@ class Address implements IQuery {
 	public $Country;
 	public $City;
 	public $Area;
-	public $Info;
+	public $Nation;
+
+
 
 	public function __construct() {
 	}
@@ -41,7 +40,7 @@ class Address implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['address'] = array();
+			$result->Object['Address'] = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -55,8 +54,9 @@ class Address implements IQuery {
 				$address->Country = $row['address_country'];
 				$address->City = $row['address_city'];
 				$address->Area = $row['address_area'];
-				$address->Info = (int) $row['info_id'];
-				array_push($result->Object['address'] , $address);
+				$address->Nation = (int)$row['e_nation_id'];
+
+				array_push($result->Object['Address'] , $address);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -92,13 +92,13 @@ class Address implements IQuery {
 
 			$object = json_decode($json);
 
-			$address = $object->address[0];
+			$address = $object->Address[0];
 
 			$sql = "
 			INSERT INTO address 
-			(address_name, address_full, address_latitude, address_longitude, address_country, address_city, address_area, info_id)
+			(address_name, address_full, address_latitude, address_longitude, address_country, address_city, address_area, e_nation_id)
 			VALUES
-			(:address_name, :address_full, :address_latitude, :address_longitude, :address_country, :address_city, :address_area, :info_id);";
+			(:address_name, :address_full, :address_latitude, :address_longitude, :address_country, :address_city, :address_area, :e_nation_id);";
 
 
 			$query = $connection->prepare($sql);
@@ -110,8 +110,7 @@ class Address implements IQuery {
 			$query->bindParam(':address_country', $address->Country, PDO::PARAM_STR);
 			$query->bindParam(':address_city', $address->City, PDO::PARAM_STR);
 			$query->bindParam(':address_area', $address->Area, PDO::PARAM_STR);
-			$query->bindParam(':info_id', $address->Info, PDO::PARAM_INT);
-
+			$query->bindParam(':e_nation_id', $address->Nation, PDO::PARAM_INT);
 
 
 			$query->execute();
@@ -144,8 +143,6 @@ class Address implements IQuery {
 
 		//$connection->beginTransaction();
 
-		$array['result'] = array();
-
 		try {
 			if (empty($url->Id)) {
 				throw new Exception("Input id is empty.", 1);
@@ -156,7 +153,7 @@ class Address implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$address = $object->address[0];
+			$address = $object->Address[0];
 
 			$sql = "
 			UPDATE address 
@@ -168,7 +165,7 @@ class Address implements IQuery {
 			address_country = :address_country, 
 			address_city = :address_city,
 			address_area = :address_area,
-			info_id = :info_id
+			e_nation_id = :e_nation_id
 
 			WHERE
 			id = :id;";
@@ -182,7 +179,7 @@ class Address implements IQuery {
 			$query->bindParam(':address_country', $address->Country, PDO::PARAM_STR);
 			$query->bindParam(':address_city', $address->City, PDO::PARAM_STR);
 			$query->bindParam(':address_area', $address->Area, PDO::PARAM_STR);
-			$query->bindParam(':info_id', $address->Info, PDO::PARAM_INT);
+			$query->bindParam(':e_nation_id', $address->Nation, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
 
