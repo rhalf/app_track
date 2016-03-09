@@ -22,11 +22,15 @@ require_once('/app/model/class/address.php');
 require_once('/app/model/class/unit.php');
 
 require_once('/app/model/class/driver.php');
-require_once('/app/model/class/companysetting.php');
+require_once('/app/model/class/companyinfo.php');
 require_once('/app/model/class/unitsim.php');
 require_once('/app/model/class/usersim.php');
 require_once('/app/model/class/unitsim.php');
 require_once('/app/model/class/userinfo.php');
+
+require_once('/app/model/class/collection.php');
+require_once('/app/model/class/vehiclecollection.php');
+
 // require_once('/app/model/class/route.php');
 // require_once('/app/model/class/poi.php');
 // require_once('/app/model/class/geofence.php');

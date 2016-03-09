@@ -24,8 +24,8 @@ function method_put(Url $url, $put) {
 		case 'driver':
 		return Driver::onUpdate($url, $put);
 		
-		case 'companysetting':
-		return CompanySetting::onUpdate($url, $put);
+		case 'companyinfo':
+		return CompanyInfo::onUpdate($url, $put);
 		
 		case 'unitsim':
 		return UnitSim::onUpdate($url, $put);
@@ -35,6 +35,12 @@ function method_put(Url $url, $put) {
 		
 		case 'userinfo':
 		return UserInfo::onUpdate($url, $put);
+		
+		case 'collection':
+		return Collection::onUpdate($url, $put);
+		
+		case 'vehiclecollection':
+		return VehicleCollection::onUpdate($url, $put);
 		
 		case 'route':
 		return Route::onUpdate($url, $put);

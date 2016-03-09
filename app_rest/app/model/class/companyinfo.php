@@ -1,13 +1,13 @@
 <?php 
 
-class Company implements IQuery {
+class CompanyInfo implements IQuery {
 
 	public $Id;
-	public $Name;
-	public $Desc;
-	public $DtCreated;
-	public $Status;
-	public $CompanyInfo;
+	public $Logo;
+	public $Alert;
+	public $Notify;
+	public $Theme;
+	public $Field;
 
 	public function __construct() {
 	}
@@ -18,17 +18,18 @@ class Company implements IQuery {
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
+
 		try {
 			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM company WHERE id = :id;";
+				$sql = "SELECT * FROM company_info WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($get['name'])) {
-				$sql = "SELECT * FROM company WHERE company_name LIKE :name;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$get['name'], PDO::PARAM_STR);
+			//} else if (isset($get['name'])) {
+				// $sql = "SELECT * FROM company_info WHERE company_info_name_f LIKE :name OR  company_info_name_m LIKE :name OR company_info_name_l LIKE :name ;";
+				// $query = $connection->prepare($sql);
+				// $query->bindParam(':name',$get['name'], PDO::PARAM_STR);
 			} else {
-				$sql = "SELECT * FROM company;";
+				$sql = "SELECT * FROM company_info;";
 				$query = $connection->prepare($sql);
 			}
 
@@ -36,21 +37,22 @@ class Company implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['Company'] = array();
+			$result->Object['CompanyInfo'] = array();
 
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
 			foreach ($rows as $row) {	
-				$company = new Company();
-				$company->Id = (int) $row['id'];
-				$company->Name = $row['company_name'];
-				$company->Desc = $row['company_desc'];
-				$company->DtCreated = $row['company_dt_created'];
-				$company->Status = (int) $row['e_status_id'];
-				$company->CompanyInfo = (int) $row['company_info_id'];
+				$CompanyInfo = new CompanyInfo();
+				$CompanyInfo->Id = (int) $row['id'];
+				$CompanyInfo->Logo = $row['info_logo'];
+				$CompanyInfo->Alert = (int)$row['info_alert'];
+				$CompanyInfo->Notify = (int) $row['info_noti'];
+				$CompanyInfo->Theme = $row['info_theme'];
+				$CompanyInfo->Field = $row['e_field_id'];
+				
 
-				array_push($result->Object['Company'], $company);
+				array_push($result->Object['CompanyInfo'], $CompanyInfo);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -84,23 +86,23 @@ class Company implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$company = $object->Company[0];
+			$CompanyInfo = $object->CompanyInfo[0];
+
 
 			$sql = "
-			INSERT INTO company 
-			(company_name, company_desc, company_dt_created, e_status_id, company_info_id)
+			INSERT INTO company_info 
+			(info_logo, info_alert, info_noti, info_theme, e_field_id)
 			VALUES
-			(:company_name, :company_desc, :company_dt_created, :e_status_id, :company_info_id);";
+			(:info_logo, :info_alert, :info_noti, :info_theme, :e_field_id);";
 
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':company_name', $company->Name, PDO::PARAM_STR);
-			$query->bindParam(':company_desc', $company->Desc, PDO::PARAM_STR);
-			$query->bindParam(':company_dt_created', $company->DtCreated, PDO::PARAM_STR);
-			$query->bindParam(':e_status_id', $company->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_info_id', $company->CompanyInfo, PDO::PARAM_INT);
-
+			$query->bindParam(':info_logo', $CompanyInfo->Logo, PDO::PARAM_STR);
+			$query->bindParam(':info_alert', $CompanyInfo->Alert, PDO::PARAM_INT);
+			$query->bindParam(':info_noti', $CompanyInfo->Notify, PDO::PARAM_INT);
+			$query->bindParam(':info_theme', $CompanyInfo->Theme, PDO::PARAM_STR);
+			$query->bindParam(':e_field_id', $CompanyInfo->Field, PDO::PARAM_INT);
 
 			$query->execute();
 
@@ -139,30 +141,30 @@ class Company implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$company = $object->Company[0];
+			$CompanyInfo = $object->CompanyInfo[0];
 
 			$sql = "
-			UPDATE company 
-			SET 
-			company_name = :company_name,
-			company_desc = :company_desc, 
-			company_dt_created = :company_dt_created,
-			e_status_id = :e_status_id, 
-			company_info_id = :company_info_id
+			UPDATE company_info 
+			SET
+			info_logo = :info_logo,
+			info_alert = :info_alert,
+			info_noti = :info_noti,
+			info_theme = :info_theme,
+			e_field_id = :e_field_id
+
 			WHERE
 			id = :id;";
 
 
 			$query = $connection->prepare($sql);
 
+			$query->bindParam(':info_logo', $CompanyInfo->Logo, PDO::PARAM_STR);
+			$query->bindParam(':info_alert', $CompanyInfo->Alert, PDO::PARAM_INT);
+			$query->bindParam(':info_noti', $CompanyInfo->Notify, PDO::PARAM_INT);
+			$query->bindParam(':info_theme', $CompanyInfo->Theme, PDO::PARAM_STR);
+			$query->bindParam(':e_field_id', $CompanyInfo->Field, PDO::PARAM_INT);
 
-			$query->bindParam(':company_name', $company->Name, PDO::PARAM_STR);
-			$query->bindParam(':company_desc', $company->Desc, PDO::PARAM_STR);
-			$query->bindParam(':company_dt_created', $company->DtCreated, PDO::PARAM_STR);
-			$query->bindParam(':e_status_id', $company->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_info_id', $company->CompanyInfo, PDO::PARAM_INT);
 			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
-
 
 			$query->execute();
 
@@ -200,7 +202,7 @@ class Company implements IQuery {
 			}
 
 			$sql = "
-			DELETE FROM company 
+			DELETE FROM company_info 
 			WHERE
 			id = :id";
 

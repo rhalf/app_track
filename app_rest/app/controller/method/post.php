@@ -24,8 +24,8 @@ function method_post(Url $url, $post) {
 		case 'driver':
 		return Driver::onInsert($url, $post);
 		
-		case 'companysetting':
-		return CompanySetting::onInsert($url, $post);
+		case 'companyinfo':
+		return CompanyInfo::onInsert($url, $post);
 
 		case 'unitsim':
 		return UnitSim::onInsert($url, $post);
@@ -35,6 +35,12 @@ function method_post(Url $url, $post) {
 		
 		case 'userinfo':
 		return UserInfo::onInsert($url, $post);
+		
+		case 'collection':
+		return Collection::onInsert($url, $post);
+		
+		case 'vehiclecollection':
+		return VehicleCollection::onInsert($url, $post);
 		
 		case 'route':
 		return Route::onInsert($url, $post);
@@ -64,7 +70,7 @@ function method_post(Url $url, $post) {
 
 		case 'simvendor':
 		return SimVendor::onInsert($url, $post);
-	
+		
 
 		default:
 		Flight::notFound("Class not found.");

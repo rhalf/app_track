@@ -24,8 +24,8 @@ function method_delete(Url $url, $delete) {
 		case 'driver':
 		return Driver::onDelete($url, $delete);
 		
-		case 'companysetting':
-		return CompanySetting::onDelete($url, $delete);
+		case 'companyinfo':
+		return CompanyInfo::onDelete($url, $delete);
 		
 		case 'unitsim':
 		return UnitSim::onDelete($url, $delete);
@@ -35,6 +35,12 @@ function method_delete(Url $url, $delete) {
 		
 		case 'userinfo':
 		return UserInfo::onDelete($url, $delete);
+		
+		case 'collection':
+		return Collection::onDelete($url, $delete);
+
+		case 'vehiclecollection':
+		return VehicleCollection::onDelete($url, $delete);
 		
 		case 'route':
 		return Route::onDelete($url, $delete);

@@ -24,8 +24,8 @@ function method_get(Url $url, $get) {
 		case 'driver':
 		return Driver::onSelect($url, $get);
 		
-		case 'companysetting':
-		return CompanySetting::onSelect($url, $get);
+		case 'companyinfo':
+		return CompanyInfo::onSelect($url, $get);
 		
 		case 'unitsim':
 		return UnitSim::onSelect($url, $get);
@@ -35,6 +35,12 @@ function method_get(Url $url, $get) {
 		
 		case 'userinfo':
 		return UserInfo::onSelect($url, $get);
+		
+		case 'collection':
+		return Collection::onSelect($url, $get);
+	
+		case 'vehiclecollection':
+		return VehicleCollection::onSelect($url, $get);
 		
 		case 'route':
 		return Route::onSelect($url, $get);

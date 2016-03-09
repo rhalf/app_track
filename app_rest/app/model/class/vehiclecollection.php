@@ -1,13 +1,12 @@
 <?php 
 
-class CompanySetting implements IQuery {
+class VehicleCollection implements IQuery {
 
 	public $Id;
-	public $Logo;
-	public $Alert;
-	public $Notify;
-	public $Theme;
-	public $Company;
+	public $Vehicle;
+	public $User;
+	public $Collection;
+
 
 	public function __construct() {
 	}
@@ -20,15 +19,23 @@ class CompanySetting implements IQuery {
 
 		try {
 			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM company_setting WHERE id = :id;";
+				$sql = "SELECT * FROM vehicle_collection WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			//} else if (isset($get['name'])) {
-				// $sql = "SELECT * FROM company_setting WHERE company_setting_name_f LIKE :name OR  company_setting_name_m LIKE :name OR company_setting_name_l LIKE :name ;";
-				// $query = $connection->prepare($sql);
-				// $query->bindParam(':name',$get['name'], PDO::PARAM_STR);
+			} else if (isset($get['vehicle'])) {
+				$sql = "SELECT * FROM vehicle_collection WHERE vehicle_id = :vehicle_id;";
+				$query = $connection->prepare($sql);
+				$query->bindParam(':vehicle_id',$get['vehicle'], PDO::PARAM_INT);
+			} else if (isset($get['user'])) {
+				$sql = "SELECT * FROM vehicle_collection WHERE user_id = :user_id;";
+				$query = $connection->prepare($sql);
+				$query->bindParam(':user_id',$get['user'], PDO::PARAM_INT);
+			} else if (isset($get['collection'])) {
+				$sql = "SELECT * FROM vehicle_collection WHERE collection_id = :collection_id;";
+				$query = $connection->prepare($sql);
+				$query->bindParam(':collection_id',$get['collection'], PDO::PARAM_INT);
 			} else {
-				$sql = "SELECT * FROM company_setting;";
+				$sql = "SELECT * FROM vehicle_collection;";
 				$query = $connection->prepare($sql);
 			}
 
@@ -36,22 +43,19 @@ class CompanySetting implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['CompanySetting'] = array();
+			$result->Object['VehicleCollection'] = array();
 
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
 			foreach ($rows as $row) {	
-				$companySetting = new CompanySetting();
-				$companySetting->Id = (int) $row['id'];
-				$companySetting->Logo = $row['setting_logo'];
-				$companySetting->Alert = (int)$row['setting_alert'];
-				$companySetting->Notify = (int) $row['setting_noti'];
-				$companySetting->Theme = $row['setting_theme'];
-				$companySetting->Company = $row['company_id'];
-				
+				$vehicleCollection = new VehicleCollection();
+				$vehicleCollection->Id = (int) $row['id'];
+				$vehicleCollection->Vehicle =  (int) $row['vehicle_id'];
+				$vehicleCollection->User =  (int) $row['user_id'];
+				$vehicleCollection->Collection =  (int) $row['collection_id'];
 
-				array_push($result->Object['CompanySetting'], $companySetting);
+				array_push($result->Object['VehicleCollection'], $vehicleCollection);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -85,26 +89,20 @@ class CompanySetting implements IQuery {
 			}
 
 			$object = json_decode($post['object']);
-			$companySetting = $object->CompanySetting[0];
+			$vehicleCollection = $object->VehicleCollection[0];
 
 			$sql = "
-			INSERT INTO company_setting 
-			(setting_id, setting_name_f, setting_name_m, setting_name_l, setting_rfid, e_status_id, id, sim_id, info_id)
+			INSERT INTO vehicle_collection 
+			(vehicle_id, user_id, collection_id)
 			VALUES
-			(:setting_id, :setting_name_f, :setting_name_m, :setting_name_l, :setting_rfid, :e_status_id, :id, :sim_id, :info_id);";
-
+			(:vehicle_id, :user_id, :collection_id);";
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':company_setting_id', $companySetting->DriverId, PDO::PARAM_STR);
-			$query->bindParam(':company_setting_name_f', $companySetting->NameFirst, PDO::PARAM_STR);
-			$query->bindParam(':company_setting_name_m', $companySetting->NameMiddle, PDO::PARAM_STR);
-			$query->bindParam(':company_setting_name_l', $companySetting->NameLast, PDO::PARAM_STR);
-			$query->bindParam(':company_setting_rfid', $companySetting->Rfid, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $companySetting->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $companySetting->Company, PDO::PARAM_INT);
-			$query->bindParam(':sim_id', $companySetting->Sim, PDO::PARAM_INT);
-			$query->bindParam(':info_id', $companySetting->Info, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_id', $vehicleCollection->Vehicle, PDO::PARAM_STR);
+			$query->bindParam(':user_id', $vehicleCollection->User, PDO::PARAM_STR);
+			$query->bindParam(':collection_id', $vehicleCollection->Collection, PDO::PARAM_STR);
+
 
 			$query->execute();
 
@@ -133,6 +131,7 @@ class CompanySetting implements IQuery {
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
 		//$connection->beginTransaction();
+
 		try {
 			if (empty($url->Id)) {
 				throw new Exception("Input id is empty.");
@@ -143,36 +142,24 @@ class CompanySetting implements IQuery {
 			}
 
 			$object = json_decode($put['object']);
-			$companySetting = $object->company_setting[0];
+			$vehicleCollection = $object->VehicleCollection[0];
 
 			$sql = "
-			UPDATE company_setting 
-			SET
-			company_setting_id = :company_setting_id,
-			company_setting_name_f = :company_setting_name_f,
-			company_setting_name_m = :company_setting_name_m,
-			company_setting_name_l = :company_setting_name_l,
-			company_setting_rfid = :company_setting_rfid,
-			e_status_id = :e_status_id,
-			company_id = :company_id,
-			sim_id = :sim_id,
-			info_id = :info_id
-
+			UPDATE vehicle_collection 
+			SET 
+			vehicle_id = :vehicle_id,
+			user_id = :user_id, 
+			collection_id = :collection_id
+			
 			WHERE
 			id = :id;";
-
+			
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':company_setting_id', $companySetting->DriverId, PDO::PARAM_STR);
-			$query->bindParam(':company_setting_name_f', $companySetting->NameFirst, PDO::PARAM_STR);
-			$query->bindParam(':company_setting_name_m', $companySetting->NameMiddle, PDO::PARAM_STR);
-			$query->bindParam(':company_setting_name_l', $companySetting->NameLast, PDO::PARAM_STR);
-			$query->bindParam(':company_setting_rfid', $companySetting->Rfid, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $companySetting->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $companySetting->Company, PDO::PARAM_INT);
-			$query->bindParam(':sim_id', $companySetting->Sim, PDO::PARAM_INT);
-			$query->bindParam(':info_id', $companySetting->Info, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_id', $vehicleCollection->Vehicle, PDO::PARAM_STR);
+			$query->bindParam(':user_id', $vehicleCollection->User, PDO::PARAM_STR);
+			$query->bindParam(':collection_id', $vehicleCollection->Collection, PDO::PARAM_STR);
 
 			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
 
@@ -212,7 +199,7 @@ class CompanySetting implements IQuery {
 			}
 
 			$sql = "
-			DELETE FROM company_setting 
+			DELETE FROM vehicle_collection 
 			WHERE
 			id = :id";
 

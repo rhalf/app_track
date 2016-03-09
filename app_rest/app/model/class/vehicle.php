@@ -32,7 +32,7 @@ class Vehicle implements IQuery {
 				$sql = "SELECT * FROM vehicle WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($get['name'])) {
+			} else if (isset($get['plate'])) {
 				$sql = "SELECT * FROM vehicle WHERE vehicle_plate LIKE :vehicle_plate;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':vehicle_plate',$get['plate'], PDO::PARAM_STR);
