@@ -12,7 +12,7 @@ class Model implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $get) {
+	public static function onSelect(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -24,10 +24,10 @@ class Model implements IQuery {
 				$sql = "SELECT * FROM model WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($get['name'])) {
+			} else if (isset($data['name'])) {
 				$sql = "SELECT * FROM model WHERE model_name LIKE :name;";
 				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$get['name'], PDO::PARAM_STR);
+				$query->bindParam(':name',$data['name'], PDO::PARAM_STR);
 			} else {
 				$sql = "SELECT * FROM model;";
 				$query = $connection->prepare($sql);
@@ -37,7 +37,7 @@ class Model implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['Model'] = array();
+			$result->Object = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -50,7 +50,7 @@ class Model implements IQuery {
 				$model->Type = $row['model_type'];
 				$model->Categ = (int) $row['model_category'];
 
-				array_push($result->Object['Model'], $model);
+				array_push($result->Object, $model);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -70,7 +70,7 @@ class Model implements IQuery {
 
 		return $result;
 	}
-	public static function onInsert(Url $url, $post) {
+	public static function onInsert(Url $url, $data) {
 		$database = Flight::get('database');
 
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
@@ -79,12 +79,15 @@ class Model implements IQuery {
 
 		try {
 
-			if (!isset($post['object'])) {
+			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
 
-			$object = json_decode($post['object']);
-			$model = $object->Model[0];
+			$model = json_decode($data['Object']);
+			if ($model == null) {
+				throw new Exception(json_get_error());
+			}
+
 
 			$sql = "
 			INSERT INTO model 
@@ -122,7 +125,7 @@ class Model implements IQuery {
 
 		return $result;
 	}
-	public static function onUpdate(Url $url, $put) {
+	public static function onUpdate(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -133,12 +136,14 @@ class Model implements IQuery {
 				throw new Exception("Input id is empty.");
 			}
 
-			if (!isset($put['object'])) {
+			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
 
-			$object = json_decode($put['object']);
-			$model = $object->Model[0];
+			$model = json_decode($data['Object']);
+			if ($model == null) {
+				throw new Exception(json_get_error());
+			}
 
 			$sql = "
 			UPDATE model 
@@ -181,7 +186,7 @@ class Model implements IQuery {
 		$connection = null;
 		return $result;
 	}
-	public static function onDelete(Url $url, $delete) {
+	public static function onDelete(Url $url, $data) {
 		$database = Flight::get('database');
 		
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);

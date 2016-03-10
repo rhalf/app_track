@@ -20,7 +20,7 @@ class Vehicle implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $get) {
+	public static function onSelect(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -32,10 +32,10 @@ class Vehicle implements IQuery {
 				$sql = "SELECT * FROM vehicle WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($get['plate'])) {
+			} else if (isset($data['plate'])) {
 				$sql = "SELECT * FROM vehicle WHERE vehicle_plate LIKE :vehicle_plate;";
 				$query = $connection->prepare($sql);
-				$query->bindParam(':vehicle_plate',$get['plate'], PDO::PARAM_STR);
+				$query->bindParam(':vehicle_plate',$data['plate'], PDO::PARAM_STR);
 			} else {
 				$sql = "SELECT * FROM vehicle;";
 				$query = $connection->prepare($sql);
@@ -45,7 +45,7 @@ class Vehicle implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['Vehicle'] = array();
+			$result->Object = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -66,7 +66,7 @@ class Vehicle implements IQuery {
 				$vehicle->Company = (int) $row['company_id'];
 
 
-				array_push($result->Object['Vehicle'], $vehicle);
+				array_push($result->Object, $vehicle);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -86,7 +86,7 @@ class Vehicle implements IQuery {
 
 		return $result;
 	}
-	public static function onInsert(Url $url, $post) {
+	public static function onInsert(Url $url, $data) {
 		$database = Flight::get('database');
 
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
@@ -95,13 +95,15 @@ class Vehicle implements IQuery {
 
 		try {
 
-			if (!isset($post['object'])) {
+			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
 
-			$object = json_decode($post['object']);
-			$vehicle = $object->Vehicle[0];
-
+			$vehicle = json_decode($data['Object']);
+			if ($vehicle == null) {
+				throw new Exception(json_get_error());
+			}
+			
 			$sql = "
 			INSERT INTO vehicle 
 			(
@@ -172,7 +174,7 @@ class Vehicle implements IQuery {
 
 		return $result;
 	}
-	public static function onUpdate(Url $url, $put) {
+	public static function onUpdate(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -183,12 +185,15 @@ class Vehicle implements IQuery {
 				throw new Exception("Input id is empty.");
 			}
 
-			if (!isset($put['object'])) {
+			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
 
-			$object = json_decode($put['object']);
-			$vehicle = $object->Vehicle[0];
+			
+			$vehicle = json_decode($data['Object']);
+			if ($vehicle == null) {
+				throw new Exception(json_get_error());
+			}
 
 			$sql = "
 			UPDATE vehicle 
@@ -246,7 +251,7 @@ class Vehicle implements IQuery {
 		$connection = null;
 		return $result;
 	}
-	public static function onDelete(Url $url, $delete) {
+	public static function onDelete(Url $url, $data) {
 		$database = Flight::get('database');
 
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);

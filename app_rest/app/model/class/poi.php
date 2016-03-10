@@ -1,13 +1,16 @@
 <?php 
 
-class Company implements IQuery {
+class Poi implements IQuery {
 
 	public $Id;
+	public $Company;
 	public $Name;
 	public $Desc;
-	public $DtCreated;
-	public $Status;
-	public $CompanyInfo;
+	public $Latitude;
+	public $Logitude;
+	public $IsVisible;
+	public $IsGlobal;
+	public $Image;
 
 	public function __construct() {
 	}
@@ -19,16 +22,17 @@ class Company implements IQuery {
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
 		try {
+
 			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM company WHERE id = :id;";
+				$sql = "SELECT * FROM poi WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
 			} else if (isset($data['name'])) {
-				$sql = "SELECT * FROM company WHERE company_name LIKE :name;";
+				$sql = "SELECT * FROM poi WHERE poi_name LIKE :name;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':name',$data['name'], PDO::PARAM_STR);
 			} else {
-				$sql = "SELECT * FROM company;";
+				$sql = "SELECT * FROM poi;";
 				$query = $connection->prepare($sql);
 			}
 
@@ -38,19 +42,21 @@ class Company implements IQuery {
 			$result->Item = $query->rowCount();
 			$result->Object = array();
 
-
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
 			foreach ($rows as $row) {	
-				$company = new Company();
-				$company->Id = (int) $row['id'];
-				$company->Name = $row['company_name'];
-				$company->Desc = $row['company_desc'];
-				$company->DtCreated = $row['company_dt_created'];
-				$company->Status = (int) $row['e_status_id'];
-				$company->CompanyInfo = (int) $row['company_info_id'];
-
-				array_push($result->Object, $company);
+				$poi = new Poi();
+				$poi->Id = (int) $row['id'];
+				$poi->Company = (int) $row['company_id'];
+				$poi->Name = $row['poi_name'];
+				$poi->Desc = $row['poi_desc'];
+				$poi->Latitude = (double) $row['poi_latitude'];
+				$poi->Logitude = (double) $row['poi_longitude'];
+				$poi->IsVisible = (bool) $row['poi_is_visible'];
+				$poi->IsGlobal = (bool) $row['poi_is_global'];
+				$poi->Image = $row['poi_image'];
+				
+				array_push($result->Object, $poi);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -70,7 +76,6 @@ class Company implements IQuery {
 
 		return $result;
 	}
-
 	public static function onInsert(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
@@ -83,26 +88,28 @@ class Company implements IQuery {
 				throw new Exception("Input object is not set.");
 			}
 
-			$company = json_decode($data['Object']);
-			if ($company == null) {
+			$poi = json_decode($data['Object']);
+			if ($poi == null) {
 				throw new Exception(json_get_error());
 			}
 
-
 			$sql = "
-			INSERT INTO company 
-			(company_name, company_desc, company_dt_created, e_status_id, company_info_id)
+			INSERT INTO poi 
+			(company_id, poi_name,poi_desc,poi_latitude,poi_longitude,poi_is_visible,poi_is_global,poi_image)
 			VALUES
-			(:company_name, :company_desc, :company_dt_created, :e_status_id, :company_info_id);";
+			(:company_id, :poi_name, :poi_desc, :poi_latitude, :poi_longitude, :poi_is_visible, :poi_is_global, :poi_image);";
 
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':company_name', $company->Name, PDO::PARAM_STR);
-			$query->bindParam(':company_desc', $company->Desc, PDO::PARAM_STR);
-			$query->bindParam(':company_dt_created', $company->DtCreated, PDO::PARAM_STR);
-			$query->bindParam(':e_status_id', $company->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_info_id', $company->CompanyInfo, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $poi->Company, PDO::PARAM_INT);
+			$query->bindParam(':poi_name', $poi->Name, PDO::PARAM_STR);
+			$query->bindParam(':poi_desc', $poi->Desc, PDO::PARAM_STR);
+			$query->bindParam(':poi_latitude', $poi->Latitude, PDO::PARAM_INT);
+			$query->bindParam(':poi_longitude', $poi->Logitude, PDO::PARAM_INT);
+			$query->bindParam(':poi_is_visible', $poi->IsVisible, PDO::PARAM_BOOL);
+			$query->bindParam(':poi_is_global', $poi->IsGlobal, PDO::PARAM_BOOL);
+			$query->bindParam(':poi_image', $poi->Image, PDO::PARAM_STR);
 
 
 			$query->execute();
@@ -123,6 +130,7 @@ class Company implements IQuery {
 		}
 
 		$connection = null;
+
 		return $result;
 	}
 	public static function onUpdate(Url $url, $data) {
@@ -131,7 +139,6 @@ class Company implements IQuery {
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 
-		//$connection->beginTransaction();
 		try {
 			if (empty($url->Id)) {
 				throw new Exception("Input id is empty.");
@@ -141,37 +148,40 @@ class Company implements IQuery {
 				throw new Exception("Input object is not set.");
 			}
 
-			$company = json_decode($data['Object']);
-			if ($company == null) {
+			$poi = json_decode($data['Object']);
+			if ($poi == null) {
 				throw new Exception(json_get_error());
 			}
 
 			$sql = "
-			UPDATE company 
+			UPDATE poi 
 			SET 
-			company_name = :company_name,
-			company_desc = :company_desc, 
-			company_dt_created = :company_dt_created,
-			e_status_id = :e_status_id, 
-			company_info_id = :company_info_id
+			company_id = :company_id,
+			poi_name = :poi_name,
+			poi_desc = :poi_desc,
+			poi_latitude = :poi_latitude,
+			poi_longitude = :poi_longitude,
+			poi_is_visible = :poi_is_visible,
+			poi_is_global = :poi_is_global,
+			poi_image = :poi_image
+
 			WHERE
 			id = :id;";
 
-
 			$query = $connection->prepare($sql);
 
+			$query->bindParam(':company_id', $poi->Company, PDO::PARAM_INT);
+			$query->bindParam(':poi_name', $poi->Name, PDO::PARAM_STR);
+			$query->bindParam(':poi_desc', $poi->Desc, PDO::PARAM_STR);
+			$query->bindParam(':poi_latitude', $poi->Latitude, PDO::PARAM_INT);
+			$query->bindParam(':poi_longitude', $poi->Logitude, PDO::PARAM_INT);
+			$query->bindParam(':poi_is_visible', $poi->IsVisible, PDO::PARAM_BOOL);
+			$query->bindParam(':poi_is_global', $poi->IsGlobal, PDO::PARAM_BOOL);
+			$query->bindParam(':poi_image', $poi->Image, PDO::PARAM_STR);
 
-			$query->bindParam(':company_name', $company->Name, PDO::PARAM_STR);
-			$query->bindParam(':company_desc', $company->Desc, PDO::PARAM_STR);
-			$query->bindParam(':company_dt_created', $company->DtCreated, PDO::PARAM_STR);
-			$query->bindParam(':e_status_id', $company->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_info_id', $company->CompanyInfo, PDO::PARAM_INT);
 			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
 
-
 			$query->execute();
-
-			//$connection->commit();
 
 			$result = new Result();
 			$result->Status = Result::SUCCESS;
@@ -189,11 +199,11 @@ class Company implements IQuery {
 		}
 
 		$connection = null;
-
 		return $result;
 	}
 	public static function onDelete(Url $url, $data) {
 		$database = Flight::get('database');
+		
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
@@ -205,7 +215,7 @@ class Company implements IQuery {
 			}
 
 			$sql = "
-			DELETE FROM company 
+			DELETE FROM poi 
 			WHERE
 			id = :id";
 
@@ -234,4 +244,5 @@ class Company implements IQuery {
 		return $result;
 	}
 }
+
 ?>

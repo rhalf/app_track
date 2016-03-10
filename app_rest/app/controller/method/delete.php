@@ -1,75 +1,75 @@
 <?php
-function method_delete(Url $url, $delete) {
+function method_delete(Url $url, $data) {
 	switch ($url->Class) {
 
 		case 'company':
-		return Company::onDelete($url, $delete);
+		return Company::onDelete($url, $data);
 
 		case 'user':
-		return User::onDelete($url, $delete);
+		return User::onDelete($url, $data);
 		
 		case 'vehicle':
-		return Vehicle::onDelete($url, $delete);
+		return Vehicle::onDelete($url, $data);
 
 		case 'model':
-		return Model::onDelete($url, $delete);
+		return Model::onDelete($url, $data);
 		
 		case 'address':
-		return Address::onDelete($url, $delete);
+		return Address::onDelete($url, $data);
 		
 		case 'unit':
-		return Unit::onDelete($url, $delete);
+		return Unit::onDelete($url, $data);
 
 		//20160308
 		case 'driver':
-		return Driver::onDelete($url, $delete);
+		return Driver::onDelete($url, $data);
 		
 		case 'companyinfo':
-		return CompanyInfo::onDelete($url, $delete);
+		return CompanyInfo::onDelete($url, $data);
 		
 		case 'unitsim':
-		return UnitSim::onDelete($url, $delete);
+		return UnitSim::onDelete($url, $data);
 
 		case 'usersim':
-		return UserSim::onDelete($url, $delete);
+		return UserSim::onDelete($url, $data);
 		
 		case 'userinfo':
-		return UserInfo::onDelete($url, $delete);
+		return UserInfo::onDelete($url, $data);
 		
 		case 'collection':
-		return Collection::onDelete($url, $delete);
+		return Collection::onDelete($url, $data);
 
 		case 'vehiclecollection':
-		return VehicleCollection::onDelete($url, $delete);
+		return VehicleCollection::onDelete($url, $data);
 		
 		case 'route':
-		return Route::onDelete($url, $delete);
+		return Route::onDelete($url, $data);
 		
 		case 'poi':
-		return Poi::onDelete($url, $delete);
+		return Poi::onDelete($url, $data);
 
 		case 'geofence':
-		return Geofence::onDelete($url, $delete);
+		return Geofence::onDelete($url, $data);
 
 
 		//Enumerations
 		case 'nation':
-		return Nation::onDelete($url, $delete);
+		return Nation::onDelete($url, $data);
 		
 		case 'privilege':
-		return Privilege::onDelete($url, $delete);
+		return Privilege::onDelete($url, $data);
 
 		case 'field':
-		return Field::onDelete($url, $delete);
+		return Field::onDelete($url, $data);
 
 		case 'status':
-		return Status::onDelete($url, $delete);
+		return Status::onDelete($url, $data);
 
 		case 'unittype':
-		return UnitType::onDelete($url, $delete);	
+		return UnitType::onDelete($url, $data);	
 
 		case 'simvendor':
-		return SimVendor::onDelete($url, $delete);
+		return SimVendor::onDelete($url, $data);
 		
 
 		default:

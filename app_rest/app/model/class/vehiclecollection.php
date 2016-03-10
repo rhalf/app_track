@@ -11,7 +11,7 @@ class VehicleCollection implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $get) {
+	public static function onSelect(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -22,18 +22,18 @@ class VehicleCollection implements IQuery {
 				$sql = "SELECT * FROM vehicle_collection WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($get['vehicle'])) {
+			} else if (isset($data['vehicle'])) {
 				$sql = "SELECT * FROM vehicle_collection WHERE vehicle_id = :vehicle_id;";
 				$query = $connection->prepare($sql);
-				$query->bindParam(':vehicle_id',$get['vehicle'], PDO::PARAM_INT);
-			} else if (isset($get['user'])) {
+				$query->bindParam(':vehicle_id',$data['vehicle'], PDO::PARAM_INT);
+			} else if (isset($data['user'])) {
 				$sql = "SELECT * FROM vehicle_collection WHERE user_id = :user_id;";
 				$query = $connection->prepare($sql);
-				$query->bindParam(':user_id',$get['user'], PDO::PARAM_INT);
-			} else if (isset($get['collection'])) {
+				$query->bindParam(':user_id',$data['user'], PDO::PARAM_INT);
+			} else if (isset($data['collection'])) {
 				$sql = "SELECT * FROM vehicle_collection WHERE collection_id = :collection_id;";
 				$query = $connection->prepare($sql);
-				$query->bindParam(':collection_id',$get['collection'], PDO::PARAM_INT);
+				$query->bindParam(':collection_id',$data['collection'], PDO::PARAM_INT);
 			} else {
 				$sql = "SELECT * FROM vehicle_collection;";
 				$query = $connection->prepare($sql);
@@ -43,7 +43,7 @@ class VehicleCollection implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['VehicleCollection'] = array();
+			$result->Object = array();
 
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -55,7 +55,7 @@ class VehicleCollection implements IQuery {
 				$vehicleCollection->User =  (int) $row['user_id'];
 				$vehicleCollection->Collection =  (int) $row['collection_id'];
 
-				array_push($result->Object['VehicleCollection'], $vehicleCollection);
+				array_push($result->Object, $vehicleCollection);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -75,8 +75,7 @@ class VehicleCollection implements IQuery {
 
 		return $result;
 	}
-
-	public static function onInsert(Url $url, $post) {
+	public static function onInsert(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -84,12 +83,14 @@ class VehicleCollection implements IQuery {
 
 		try {
 
-			if (!isset($post['object'])) {
+			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
 
-			$object = json_decode($post['object']);
-			$vehicleCollection = $object->VehicleCollection[0];
+			$vehicleCollection = json_decode($data['Object']);
+			if ($vehicleCollection == null) {
+				throw new Exception(json_get_error());
+			}
 
 			$sql = "
 			INSERT INTO vehicle_collection 
@@ -124,7 +125,7 @@ class VehicleCollection implements IQuery {
 		$connection = null;
 		return $result;
 	}
-	public static function onUpdate(Url $url, $put) {
+	public static function onUpdate(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -137,13 +138,15 @@ class VehicleCollection implements IQuery {
 				throw new Exception("Input id is empty.");
 			}
 
-			if (!isset($put['object'])) {
+			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
 
-			$object = json_decode($put['object']);
-			$vehicleCollection = $object->VehicleCollection[0];
-
+			$vehicleCollection = json_decode($data['Object']);
+			if ($vehicleCollection == null) {
+				throw new Exception(json_get_error());
+			}
+			
 			$sql = "
 			UPDATE vehicle_collection 
 			SET 
@@ -186,7 +189,7 @@ class VehicleCollection implements IQuery {
 
 		return $result;
 	}
-	public static function onDelete(Url $url, $delete) {
+	public static function onDelete(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

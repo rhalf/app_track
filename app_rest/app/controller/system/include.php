@@ -31,9 +31,9 @@ require_once('/app/model/class/userinfo.php');
 require_once('/app/model/class/collection.php');
 require_once('/app/model/class/vehiclecollection.php');
 
-// require_once('/app/model/class/route.php');
-// require_once('/app/model/class/poi.php');
-// require_once('/app/model/class/geofence.php');
+require_once('/app/model/class/route.php');
+require_once('/app/model/class/poi.php');
+require_once('/app/model/class/geofence.php');
 
 //Database Enumeration Classes
 require_once('/app/model/class/nation.php');

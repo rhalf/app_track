@@ -13,7 +13,7 @@ class Unit implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $get) {
+	public static function onSelect(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -25,10 +25,10 @@ class Unit implements IQuery {
 				$sql = "SELECT * FROM unit WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($get['imei'])) {
+			} else if (isset($data['imei'])) {
 				$sql = "SELECT * FROM unit WHERE unit_imei LIKE :imei;";
 				$query = $connection->prepare($sql);
-				$query->bindParam(':imei',$get['imei'], PDO::PARAM_STR);
+				$query->bindParam(':imei',$data['imei'], PDO::PARAM_STR);
 			} else {
 				$sql = "SELECT * FROM unit;";
 				$query = $connection->prepare($sql);
@@ -38,7 +38,7 @@ class Unit implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['Unit'] = array();
+			$result->Object = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -52,7 +52,7 @@ class Unit implements IQuery {
 				$unit->UnitSim = (int) $row['sim_id'];
 				$unit->UnitType = (int) $row['unit_type_id'];
 				
-				array_push($result->Object['Unit'], $unit);
+				array_push($result->Object, $unit);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -72,7 +72,7 @@ class Unit implements IQuery {
 
 		return $result;
 	}
-	public static function onInsert(Url $url, $post) {
+	public static function onInsert(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -80,13 +80,14 @@ class Unit implements IQuery {
 
 		try {
 
-			if (!isset($post['object'])) {
+			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
 
-			$object = json_decode($post['object']);
-			$unit = $object->Unit[0];
-
+			$unit = json_decode($data['Object']);
+			if ($unit == null) {
+				throw new Exception(json_get_error());
+			}
 			
 			$sql = "
 			INSERT INTO unit 
@@ -125,7 +126,7 @@ class Unit implements IQuery {
 
 		return $result;
 	}
-	public static function onUpdate(Url $url, $put) {
+	public static function onUpdate(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -136,12 +137,14 @@ class Unit implements IQuery {
 				throw new Exception("Input id is empty.");
 			}
 
-			if (!isset($put['object'])) {
+			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
 
-			$object = json_decode($put['object']);
-			$unit = $object->Unit[0];
+			$unit = json_decode($data['Object']);
+			if ($unit == null) {
+				throw new Exception(json_get_error());
+			}
 
 			$sql = "
 			UPDATE unit 
@@ -184,7 +187,7 @@ class Unit implements IQuery {
 		$connection = null;
 		return $result;
 	}
-	public static function onDelete(Url $url, $delete) {
+	public static function onDelete(Url $url, $data) {
 		$database = Flight::get('database');
 		
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);

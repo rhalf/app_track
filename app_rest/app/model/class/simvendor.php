@@ -11,7 +11,7 @@ class SimVendor implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $get) {
+	public static function onSelect(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -23,10 +23,10 @@ class SimVendor implements IQuery {
 				$sql = "SELECT * FROM  e_sim_vendor WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($get['imei'])) {
+			} else if (isset($data['imei'])) {
 				$sql = "SELECT * FROM  e_sim_vendor WHERE sim_vendor_name LIKE :name;";
 				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$get['name'], PDO::PARAM_STR);
+				$query->bindParam(':name',$data['name'], PDO::PARAM_STR);
 			} else {
 				$sql = "SELECT * FROM e_sim_vendor;";
 				$query = $connection->prepare($sql);
@@ -36,7 +36,7 @@ class SimVendor implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['SimVendor'] = array();
+			$result->Object = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -48,7 +48,7 @@ class SimVendor implements IQuery {
 				$simVendor->Nation = (int) $row['e_nation_id'];
 				
 
-				array_push($result->Object['SimVendor'], $simVendor);
+				array_push($result->Object, $simVendor);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -68,7 +68,7 @@ class SimVendor implements IQuery {
 
 		return $result;
 	}
-	public static function onInsert(Url $url, $post) {
+	public static function onInsert(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -76,14 +76,15 @@ class SimVendor implements IQuery {
 
 		try {
 
-			if (!isset($post['object'])) {
+			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
 
-			$object = json_decode($post['object']);
-			$simVendor = $object->SimVendor[0];
-
-		
+			$simVendor = json_decode($data['Object']);
+			if ($simVendor == null) {
+				throw new Exception(json_get_error());
+			}
+			
 			$sql = "
 			INSERT INTO e_sim_vendor 
 			(sim_vendor_name, sim_vendor_desc, e_nation_id)
@@ -117,7 +118,7 @@ class SimVendor implements IQuery {
 
 		return $result;
 	}
-	public static function onUpdate(Url $url, $put) {
+	public static function onUpdate(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -128,12 +129,14 @@ class SimVendor implements IQuery {
 				throw new Exception("Input id is empty.");
 			}
 
-			if (!isset($put['object'])) {
+			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
 
-			$object = json_decode($put['object']);
-			$simVendor = $object->SimVendor[0];
+			$simVendor = json_decode($data['Object']);
+			if ($simVendor == null) {
+				throw new Exception(json_get_error());
+			}
 			
 			$sql = "
 			UPDATE e_sim_vendor 
@@ -171,7 +174,7 @@ class SimVendor implements IQuery {
 		$connection = null;
 		return $result;
 	}
-	public static function onDelete(Url $url, $delete) {
+	public static function onDelete(Url $url, $data) {
 		$database = Flight::get('database');
 		
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);

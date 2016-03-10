@@ -1,75 +1,75 @@
 <?php
-function method_put(Url $url, $put) {
+function method_put(Url $url, $data) {
 	switch ($url->Class) {
 
 		case 'company':
-		return Company::onUpdate($url, $put);
+		return Company::onUpdate($url, $data);
 
 		case 'user':
-		return User::onUpdate($url, $put);
+		return User::onUpdate($url, $data);
 
 		case 'vehicle':
-		return Vehicle::onUpdate($url, $put);
+		return Vehicle::onUpdate($url, $data);
 		
 		case 'model':
-		return Model::onUpdate($url, $put);
+		return Model::onUpdate($url, $data);
 
 		case 'address':
-		return Address::onUpdate($url, $put);
+		return Address::onUpdate($url, $data);
 
 		case 'unit':
-		return Unit::onUpdate($url, $put);
+		return Unit::onUpdate($url, $data);
 		
 		//20160308
 		case 'driver':
-		return Driver::onUpdate($url, $put);
+		return Driver::onUpdate($url, $data);
 		
 		case 'companyinfo':
-		return CompanyInfo::onUpdate($url, $put);
+		return CompanyInfo::onUpdate($url, $data);
 		
 		case 'unitsim':
-		return UnitSim::onUpdate($url, $put);
+		return UnitSim::onUpdate($url, $data);
 
 		case 'usersim':
-		return UserSim::onUpdate($url, $put);
+		return UserSim::onUpdate($url, $data);
 		
 		case 'userinfo':
-		return UserInfo::onUpdate($url, $put);
+		return UserInfo::onUpdate($url, $data);
 		
 		case 'collection':
-		return Collection::onUpdate($url, $put);
+		return Collection::onUpdate($url, $data);
 		
 		case 'vehiclecollection':
-		return VehicleCollection::onUpdate($url, $put);
+		return VehicleCollection::onUpdate($url, $data);
 		
 		case 'route':
-		return Route::onUpdate($url, $put);
+		return Route::onUpdate($url, $data);
 		
 		case 'poi':
-		return Poi::onUpdate($url, $put);
+		return Poi::onUpdate($url, $data);
 
 		case 'geofence':
-		return Geofence::onUpdate($url, $put);
+		return Geofence::onUpdate($url, $data);
 
 
 		//Enumerations
 		case 'nation':
-		return Nation::onUpdate($url, $put);
+		return Nation::onUpdate($url, $data);
 		
 		case 'privilege':
-		return Privilege::onUpdate($url, $put);
+		return Privilege::onUpdate($url, $data);
 
 		case 'field':
-		return Field::onUpdate($url, $put);
+		return Field::onUpdate($url, $data);
 
 		case 'status':
-		return Status::onUpdate($url, $put);
+		return Status::onUpdate($url, $data);
 
 		case 'unittype':
-		return UnitType::onUpdate($url, $put);	
+		return UnitType::onUpdate($url, $data);	
 
 		case 'simvendor':
-		return SimVendor::onUpdate($url, $put);
+		return SimVendor::onUpdate($url, $data);
 
 
 		default:

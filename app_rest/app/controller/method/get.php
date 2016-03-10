@@ -1,74 +1,74 @@
 <?php
-function method_get(Url $url, $get) {
+function method_get(Url $url, $data) {
 	switch ($url->Class) {
 
 		case 'company':
-		return Company::onSelect($url, $get);
+		return Company::onSelect($url, $data);
 
 		case 'user':
-		return User::onSelect($url, $get);
+		return User::onSelect($url, $data);
 
 		case 'vehicle':
-		return Vehicle::onSelect($url, $get);
+		return Vehicle::onSelect($url, $data);
 
 		case 'model':
-		return Model::onSelect($url, $get);
+		return Model::onSelect($url, $data);
 
 		case 'address':
-		return Address::onSelect($url, $get);
+		return Address::onSelect($url, $data);
 
 		case 'unit':
-		return Unit::onSelect($url, $get);
+		return Unit::onSelect($url, $data);
 
 		//20160308
 		case 'driver':
-		return Driver::onSelect($url, $get);
+		return Driver::onSelect($url, $data);
 		
 		case 'companyinfo':
-		return CompanyInfo::onSelect($url, $get);
+		return CompanyInfo::onSelect($url, $data);
 		
 		case 'unitsim':
-		return UnitSim::onSelect($url, $get);
+		return UnitSim::onSelect($url, $data);
 
 		case 'usersim':
-		return UserSim::onSelect($url, $get);
+		return UserSim::onSelect($url, $data);
 		
 		case 'userinfo':
-		return UserInfo::onSelect($url, $get);
+		return UserInfo::onSelect($url, $data);
 		
 		case 'collection':
-		return Collection::onSelect($url, $get);
+		return Collection::onSelect($url, $data);
 	
 		case 'vehiclecollection':
-		return VehicleCollection::onSelect($url, $get);
+		return VehicleCollection::onSelect($url, $data);
 		
 		case 'route':
-		return Route::onSelect($url, $get);
+		return Route::onSelect($url, $data);
 		
 		case 'poi':
-		return Poi::onSelect($url, $get);
+		return Poi::onSelect($url, $data);
 
 		case 'geofence':
-		return Geofence::onSelect($url, $get);
+		return Geofence::onSelect($url, $data);
 
 		//Enumerations
 		case 'nation':
-		return Nation::onSelect($url, $get);
+		return Nation::onSelect($url, $data);
 
 		case 'privilege':
-		return Privilege::onSelect($url, $get);
+		return Privilege::onSelect($url, $data);
 
 		case 'field':
-		return Field::onSelect($url, $get);
+		return Field::onSelect($url, $data);
 
 		case 'status':
-		return Status::onSelect($url, $get);
+		return Status::onSelect($url, $data);
 
 		case 'unittype':
-		return UnitType::onSelect($url, $get);	
+		return UnitType::onSelect($url, $data);	
 
 		case 'simvendor':
-		return SimVendor::onSelect($url, $get);
+		return SimVendor::onSelect($url, $data);
 
 
 		default:

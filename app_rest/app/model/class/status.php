@@ -10,7 +10,7 @@ class Status implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $get) {
+	public static function onSelect(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -22,10 +22,10 @@ class Status implements IQuery {
 				$sql = "SELECT * FROM e_status WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($get['imei'])) {
+			} else if (isset($data['imei'])) {
 				$sql = "SELECT * FROM e_status WHERE status_name LIKE :name;";
 				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$get['name'], PDO::PARAM_STR);
+				$query->bindParam(':name',$data['name'], PDO::PARAM_STR);
 			} else {
 				$sql = "SELECT * FROM e_status;";
 				$query = $connection->prepare($sql);
@@ -35,7 +35,7 @@ class Status implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['Status'] = array();
+			$result->Object = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -47,7 +47,7 @@ class Status implements IQuery {
 				$e_status->Desc = $row['status_desc'];
 				$e_status->Value = (int)$row['status_value'];
 				
-				array_push($result->Object['Status'], $e_status);
+				array_push($result->Object, $e_status);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -67,7 +67,7 @@ class Status implements IQuery {
 
 		return $result;
 	}
-	public static function onInsert(Url $url, $post) {
+	public static function onInsert(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -75,12 +75,15 @@ class Status implements IQuery {
 
 		try {
 
-			if (!isset($post['object'])) {
+			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
 
-			$object = json_decode($post['object']);
-			$status = $object->Status[0];
+			$status = json_decode($data['Object']);
+			if ($status == null) {
+				throw new Exception(json_get_error());
+			}
+
 
 			$sql = "
 			INSERT INTO e_status 
@@ -115,7 +118,7 @@ class Status implements IQuery {
 
 		return $result;
 	}
-	public static function onUpdate(Url $url, $put) {
+	public static function onUpdate(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -126,12 +129,15 @@ class Status implements IQuery {
 				throw new Exception("Input id is empty.");
 			}
 
-			if (!isset($put['object'])) {
+			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
 
-			$object = json_decode($put['object']);
-			$status = $object->Status[0];
+			$status = json_decode($data['Object']);
+			if ($status == null) {
+				throw new Exception(json_get_error());
+			}
+
 			
 			$sql = "
 			UPDATE e_status 
@@ -170,7 +176,7 @@ class Status implements IQuery {
 		$connection = null;
 		return $result;
 	}
-	public static function onDelete(Url $url, $delete) {
+	public static function onDelete(Url $url, $data) {
 		$database = Flight::get('database');
 		
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);

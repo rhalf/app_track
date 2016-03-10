@@ -1,75 +1,75 @@
 <?php
-function method_post(Url $url, $post) {
+function method_post(Url $url, $data) {
 	switch ($url->Class) {
 
 		case 'company':
-		return Company::onInsert($url, $post);
+		return Company::onInsert($url, $data);
 
 		case 'user':
-		return User::onInsert($url, $post);
+		return User::onInsert($url, $data);
 
 		case 'vehicle':
-		return Vehicle::onInsert($url, $post);
+		return Vehicle::onInsert($url, $data);
 
 		case 'model':
-		return Model::onInsert($url, $post);
+		return Model::onInsert($url, $data);
 
 		case 'address':
-		return Address::onInsert($url, $post);
+		return Address::onInsert($url, $data);
 
 		case 'unit':
-		return Unit::onInsert($url, $post);
+		return Unit::onInsert($url, $data);
 
 		//20160308
 		case 'driver':
-		return Driver::onInsert($url, $post);
+		return Driver::onInsert($url, $data);
 		
 		case 'companyinfo':
-		return CompanyInfo::onInsert($url, $post);
+		return CompanyInfo::onInsert($url, $data);
 
 		case 'unitsim':
-		return UnitSim::onInsert($url, $post);
+		return UnitSim::onInsert($url, $data);
 
 		case 'usersim':
-		return UserSim::onInsert($url, $post);
+		return UserSim::onInsert($url, $data);
 		
 		case 'userinfo':
-		return UserInfo::onInsert($url, $post);
+		return UserInfo::onInsert($url, $data);
 		
 		case 'collection':
-		return Collection::onInsert($url, $post);
+		return Collection::onInsert($url, $data);
 		
 		case 'vehiclecollection':
-		return VehicleCollection::onInsert($url, $post);
+		return VehicleCollection::onInsert($url, $data);
 		
 		case 'route':
-		return Route::onInsert($url, $post);
+		return Route::onInsert($url, $data);
 		
 		case 'poi':
-		return Poi::onInsert($url, $post);
+		return Poi::onInsert($url, $data);
 
 		case 'geofence':
-		return Geofence::onInsert($url, $post);
+		return Geofence::onInsert($url, $data);
 
 
 		//Enumerations
 		case 'nation':
-		return Nation::onInsert($url, $post);
+		return Nation::onInsert($url, $data);
 
 		case 'privilege':
-		return Privilege::onInsert($url, $post);
+		return Privilege::onInsert($url, $data);
 
 		case 'field':
-		return Field::onInsert($url, $post);
+		return Field::onInsert($url, $data);
 
 		case 'status':
-		return Status::onInsert($url, $post);
+		return Status::onInsert($url, $data);
 
 		case 'unittype':
-		return UnitType::onInsert($url, $post);	
+		return UnitType::onInsert($url, $data);	
 
 		case 'simvendor':
-		return SimVendor::onInsert($url, $post);
+		return SimVendor::onInsert($url, $data);
 		
 
 		default:

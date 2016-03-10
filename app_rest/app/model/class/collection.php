@@ -9,7 +9,7 @@ class Collection implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $get) {
+	public static function onSelect(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -19,11 +19,12 @@ class Collection implements IQuery {
 			if (!empty($url->Id)) {
 				$sql = "SELECT * FROM collection WHERE id = :id;";
 				$query = $connection->prepare($sql);
+
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($get['name'])) {
+			} else if (isset($data['name'])) {
 				$sql = "SELECT * FROM collection WHERE collection_name LIKE :name;";
 				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$get['name'], PDO::PARAM_STR);
+				$query->bindParam(':name',$data['name'], PDO::PARAM_STR);
 			} else {
 				$sql = "SELECT * FROM collection;";
 				$query = $connection->prepare($sql);
@@ -33,7 +34,7 @@ class Collection implements IQuery {
 
 			$result = new Result();
 			$result->Item = $query->rowCount();
-			$result->Object['Collection'] = array();
+			$result->Object = array();
 
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -44,7 +45,7 @@ class Collection implements IQuery {
 				$collection->Name = $row['collection_name'];
 				$collection->Desc = $row['collection_desc'];
 
-				array_push($result->Object['Collection'], $collection);
+				array_push($result->Object, $collection);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -64,8 +65,7 @@ class Collection implements IQuery {
 
 		return $result;
 	}
-
-	public static function onInsert(Url $url, $post) {
+	public static function onInsert(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -73,12 +73,16 @@ class Collection implements IQuery {
 
 		try {
 
-			if (!isset($post['object'])) {
+			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
 
-			$object = json_decode($post['object']);
-			$collection = $object->Collection[0];
+
+			$collection = json_decode($data['Object']);
+			if ($collection == null) {
+				throw new Exception(json_get_error());
+			}
+
 
 			$sql = "
 			INSERT INTO collection 
@@ -111,7 +115,7 @@ class Collection implements IQuery {
 		$connection = null;
 		return $result;
 	}
-	public static function onUpdate(Url $url, $put) {
+	public static function onUpdate(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -124,12 +128,15 @@ class Collection implements IQuery {
 				throw new Exception("Input id is empty.");
 			}
 
-			if (!isset($put['object'])) {
+			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
 
-			$object = json_decode($put['object']);
-			$collection = $object->Collection[0];
+			$collection = json_decode($data['Object']);
+			if ($collection == null) {
+				throw new Exception(json_get_error());
+			}
+
 
 			$sql = "
 			UPDATE collection 
@@ -172,7 +179,7 @@ class Collection implements IQuery {
 
 		return $result;
 	}
-	public static function onDelete(Url $url, $delete) {
+	public static function onDelete(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

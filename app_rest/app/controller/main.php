@@ -120,11 +120,13 @@ Flight::map('process', function($url) {
 
 //Main Exit Point
 Flight::map('sendJson', function(Result $result) {
+	header('Access-Control-Allow-Origin: *');  
 	header('Content-Type: application/json');
 	Flight::json($result);
 });
 
 Flight::map('sendXml', function(Result $result) {
+	header('Access-Control-Allow-Origin: *');  
 	header('Content-Type: application/xml');
 	echo xmlrpc_encode($result);
 });
