@@ -2,7 +2,7 @@
 $root = $_SERVER['DOCUMENT_ROOT'];
 
 //Framework
-require_once('/library/flight/flight/Flight.php');
+require_once('/asset/library/flight/flight/Flight.php');
 
 //System Interfaces
 require_once('/app/model/interface/iquery.php');

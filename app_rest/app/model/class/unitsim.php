@@ -138,10 +138,11 @@ class UnitSim implements IQuery {
 			if (!isset($data['Object'])) {
 				throw new Exception("Input object is not set.");
 			}
-
-			$object = json_decode($data['Object']);
-			$unitSim = $object->UnitSim[0];
-
+			
+			$unitSim = json_decode($data['Object']);
+			if ($unitSim == null) {
+				throw new Exception(json_get_error());
+			}
 
 
 			$sql = "

@@ -89,6 +89,10 @@ class Unit implements IQuery {
 				throw new Exception(json_get_error());
 			}
 			
+			/* Begin Transaction */
+			$connection->beginTransaction();
+
+			//Query 1
 			$sql = "
 			INSERT INTO unit 
 			(unit_imei, unit_dt_created, unit_serial_number, unit_data_size, sim_id, unit_type_id)
@@ -107,16 +111,66 @@ class Unit implements IQuery {
 			
 			$query->execute();
 
+			//Query 2
+			$year = date('Y');
+			$schema = "app_data_$year";
+
+			$unitImei =  $unit->Imei;
+			$tableName = "data_$unitImei";
+
+			$sql = "
+			CREATE TABLE IF NOT EXISTS `" . $schema ."`.`" . $tableName . "` (
+			`id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+			`data_dt_server` DATETIME NULL COMMENT '',
+			`data_dt_client` DATETIME NULL COMMENT '',
+			`data_command` SMALLINT NULL COMMENT '',
+			`data_event` SMALLINT NULL COMMENT '',
+			`data_gps_satellite` SMALLINT NULL COMMENT '',
+			`data_gps_status` SMALLINT NULL COMMENT '',
+			`data_gprs_signal` SMALLINT NULL COMMENT '',
+			`data_gprs_status` VARCHAR(25) NULL COMMENT '',
+			`data_speed` SMALLINT NULL COMMENT '',
+			`data_altitude` DOUBLE NULL COMMENT '',
+			`data_latitude` DOUBLE NULL COMMENT '',
+			`data_longitude` DOUBLE NULL COMMENT '',
+			`data_accuracy_h` FLOAT NULL COMMENT '',
+			`data_accuracy_v` FLOAT NULL COMMENT '',
+			`data_heading` SMALLINT NULL COMMENT '',
+			`data_odometer` BIGINT NULL COMMENT '',
+			`data_runningtime` BIGINT NULL COMMENT '',
+			`data_sleepmode` SMALLINT NULL COMMENT '',
+			`data_res1` INT NULL COMMENT '',
+			`data_rfid` BIGINT NULL COMMENT '',
+			`data_camera` BIGINT NULL COMMENT '',
+			`data_digital_io` BIGINT NULL COMMENT '',
+			`data_analog_io` VARCHAR(80) NULL COMMENT '',
+			PRIMARY KEY (`id`)  COMMENT '')
+			ENGINE = InnoDB
+			PACK_KEYS = DEFAULT;
+			";
+
+			$query = $connection->prepare($sql);	
+
+			$query->execute();
+
+			$connection->commit();
+
 			$result = new Result();
 			$result->Status = Result::SUCCESS;
 			$result->Item = $query->rowCount();
 			$result->Message = 'Done.';
 
 		} catch (PDOException $pdoException) {
+			
+			$connection->rollBack();
+
 			$result = new Result();
 			$result->Status = Result::ERROR;
 			$result->Message = $pdoException->getMessage();
 		} catch (Exception $exception) {
+
+			$connection->rollBack();
+
 			$result = new Result();
 			$result->Status = Result::ERROR;
 			$result->Message = $exception->getMessage();
@@ -200,27 +254,74 @@ class Unit implements IQuery {
 				throw new Exception("Input id is empty");
 			}
 
+			/* Begin Transaction */
+			$connection->beginTransaction();
+
+
+			/*Query 1 Select unit*/
+			$sql = "SELECT * FROM unit WHERE id = :id;";
+			$query = $connection->prepare($sql);
+			$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
+			$query->execute();
+
+			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
+
+			$row = $rows[0];
+
+			$unit = new Unit();
+			$unit->Id = (int) $row['id'];
+			$unit->Imei = (int)$row['unit_imei'];
+			$unit->DtCreated = $row['unit_dt_created'];
+			$unit->SerialNumber = $row['unit_serial_number'];
+			$unit->DataSize = $row['unit_data_size'];
+			$unit->UnitSim = (int) $row['sim_id'];
+			$unit->UnitType = (int) $row['unit_type_id'];
+
+
+			/*Query 2 Delete unit*/
 			$sql = "
 			DELETE FROM unit 
 			WHERE
 			id = :id";
 
 			$query = $connection->prepare($sql);
-
 			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
-
 			$query->execute();
+
+			/*Query 3 Drop data_unit.imei table*/
+			$year = date('Y');
+			$schema = "app_data_$year";
+
+			$unitImei = $unit->Imei;
+			$tableName = "data_$unitImei";
+
+			$sql = "
+			
+			DROP TABLE IF EXISTS $schema.$tableName;
+
+			";
+
+			$query = $connection->prepare($sql);
+			$query->execute();
+
+			$connection->commit();
 
 			$result = new Result();
 			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
+			$result->Item = 1;
 			$result->Message = 'Done.';
 
 		} catch (PDOException $pdoException) {
+			
+			$connection->rollBack();
+			
 			$result = new Result();
 			$result->Status = Result::ERROR;
 			$result->Message = $pdoException->getMessage();
 		} catch (Exception $exception) {
+
+			$connection->rollBack();
+
 			$result = new Result();
 			$result->Status = Result::ERROR;
 			$result->Message = $exception->getMessage();
