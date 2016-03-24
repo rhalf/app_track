@@ -1,11 +1,46 @@
-<!-- <div ng-controller="loginController">
-	<form name="user">
-		<table>
-			<tr><td colspan="2"><data-alert content="content"></data-alert></td></tr>
-			<tr><td>Username</td><td><input type="text" ng-model="Name" required></input></td></tr>
-			<tr><td>Password</td><td><input type="password" ng-model="Password" required></input></td></tr>
-			<tr><td>Remember Me </td><td><input type="checkbox" ng-model="IsRemembered"></input></td></tr>
-			<tr><td colspan="2"><button ng-click="check()">Login</button></td></tr>
-		</table>
-	</form>
-</div> -->
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+        <div class="content">
+            <div class="login-form">
+                <h2>Login</h2>
+                <form action="">
+                    <fieldset>
+                        <div class="clearfix">
+                            <input type="text" placeholder="Username">
+                        </div>
+                        <div class="clearfix">
+                            <input type="password" placeholder="Password">
+                        </div>
+                        <button class="btn primary" type="submit">Sign in</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+
+
+    <style type="text/css">
+        /* Override some defaults */
+        html, body {
+            background-color: #eee;
+            position: absolute;
+            height : 100%;
+            width : 100%;
+        }
+
+        .content {
+            width: 300px;
+            height: 400px;
+            margin: auto;
+        }
+
+   
+   
+    </style>
+</body>
+</html>
