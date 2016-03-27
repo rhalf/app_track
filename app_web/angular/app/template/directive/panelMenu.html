@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <nav class="navbar navbar-default" ng-controller="panelMenuController">
+        <div class="navbar-header">
+            <a class="navbar-brand" ng-click="toggle()" href="">
+                <span class="glyphicon glyphicon-menu-hamburger"></span>
+            </a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                    System
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu"></ul>
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                    Company
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Information</a></li>
+                    <li><a href="#">User</a></li>
+                    <li><a href="#">Vehicle</a></li>
+                    <li><a href="#">Driver</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                    Map
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Geofence</a></li>
+                    <li><a href="#">Poi</a></li>
+                    <li><a href="#">Route</a></li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="#"><span class="glyphicon glyphicon-user"></span> Admin</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+        </ul>
+    </nav>
+</body>
+</html>
