@@ -38,7 +38,7 @@ function method_get(Url $url, $data) {
 		
 		case 'collection':
 		return Collection::onSelect($url, $data);
-	
+
 		case 'vehiclecollection':
 		return VehicleCollection::onSelect($url, $data);
 		
@@ -50,6 +50,27 @@ function method_get(Url $url, $data) {
 
 		case 'geofence':
 		return Geofence::onSelect($url, $data);
+
+		//App 
+		case 'appdatabase':
+		return AppDatabase::onSelect($url, $data);
+
+		case 'appnote':
+		return AppNote::onSelect($url, $data);
+
+		case 'appsetting':
+		return AppSetting::onSelect($url, $data);
+
+		case 'appclient':
+		return AppClient::onSelect($url, $data);
+
+		case 'appinfo':
+		return AppInfo::onSelect($url, $data);
+
+		case 'applog':
+		return AppLog::onSelect($url, $data);
+
+
 
 		//Enumerations
 		case 'nation':
@@ -70,7 +91,7 @@ function method_get(Url $url, $data) {
 		case 'simvendor':
 		return SimVendor::onSelect($url, $data);
 
-
+		
 		default:
 		Flight::notFound("Class not found.");
 		

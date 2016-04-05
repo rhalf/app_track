@@ -5,6 +5,7 @@ require_once 'app/controller/system/setting.php';
 
 //Main Entry Point
 Flight::route('/(@version(/@category(/@class(/@format(/@id:[0-9]+)))))', function($version, $category, $class, $format, $id){
+
 	try {
 		$url = new Url();
 		$url->Version = $version;
@@ -63,19 +64,33 @@ Flight::route('/(@version(/@category(/@class(/@format(/@id:[0-9]+)))))', functio
 
 		//Checking category if exist
 		switch ($url->Category) {
-
+			//=======================================Main
 			case 'main':
+			if (!isset($_SESSION['user'])) {
+				Flight::notAuthorized('Authorization is needed.');
+			}
 			Flight::set('database', Flight::get('db1'));
 			$result = Flight::process($url);
 			break;
 
+			//=======================================Data
 			case 'data':
+			if (!isset($_SESSION['user'])) {
+				Flight::notAuthorized('Authorization is needed.');
+			}
 			Flight::set('database', Flight::get('db2'));
 			$result = Flight::process($url);
 			break;
 
+			//=======================================Session
+			case 'session':
+			Flight::set('database', Flight::get('db1'));
+			$result = Flight::process($url);
+			break;
+			
 			default:
 			Flight::notFound("Category not found.");
+			$result = Flight::process($url);
 			break;
 		}
 
@@ -98,21 +113,19 @@ Flight::map('process', function($url) {
 
 		case 'GET':
 		return method_get($url, $_GET);
-		break;
 
 		case 'POST':
-		return method_post($url, $_POST);
-		break;
-
+		//return method_post($url, $_POST);
+		$post = json_decode(file_get_contents("php://input"), true);
+		return method_post($url, $post);
+		
 		case 'PUT':
 		parse_str(file_get_contents("php://input"),$put);
 		return method_put($url, $put);
-		break;
 		
 		case 'DELETE':
 		parse_str(file_get_contents("php://input"),$delete);
 		return method_delete($url, $delete);
-		break;
 	}
 	Flight::notFound("Method verbs not recognized.");
 });

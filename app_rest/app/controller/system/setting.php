@@ -1,7 +1,10 @@
 <?php 
 
-//Session
-session_start();
+//Header
+header('Access-Control-Allow-Origin: *');  
+header('Content-Type: application/json');
+
+
 
 //Database
 $db1 = new Database("184.107.179.178", 3306, "app_main", "admin", "admin");
@@ -14,8 +17,12 @@ Flight::set('db2', $db2);
 $keys = array(
 	'49xSgp6MDZFV3wb2' => 'Testing',
 	'CjXSJrGje33Njj4G' => 'Reserve'
-);
+	);
 
+
+
+
+//Api Version
 Flight::set('api_key', $keys);
 Flight::set('api_version', 'v1');
 

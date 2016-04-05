@@ -52,6 +52,26 @@ function method_delete(Url $url, $data) {
 		return Geofence::onDelete($url, $data);
 
 
+		//App 
+		case 'appdatabase':
+		return AppDatabase::onDelete($url, $data);
+
+		case 'appnote':
+		return AppNote::onDelete($url, $data);
+
+		case 'appsetting':
+		return AppSetting::onDelete($url, $data);
+
+
+		case 'appclient':
+		return AppClient::onDelete($url, $data);
+
+		case 'appinfo':
+		return AppInfo::onDelete($url, $data);
+
+		case 'applog':
+		return AppLog::onDelete($url, $data);
+
 		//Enumerations
 		case 'nation':
 		return Nation::onDelete($url, $data);

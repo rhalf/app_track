@@ -1,24 +1,15 @@
 <?php 
 
-class User implements IQuery {
+class AppLog implements IQuery {
 
 	public $Id;
+	public $Type;
 	public $Name;
-	public $Password;
-	public $Hash;
+	public $Desc;
 	public $DtCreated;
-	public $DtExpired;
-	public $DtLogin;
-	public $DtActive;
-	public $Privilege;
-	public $Status;
-	public $Company;
-	public $Info;
 
-	
 	public function __construct() {
 	}
-
 	public static function onSelect(Url $url, $data) {
 		$database = Flight::get('database');
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
@@ -28,42 +19,31 @@ class User implements IQuery {
 		try {
 
 			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM user WHERE id = :id;";
+				$sql = "SELECT * FROM app_log WHERE id = :id;";
 				$query = $connection->prepare($sql);
 				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
 			} else if (isset($data['name'])) {
-				$sql = "SELECT * FROM user WHERE user_name LIKE :name;";
+				$sql = "SELECT * FROM app_log WHERE log_name LIKE :log_name;";
 				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$data['name'], PDO::PARAM_STR);
+				$query->bindParam(':log_name',$data['name'], PDO::PARAM_STR);
 			} else {
-				$sql = "SELECT * FROM user;";
+				$sql = "SELECT * FROM app_log;";
 				$query = $connection->prepare($sql);
 			}
-
 			$query->execute();
-
 			$result = new Result();
 			$result->Item = $query->rowCount();
 			$result->Object = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
-
 			foreach ($rows as $row) {	
-				$user = new User();
-				$user->Id = (int) $row['id'];
-				$user->Name = $row['user_name'];
-				$user->Password = $row['user_password'];
-				$user->Hash = $row['user_hash'];
-				$user->DtCreated = $row['user_dt_created'];
-				$user->DtExpired = $row['user_dt_expired'];
-				$user->DtLogin = $row['user_dt_login'];
-				$user->DtActive = $row['user_dt_active'];
-				$user->Privilege = (int) $row['e_privilege_id'];
-				$user->Status = (int) $row['e_status_id'];
-				$user->Company = (int) $row['company_id'];
-				$user->Info = (int) $row['info_id'];
-
-				array_push($result->Object, $user);
+				$applog = new AppLog();
+				$applog->Id = (int) $row['id'];
+				$applog->Type = (int) $row['log_type'];
+				$applog->Name =$row['log_name'];
+				$applog->Desc = $row['log_desc'];
+				$applog->DtCreated = $row['log_dt_created'];
+				array_push($result->Object, $applog);
 			}
 
 			$result->Status = Result::SUCCESS;
@@ -85,7 +65,6 @@ class User implements IQuery {
 	}
 	public static function onInsert(Url $url, $data) {
 		$database = Flight::get('database');
-
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
@@ -96,31 +75,25 @@ class User implements IQuery {
 				throw new Exception("Input object is not set.");
 			}
 
-			$user = json_decode($data['Object']);
-			if ($user == null) {
+			$applog = json_decode($data['Object']);
+			if ($applog == null) {
 				throw new Exception(json_get_error());
 			}
 
-			$sql = "
-			INSERT INTO user 
-			(user_name, user_password, user_hash, user_dt_created, user_dt_expired, user_dt_login, user_dt_active, e_privilege_id, e_status_id, company_id, info_id)
-			VALUES
-			(:user_name, :user_password, :user_hash, :user_dt_created, :user_dt_expired, :user_dt_login, :user_dt_active, :e_privilege_id, :e_status_id, :company_id, :info_id);";
 
+			$sql = "
+			INSERT INTO app_log 
+			(log_type, log_name,log_desc, log_dt_created)
+			VALUES
+			(:log_type, :log_name, :log_desc, :log_dt_created);";
 
 			$query = $connection->prepare($sql);
+			$query->bindParam(':log_type', $applog->Type, PDO::PARAM_INT);
+			$query->bindParam(':log_name', $applog->Name, PDO::PARAM_STR);
+			$query->bindParam(':log_desc', $applog->Desc, PDO::PARAM_STR);
+			$query->bindParam(':log_dt_created', $applog->DtCreated, PDO::PARAM_STR);
 
-			$query->bindParam(':user_name', $user->Name, PDO::PARAM_STR);
-			$query->bindParam(':user_password', sha1($user->Password), PDO::PARAM_STR);
-			$query->bindParam(':user_hash', sha1(new DateTime()), PDO::PARAM_STR);
-			$query->bindParam(':user_dt_created', $user->DtCreated, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_expired', $user->DtExpired, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_login', $user->DtLogin, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_active', $user->DtActive, PDO::PARAM_STR);
-			$query->bindParam(':e_privilege_id', $user->Privilege, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $user->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $user->Company, PDO::PARAM_INT);
-			$query->bindParam(':info_id', $user->Info, PDO::PARAM_INT);
+
 
 			$query->execute();
 
@@ -158,44 +131,31 @@ class User implements IQuery {
 				throw new Exception("Input object is not set.");
 			}
 
-			$user = json_decode($data['Object']);
-			if ($user == null) {
+			$applog = json_decode($data['Object']);
+			if ($applog == null) {
 				throw new Exception(json_get_error());
 			}
-			
+
 			$sql = "
-			UPDATE user 
+			UPDATE app_log 
 			SET 
-			user_name = :user_name,
-			user_password = :user_password, 
-			user_hash = :user_hash,
-			user_dt_created = :user_dt_created,
-			user_dt_expired = :user_dt_expired,
-			user_dt_login = :user_dt_login,
-			user_dt_active = :user_dt_active,
-			e_privilege_id = :e_privilege_id,
-			e_status_id = :e_status_id,
-			company_id = :company_id,
-			info_id = :info_id
+			log_type = :log_type,
+			log_name = :log_name,
+			log_desc = :log_desc,
+			log_dt_created = :log_dt_created
+
 			WHERE
 			id = :id;";
 
 			
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':user_name', $user->Name, PDO::PARAM_STR);
-			$query->bindParam(':user_password', $user->Password, PDO::PARAM_STR);
-			$query->bindParam(':user_hash', $user->Hash, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_created', $user->DtCreated, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_expired', $user->DtExpired, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_login', $user->DtLogin, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_active', $user->DtActive, PDO::PARAM_STR);
-			$query->bindParam(':e_privilege_id', $user->Privilege, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $user->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $user->Company, PDO::PARAM_INT);
-			$query->bindParam(':info_id', $user->Info, PDO::PARAM_INT);
-
+			$query->bindParam(':log_type', $applog->Type, PDO::PARAM_INT);
+			$query->bindParam(':log_name', $applog->Name, PDO::PARAM_STR);
+			$query->bindParam(':log_desc', $applog->Desc, PDO::PARAM_STR);
+				$query->bindParam(':log_dt_created', $applog->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+		
 
 			$query->execute();
 
@@ -219,7 +179,6 @@ class User implements IQuery {
 	}
 	public static function onDelete(Url $url, $data) {
 		$database = Flight::get('database');
-		
 		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
@@ -231,7 +190,7 @@ class User implements IQuery {
 			}
 
 			$sql = "
-			DELETE FROM user 
+			DELETE FROM app_log 
 			WHERE
 			id = :id";
 

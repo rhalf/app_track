@@ -51,6 +51,26 @@ function method_put(Url $url, $data) {
 		case 'geofence':
 		return Geofence::onUpdate($url, $data);
 
+		//App 
+		case 'appdatabase':
+		return AppDatabase::onUpdate($url, $data);
+
+		case 'appnote':
+		return AppNote::onUpdate($url, $data);
+
+		case 'appsetting':
+		return AppSetting::onUpdate($url, $data);
+
+		case 'appclient':
+		return AppClient::onUpdate($url, $data);
+		
+		case 'appinfo':
+		return AppInfo::onUpdate($url, $data);
+
+		case 'applog':
+		return AppLog::onUpdate($url, $data);
+
+
 
 		//Enumerations
 		case 'nation':

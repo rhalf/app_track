@@ -52,6 +52,34 @@ function method_post(Url $url, $data) {
 		return Geofence::onInsert($url, $data);
 
 
+		//App 
+		case 'appdatabase':
+		return AppDatabase::onInsert($url, $data);
+
+		case 'appnote':
+		return AppNote::onInsert($url, $data);
+
+		case 'appsetting':
+		return AppSetting::onInsert($url, $data);
+
+		case 'appclient':
+		return AppClient::onInsert($url, $data);
+
+		case 'appinfo':
+		return AppInfo::onInsert($url, $data);
+
+		case 'applog':
+		return AppLog::onInsert($url, $data);
+
+
+		//Session
+		case 'login':
+		return Session::login($url, $data);
+		
+		case 'logout':
+		return Session::logout($url, $data);
+		
+		
 		//Enumerations
 		case 'nation':
 		return Nation::onInsert($url, $data);

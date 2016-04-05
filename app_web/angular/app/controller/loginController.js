@@ -1,8 +1,8 @@
 ﻿var app = angular.module('app');
 
-app.controller('loginController', function ($scope, $cookies) {
+app.controller('loginController', function ($scope, $cookies, $location, $http, authFactory) {
 
-   //Alerts
+    //Alerts
     $scope.alerts = [];
     $scope.addAlert = function (type, message) {
         $scope.alerts.push({ type: type, msg: message });
@@ -13,7 +13,7 @@ app.controller('loginController', function ($scope, $cookies) {
 
     $scope.user = {};
 
-    $scope.user = $cookies.getObject('user');
+    $scope.user = authFactory.getAccessToken();
 
     $scope.login = function () {
 
@@ -28,11 +28,35 @@ app.controller('loginController', function ($scope, $cookies) {
             $scope.user.password = null;
             return;
         }
-     
-        $cookies.putObject('user', $scope.user);
 
-        console.log($cookies.getObject('user'));
+    
+
+
+        $http({
+            url: 'http://184.107.179.181/v1/session/login/json',
+            method: 'POST',
+            data: {
+                name: $scope.user.name,
+                password: $scope.user.password
+            },
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+       .success(function (data, status, headers, config) {
+           console.log(data);
+           if (!data.Status) {
+               authFactory.setAccessToken(data.Object[0]);
+               $location.path('/form');
+           } else {
+               $scope.addAlert('danger', data.Message)
+               authFactory = {};
+           }
+       })
+       .error(function (data, status, header, config) {
+           console.log(status);
+           authFactory = {};
+       });
     }
-   
 });
 

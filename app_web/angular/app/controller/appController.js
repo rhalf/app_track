@@ -8,17 +8,21 @@ app.controller('appController', function ($scope) {
 app.config(function ($routeProvider, $locationProvider) {
 
     $routeProvider
-        .when('/', {
-            templateUrl: 'app/template/form/form.html'
+        .when('/form', {
+            templateUrl: 'app/template/form/form.html',
+            controller: 'formController',
+            authenticated: true
         })
-        .when('/login', {
-            templateUrl: 'app/template/form/login.html'
+        .when('/', {
+            templateUrl: 'app/template/form/login.html',
+            controller: 'loginController'
+
         })
         .otherwise({
-            redirectTo: '/login'
+            redirectTo: '/'
         });
 
-    $locationProvider.html5Mode(true);
+    //$locationProvider.html5Mode(true);
 
 });
 
@@ -72,3 +76,25 @@ app.directive('panelMenu', function () {
 //        }
 //    }
 //});
+
+
+app.run(["$rootScope", "$location", "authFactory", function ($rootScope, $location, authFactory) {
+
+    $rootScope.$on("$routeChangeStart", function (event, next, current) {
+
+        //console.log(event);
+        //console.log(next);
+        //console.log(current);
+
+        //If route is authenticated, then the user should have access
+        if (next.$$route.authenticated) {
+
+            var user = authFactory.getAccessToken();
+
+            if (!user) {
+                $location.path('/');
+            }
+        }
+    });
+
+}]);
