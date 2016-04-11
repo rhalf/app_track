@@ -11,21 +11,26 @@ app.controller('loginController', function ($scope, $cookies, $location, $http, 
         $scope.alerts.splice(index, 1);
     };
 
-    $scope.user = {};
 
-    $scope.user = authFactory.getAccessToken();
+    //User
+    $scope.user = { name: '', password: '' };
+
+    var object = authFactory.getAccessToken();
+    
+    if (!angular.isUndefined(object) && object != null) {
+        $location.path('/form');
+    }
+
 
     $scope.login = function () {
 
-        //Validation
-        if ($scope.user.name == null) {
+        
+        if (!$scope.loginForm.userName.$valid) {
             $scope.addAlert('danger', "Username is empty or null.");
-            $scope.user.name = null;
             return;
         }
-        if ($scope.user.password == null) {
+        if (!$scope.loginForm.userPassword.$valid) {
             $scope.addAlert('danger', "Password is empty or null.");
-            $scope.user.password = null;
             return;
         }
 
@@ -33,14 +38,14 @@ app.controller('loginController', function ($scope, $cookies, $location, $http, 
 
 
         $http({
-            url: 'http://184.107.179.181/v1/session/login/json',
+            url: 'http://184.107.179.181/v1/session/login/',
             method: 'POST',
             data: {
                 name: $scope.user.name,
                 password: $scope.user.password
             },
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                "Content-Type": "application/x-www-form-urlencoded"
             }
         })
        .success(function (data, status, headers, config) {
@@ -50,13 +55,13 @@ app.controller('loginController', function ($scope, $cookies, $location, $http, 
                $location.path('/form');
            } else {
                $scope.addAlert('danger', data.Message)
-               authFactory = {};
+               authFactory.setAccessToken(null);
            }
        })
        .error(function (data, status, header, config) {
            console.log(status);
            authFactory = {};
        });
-    }
+    } 
 });
 

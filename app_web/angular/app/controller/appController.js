@@ -5,7 +5,15 @@ app.controller('appController', function ($scope) {
 });
 
 //Config
-app.config(function ($routeProvider, $locationProvider) {
+app.config(function ($routeProvider, $locationProvider, $httpProvider) {
+
+
+    //$httpProvider.defaults.useXDomain = true;
+    //$httpProvider.defaults.withCredentials = true;
+    //delete $httpProvider.defaults.headers.common["X-Requested-With"];
+    //$httpProvider.defaults.headers.common["Accept"] = "application/json";
+    //$httpProvider.defaults.headers.common["Content-Type"] = "application/json";
+
 
     $routeProvider
         .when('/form', {
@@ -22,42 +30,42 @@ app.config(function ($routeProvider, $locationProvider) {
             redirectTo: '/'
         });
 
-    //$locationProvider.html5Mode(true);
+
 
 });
 
 
 
 //Directive
-//app.directive('panelRight', function () {
-//    return {
-//        templateUrl: '/app/template/directive/panelRight.html'
-//    }
-//});
+app.directive('panelMenu', function () {
+    return {
+        templateUrl: '/app/template/directive/panelMenu.html',
+        controller: 'panelMenuController'
+    }
+});
 
 app.directive('panelLeft', function () {
     return {
-        templateUrl: '/app/template/directive/panelLeft.html'
+        templateUrl: '/app/template/directive/panelLeft.html',
+        controller: 'panelLeftController'
     }
 });
 
 app.directive('panelCenter', function () {
     return {
-        templateUrl: '/app/template/directive/panelCenter.html'
+        templateUrl: '/app/template/directive/panelCenter.html',
+        controller: 'panelCenterController'
     }
 });
 
 app.directive('panelMap', function () {
     return {
-        templateUrl: '/app/template/directive/panelMap.html'
+        templateUrl: '/app/template/directive/panelMap.html',
+        controller: 'panelMapController'
     }
 });
 
-app.directive('panelMenu', function () {
-    return {
-        templateUrl: '/app/template/directive/panelMenu.html'
-    }
-});
+
 
 
 

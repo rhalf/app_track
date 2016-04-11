@@ -11,8 +11,15 @@ app.factory('authFactory', function ($cookies) {
     };
 
     authFactory.getAccessToken = function () {
-        var authFactory =  $cookies.getObject('authFactory');
-        return authFactory.token;
+        var authFactory = $cookies.getObject('authFactory');
+
+        if (angular.isUndefined(authFactory) || authFactory == null) {
+            return null;
+        } else {
+            return authFactory.token;
+        }
+
+       
     };
 
     return authFactory;

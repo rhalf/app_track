@@ -5,13 +5,12 @@
     <meta charset="utf-8" />
 </head>
 <body>
-    <div ng-controller="formController">
-        <!-- /#wrapper -->
-        <div id="wrapper" ng-class="{ 'toggled' : toggle() }">
-            <div panel-left></div>
-            <div panel-center></div>
-        </div>
-        <!-- /#wrapper -->
+
+    <!-- /#wrapper -->
+    <div id="wrapper" ng-class="{ 'toggled' : getToggle() }">
+        <div panel-left></div>
+        <div panel-center></div>
     </div>
+    <!-- /#wrapper -->
 </body>
 </html>
