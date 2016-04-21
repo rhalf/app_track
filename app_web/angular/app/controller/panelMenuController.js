@@ -16,11 +16,11 @@ app.controller('panelMenuController', function ($scope, $location, $uibModal, pa
     };
 
 
-    $scope.showCompanyInfo = function () {
+    $scope.showCompany = function () {
         $uibModal.open({
             animation: true,
-            templateUrl: 'app/template/class/companyInfo.html',
-            controller: 'companyInfoController'
+            templateUrl: 'app/template/class/company.html',
+            controller: 'companyController'
         });
     };
 

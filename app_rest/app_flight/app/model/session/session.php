@@ -53,29 +53,17 @@ class Session {
 
 				array_push($result->Object, $user);
 
-				//Session
-				$_SESSION['user'] = $user;
-
 			} else {
 				throw new Exception("Unknown username and/or password");
 			}
 
 		} catch (PDOException $pdoException) {
 
-			//Session
-			if (isset($_SESSION)){
-				session_destroy();
-			}
-
 			$result = new Result();
 			$result->Status = Result::ERROR;
 			$result->Message = $pdoException->getMessage();
 
 		} catch (Exception $exception) {
-			//Session
-			if (isset($_SESSION)){
-				session_destroy();
-			}
 			
 			$result = new Result();
 			$result->Status = Result::ERROR;
@@ -92,10 +80,6 @@ class Session {
 		$connection = Flight::dbMain();
 
 		try {
-			//Session
-			if (isset($_SESSION)){
-				session_destroy();
-			}
 
 			$result = new Result();
 			$result->Status = Result::SUCCESS;

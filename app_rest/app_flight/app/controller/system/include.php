@@ -43,8 +43,6 @@ require_once('/app/model/class/status.php');
 require_once('/app/model/class/unittype.php');
 require_once('/app/model/class/simvendor.php');
 
-
-
 require_once('app/model/class/appnote.php');
 require_once('app/model/class/appdatabase.php');
 require_once('app/model/class/appsetting.php');
@@ -52,13 +50,10 @@ require_once('app/model/class/appclient.php');
 require_once('app/model/class/appinfo.php');
 require_once('app/model/class/applog.php');
 
-
-
 //Session
 require_once('app/model/session/session.php');
 
 //System Functions
-require_once('app/controller/system/function.php');
 require_once('app/controller/method/get.php');
 require_once('app/controller/method/post.php');
 require_once('app/controller/method/put.php');
@@ -66,6 +61,10 @@ require_once('app/controller/method/delete.php');
 require_once('app/controller/method/options.php');
 require_once('app/controller/method/patch.php');
 
+
+require_once('app/controller/system/function.php');
+require_once 'app/controller/system/statuscode.php';
+require_once 'app/controller/system/setting.php';
 
 
 

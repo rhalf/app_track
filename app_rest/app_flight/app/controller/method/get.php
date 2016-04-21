@@ -3,93 +3,93 @@ function method_get(Url $url, $data) {
 	switch ($url->Class) {
 
 		case 'company':
-		return Company::onSelect($url, $data);
+		Company::onSelect($url, $data);
 
 		case 'user':
-		return User::onSelect($url, $data);
+		User::onSelect($url, $data);
 
 		case 'vehicle':
-		return Vehicle::onSelect($url, $data);
+		Vehicle::onSelect($url, $data);
 
 		case 'model':
-		return Model::onSelect($url, $data);
+		Model::onSelect($url, $data);
 
 		case 'address':
-		return Address::onSelect($url, $data);
+		Address::onSelect($url, $data);
 
 		case 'unit':
-		return Unit::onSelect($url, $data);
+		Unit::onSelect($url, $data);
 
 		//20160308
 		case 'driver':
-		return Driver::onSelect($url, $data);
+		Driver::onSelect($url, $data);
 		
 		case 'companyinfo':
-		return CompanyInfo::onSelect($url, $data);
+		CompanyInfo::onSelect($url, $data);
 		
 		case 'unitsim':
-		return UnitSim::onSelect($url, $data);
+		UnitSim::onSelect($url, $data);
 
 		case 'usersim':
-		return UserSim::onSelect($url, $data);
+		UserSim::onSelect($url, $data);
 		
 		case 'userinfo':
-		return UserInfo::onSelect($url, $data);
+		UserInfo::onSelect($url, $data);
 		
 		case 'collection':
-		return Collection::onSelect($url, $data);
+		Collection::onSelect($url, $data);
 
 		case 'vehiclecollection':
-		return VehicleCollection::onSelect($url, $data);
+		VehicleCollection::onSelect($url, $data);
 		
 		case 'route':
-		return Route::onSelect($url, $data);
+		Route::onSelect($url, $data);
 		
 		case 'poi':
-		return Poi::onSelect($url, $data);
+		Poi::onSelect($url, $data);
 
 		case 'geofence':
-		return Geofence::onSelect($url, $data);
+		Geofence::onSelect($url, $data);
 
 		//App 
 		case 'appdatabase':
-		return AppDatabase::onSelect($url, $data);
+		AppDatabase::onSelect($url, $data);
 
 		case 'appnote':
-		return AppNote::onSelect($url, $data);
+		AppNote::onSelect($url, $data);
 
 		case 'appsetting':
-		return AppSetting::onSelect($url, $data);
+		AppSetting::onSelect($url, $data);
 
 		case 'appclient':
-		return AppClient::onSelect($url, $data);
+		AppClient::onSelect($url, $data);
 
 		case 'appinfo':
-		return AppInfo::onSelect($url, $data);
+		AppInfo::onSelect($url, $data);
 
 		case 'applog':
-		return AppLog::onSelect($url, $data);
+		AppLog::onSelect($url, $data);
 
 
 
 		//Enumerations
 		case 'nation':
-		return Nation::onSelect($url, $data);
+		Nation::onSelect($url, $data);
 
 		case 'privilege':
-		return Privilege::onSelect($url, $data);
+		Privilege::onSelect($url, $data);
 
 		case 'field':
-		return Field::onSelect($url, $data);
+		Field::onSelect($url, $data);
 
 		case 'status':
-		return Status::onSelect($url, $data);
+		Status::onSelect($url, $data);
 
 		case 'unittype':
-		return UnitType::onSelect($url, $data);	
+		UnitType::onSelect($url, $data);	
 
 		case 'simvendor':
-		return SimVendor::onSelect($url, $data);
+		SimVendor::onSelect($url, $data);
 
 		
 		default:

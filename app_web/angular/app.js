@@ -2,6 +2,7 @@
     'ngAnimate',
     'ngRoute',
     'ngCookies',
+    'ngResource',
     'ui.bootstrap',
     'leaflet-directive'
 ]);

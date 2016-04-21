@@ -18,9 +18,7 @@ app.factory('authFactory', function ($cookies) {
         } else {
             return authFactory.token;
         }
-
-       
     };
 
     return authFactory;
-});
+});                                                                                                                                                                                                                                         

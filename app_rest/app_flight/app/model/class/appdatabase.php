@@ -10,70 +10,81 @@ class AppDatabase implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $data) {
+	public static function selectAll() {
 		
 		$connection = Flight::dbMain();
 
 		try {
-
-			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM app_database WHERE id = :id;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($data['name'])) {
-				$sql = "SELECT * FROM app_database WHERE db_name LIKE :db_name;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':db_name',$data['name'], PDO::PARAM_STR);
-			} else {
-				$sql = "SELECT * FROM app_database;";
-				$query = $connection->prepare($sql);
-			}
-
+			$sql = "SELECT * FROM app_database;";
+			$query = $connection->prepare($sql);
+			
 			$query->execute();
-
-			$result = new Result();
-			$result->Item = $query->rowCount();
-			$result->Object = array();
 
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
+			$result = array();
+
 			foreach ($rows as $row) {	
-				$appdatabase = new AppDatabase();
-				$appdatabase->Id = (int) $row['id'];
-				$appdatabase->Name = $row['db_name'];
-				$appdatabase->Status = (int) $row['e_status_id'];
-				array_push($result->Object, $appdatabase);
+				$appDatabase = new AppDatabase();
+				$appDatabase->Id = (int) $row['id'];
+				$appDatabase->Name = $row['db_name'];
+				$appDatabase->Status = (int) $row['e_status_id'];
+				array_push($result, $appDatabase);
 			}
 
-			$result->Status = Result::SUCCESS;
-			$result->Message = 'Done.';
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
 
-		$connection = null;
-
-		return $result;
 	}
-	public static function onInsert(Url $url, $data) {
+	public static function select($id) {
+		
+		$connection = Flight::dbMain();
+
+		try {
+			$sql = "SELECT * FROM app_database WHERE id = :id;";
+			$query = $connection->prepare($sql);
+			$query->bindParam(':id',$id, PDO::PARAM_INT);
+			
+			$query->execute();
+
+			if ($query->rowCount() < 1){
+				Flight::notFound("id not found");
+			}
+
+			$row = $query->fetch(PDO::FETCH_ASSOC);
+
+			$appDatabase = new AppDatabase();
+			$appDatabase->Id = (int) $row['id'];
+			$appDatabase->Name = $row['db_name'];
+			$appDatabase->Status = (int) $row['e_status_id'];
+
+			Flight::ok($appDatabase);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
+
+	}
+	public static function insert() {
 		
 		$connection = Flight::dbMain();
 
 		try {
 
-			if (!isset($data['Object'])) {
-				throw new Exception("Input object is not set.");
-			}
+			$appDatabase = json_decode(file_get_contents("php://input"));
 
-			$appdatabase = json_decode($data['Object']);
-			if ($appdatabase == null) {
+			if ($appDatabase == null) {
 				throw new Exception(json_get_error());
 			}
 
@@ -86,45 +97,35 @@ class AppDatabase implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':db_name', $appdatabase->Name, PDO::PARAM_STR);
-			$query->bindParam(':e_status_id', $appdatabase->Status, PDO::PARAM_INT);
+			$query->bindParam(':db_name', $appDatabase->Name, PDO::PARAM_STR);
+			$query->bindParam(':e_status_id', $appDatabase->Status, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
-			$result->Message = 'Done.';
+			$result->Status = Result::INSERTED;
+			$result->Id = $connection->lastInsertId();
+			$result->Message = 'Done';
+
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-
-		return $result;
 	}
-	public static function onUpdate(Url $url, $data) {
+	public static function update($id) {
 
 		$connection = Flight::dbMain();
 
 		try {
-			if (empty($url->Id)) {
-				throw new Exception("Input id is empty.");
-			}
 
-			if (!isset($data['Object'])) {
-				throw new Exception("Input object is not set.");
-			}
+			$appDatabase = json_decode(file_get_contents("php://input"));
 
-			$appdatabase = json_decode($data['Object']);
-			if ($appdatabase == null) {
+			if ($appDatabase == null) {
 				throw new Exception(json_get_error());
 			}
 
@@ -139,39 +140,33 @@ class AppDatabase implements IQuery {
 			
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':db_name', $appdatabase->Name, PDO::PARAM_STR);
-			$query->bindParam(':e_status_id', $appdatabase->Status, PDO::PARAM_INT);
-			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+			$query->bindParam(':db_name', $appDatabase->Name, PDO::PARAM_STR);
+			$query->bindParam(':e_status_id', $appDatabase->Status, PDO::PARAM_INT);
+			
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
+			$result->Status = Result::UPDATED;
+			$result->Id = $id;
 			$result->Message = 'Done.';
 
-		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
-		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
-		}
+			Flight::ok($result);
 
-		$connection = null;
-		return $result;
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
 	}
-	public static function onDelete(Url $url, $data) {
+	public static function delete($id) {
 		
 		$connection = Flight::dbMain();
-		
+
 		try {
-			
-			if (empty($url->Id)) {
-				throw new Exception("Input id is empty");
-			}
 
 			$sql = "
 			DELETE FROM app_database 
@@ -180,27 +175,24 @@ class AppDatabase implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
-			$result->Message = 'Done.';
+			$result->Status = Result::DELETED;
+			$result->Message = 'Done';
+			$result->Id = $id;
+
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-		return $result;
 	}
 }
 

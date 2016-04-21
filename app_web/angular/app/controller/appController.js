@@ -1,8 +1,15 @@
 ﻿var app = angular.module('app');
 
+app.run(function (resourceService) {
+    console.log("<-===Started===->");
+    resourceService.init();
+});
+
 app.controller('appController', function ($scope) {
 
 });
+
+
 
 //Config
 app.config(function ($routeProvider, $locationProvider, $httpProvider) {
@@ -65,25 +72,6 @@ app.directive('panelMap', function () {
     }
 });
 
-
-
-
-
-////
-//app.directive('alertDirective', function ($timeout) {
-//    return {
-//        replace: true,
-//        scope: {
-//            ngModel: '='
-//        },
-//        template:'<div class="alert fade" bs-alert="ngModel"></div>',
-//        link: function (scope, element, attrs) {
-//            //$timeout(function () {
-//            //    element.hide();
-//            //}, 3000);
-//        }
-//    }
-//});
 
 
 app.run(["$rootScope", "$location", "authFactory", function ($rootScope, $location, authFactory) {

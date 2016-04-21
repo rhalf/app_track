@@ -1,9 +1,5 @@
 <?php 
 
-//Session
-session_start();
-
-
 //Database
 Flight::register('dbMain', 'PDO', array('mysql:host=184.107.179.178;dbname=app_main','admin','admin'), function($dbMain){
 	$dbMain->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -15,6 +11,16 @@ Flight::register('dbData', 'PDO', array('mysql:host=184.107.179.178;dbname=app_d
 });
 
 
+//Api
+$keys = array(
+	'49xSgp6MDZFV3wb2' => 'Testing',
+	'CjXSJrGje33Njj4G' => 'Reserve'
+);
+
+//Api Version
+Flight::set('api_key', $keys);
+Flight::set('api_version', 'v1');
+
 
 // Flight::before('json', function() {
 // 	header('Access-Control-Allow-Origin: *');
@@ -23,18 +29,5 @@ Flight::register('dbData', 'PDO', array('mysql:host=184.107.179.178;dbname=app_d
 // 	header('Content-Type: application/json; charset=UTF-8');
 
 // });
-
-//Api
-$keys = array(
-	'49xSgp6MDZFV3wb2' => 'Testing',
-	'CjXSJrGje33Njj4G' => 'Reserve'
-);
-
-
-
-
-//Api Version
-Flight::set('api_key', $keys);
-Flight::set('api_version', 'v1');
 
 ?>	
