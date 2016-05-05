@@ -24,6 +24,7 @@ class User implements IQuery {
 		$connection = Flight::dbMain();
 
 		try {
+
 			$sql = "SELECT * FROM user;";
 			$query = $connection->prepare($sql);
 			
@@ -63,10 +64,10 @@ class User implements IQuery {
 	}
 	public static function select($id) {
 
-
 		$connection = Flight::dbMain();
 
 		try {
+			
 			$sql = "SELECT * FROM user WHERE id = :id;";
 			$query = $connection->prepare($sql);
 			$query->bindParam(':id',$id, PDO::PARAM_INT);
@@ -219,6 +220,7 @@ class User implements IQuery {
 			$connection = null;
 		}
 	}
+	
 	public static function delete($id) {
 
 		$connection = Flight::dbMain();

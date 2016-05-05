@@ -5,6 +5,7 @@ class AppDatabase implements IQuery {
 	public $Id;
 	public $Name;
 	public $Status;
+	public $Type;
 	
 
 	public function __construct() {
@@ -28,6 +29,7 @@ class AppDatabase implements IQuery {
 				$appDatabase = new AppDatabase();
 				$appDatabase->Id = (int) $row['id'];
 				$appDatabase->Name = $row['db_name'];
+				$appDatabase->Type = (int) $row['db_type'];
 				$appDatabase->Status = (int) $row['e_status_id'];
 				array_push($result, $appDatabase);
 			}
@@ -63,6 +65,7 @@ class AppDatabase implements IQuery {
 			$appDatabase = new AppDatabase();
 			$appDatabase->Id = (int) $row['id'];
 			$appDatabase->Name = $row['db_name'];
+			$appDatabase->Type = $row['db_type'];
 			$appDatabase->Status = (int) $row['e_status_id'];
 
 			Flight::ok($appDatabase);
@@ -91,14 +94,16 @@ class AppDatabase implements IQuery {
 
 			$sql = "
 			INSERT INTO app_database 
-			(db_name, e_status_id)
+			(db_name, db_type, e_status_id)
 			VALUES
-			(:db_name, :e_status_id);";
+			(:db_name, :db_type, :e_status_id);";
 
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':db_name', $appDatabase->Name, PDO::PARAM_STR);
+			$query->bindParam(':db_type', $appDatabase->Type, PDO::PARAM_INT);
 			$query->bindParam(':e_status_id', $appDatabase->Status, PDO::PARAM_INT);
+
 
 			$query->execute();
 
@@ -133,6 +138,7 @@ class AppDatabase implements IQuery {
 			UPDATE app_database 
 			SET 
 			db_name = :db_name,
+			db_type = :db_type,
 			e_status_id = :e_status_id
 			WHERE
 			id = :id;";
@@ -141,6 +147,7 @@ class AppDatabase implements IQuery {
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':db_name', $appDatabase->Name, PDO::PARAM_STR);
+			$query->bindParam(':db_type', $appDatabase->Type, PDO::PARAM_INT);
 			$query->bindParam(':e_status_id', $appDatabase->Status, PDO::PARAM_INT);
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);

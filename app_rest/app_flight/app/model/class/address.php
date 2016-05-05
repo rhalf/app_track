@@ -100,9 +100,9 @@ class Address implements IQuery {
 
 		try {
 
-			$user = json_decode(file_get_contents("php://input"));
+			$address = json_decode(file_get_contents("php://input"));
 
-			if ($user == null) {
+			if ($address == null) {
 				throw new Exception(json_get_error());
 			}
 

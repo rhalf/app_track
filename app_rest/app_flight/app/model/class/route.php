@@ -13,32 +13,20 @@ class Route implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $data) {
-		
+	public static function selectAll() {
+
 		$connection = Flight::dbMain();
 
 		try {
 
-			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM route WHERE id = :id;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($data['name'])) {
-				$sql = "SELECT * FROM route WHERE route_name LIKE :name;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$data['name'], PDO::PARAM_STR);
-			} else {
-				$sql = "SELECT * FROM route;";
-				$query = $connection->prepare($sql);
-			}
+			$sql = "SELECT * FROM route;";
+			$query = $connection->prepare($sql);
 
 			$query->execute();
 
-			$result = new Result();
-			$result->Item = $query->rowCount();
-			$result->Object = array();
-
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
+
+			$result = array();
 
 			foreach ($rows as $row) {	
 				$route = new Route();
@@ -49,38 +37,68 @@ class Route implements IQuery {
 				$route->IsVisible = (bool) $row['route_is_visible'];
 				$route->IsGlobal = (bool) $row['route_is_global'];
 				$route->ComapnyId = (int) $row['company_id'];
-				
-				array_push($result->Object, $route);
+
+				array_push($result, $route);
 			}
 
-			$result->Status = Result::SUCCESS;
-			$result->Message = 'Done.';
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-
-		return $result;
 	}
-	public static function onInsert(Url $url, $data) {
+
+	public static function select($id) {
 
 		$connection = Flight::dbMain();
 
 		try {
 
-			if (!isset($data['Object'])) {
-				throw new Exception("Input object is not set.");
+			$sql = "SELECT * FROM route WHERE id = :id;";
+			$query = $connection->prepare($sql);
+			$query->bindParam(':id',$id, PDO::PARAM_INT);
+
+			$query->execute();
+
+			if ($query->rowCount() < 1){
+				Flight::notFound("id not found");
 			}
 
-			$route = json_decode($data['Object']);
+			$row = $query->fetch(PDO::FETCH_ASSOC);
+
+			$route = new Route();
+			$route->Id = (int) $row['id'];
+			$route->Name = $row['route_name'];
+			$route->Desc = $row['route_description'];
+			$route->Coordinates = $row['route_coordinates'];
+			$route->IsVisible = (bool) $row['route_is_visible'];
+			$route->IsGlobal = (bool) $row['route_is_global'];
+			$route->ComapnyId = (int) $row['company_id'];
+
+
+			Flight::ok($route);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
+	}
+
+	public static function insert() {
+
+		$connection = Flight::dbMain();
+
+		try {
+
+			$route = json_decode(file_get_contents("php://input"));
+
 			if ($route == null) {
 				throw new Exception(json_get_error());
 			}
@@ -103,43 +121,36 @@ class Route implements IQuery {
 
 
 			$query->execute();
-
+			
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
-			$result->Message = 'Done.';
+			$result->Status = Result::INSERTED;
+			$result->Id = $connection->lastInsertId();
+			$result->Message = 'Done';
+
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-
-		return $result;
 	}
-	public static function onUpdate(Url $url, $data) {
-		
+
+	
+	public static function update($id) {
+
 		$connection = Flight::dbMain();
 
 		try {
-			if (empty($url->Id)) {
-				throw new Exception("Input id is empty.");
-			}
 
-			if (!isset($data['Object'])) {
-				throw new Exception("Input object is not set.");
-			}
+			$route = json_decode(file_get_contents("php://input"));
 
-			$route = json_decode($data['Object']);
 			if ($route == null) {
 				throw new Exception(json_get_error());
 			}
+
 
 			$sql = "
 			UPDATE route 
@@ -161,37 +172,33 @@ class Route implements IQuery {
 			$query->bindParam(':route_is_visible', $route->IsVisible, PDO::PARAM_BOOL);
 			$query->bindParam(':route_is_global', $route->IsGlobal, PDO::PARAM_BOOL);
 			$query->bindParam(':company_id', $route->ComapnyId, PDO::PARAM_INT);
-			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+			
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
+			$result->Status = Result::UPDATED;
+			$result->Id = $id;
 			$result->Message = 'Done.';
 
+			Flight::ok($result);
+
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-		return $result;
 	}
-	public static function onDelete(Url $url, $data) {
-		
-		$connection = Flight::dbMain();
 
+	public static function delete($id) {
+
+		$connection = Flight::dbMain();
+		
 		try {
-			
-			if (empty($url->Id)) {
-				throw new Exception("Input id is empty");
-			}
+
 
 			$sql = "
 			DELETE FROM route 
@@ -200,27 +207,24 @@ class Route implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
-			$result->Message = 'Done.';
+			$result->Status = Result::DELETED;
+			$result->Message = 'Done';
+			$result->Id = $id;
+
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-		return $result;
 	}
 }
 

@@ -19,32 +19,20 @@ class Nation implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $data) {
+	public static function selectAll() {
 		
 		$connection = Flight::dbMain();
 
 		try {
 
-			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM e_nation WHERE id = :id;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($data['name'])) {
-				$sql = "SELECT * FROM e_nation WHERE nation_name LIKE :name;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$data['name'], PDO::PARAM_STR);
-			} else {
-				$sql = "SELECT * FROM e_nation;";
-				$query = $connection->prepare($sql);
-			}
-
+			$sql = "SELECT * FROM e_nation;";
+			$query = $connection->prepare($sql);
+			
 			$query->execute();
 
-			$result = new Result();
-			$result->Item = $query->rowCount();
-			$result->Object = array();
-
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
+
+			$result = array();
 
 			foreach ($rows as $row) {	
 				$nation = new Nation();
@@ -61,43 +49,75 @@ class Nation implements IQuery {
 				$nation->Ethnic = $row['nation_ethnic'];
 				$nation->Currency = $row['nation_currency'];
 
-				array_push($result->Object, $nation);
+				array_push($result, $nation);
 			}
 
-			$result->Status = Result::SUCCESS;
-			$result->Message = 'Done.';
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-
-		return $result;
 	}
-	public static function onInsert(Url $url, $data) {
-		$database = Flight::get('database');
 
-		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
-		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+	public static function select($id) {
+		
+		$connection = Flight::dbMain();
 
 		try {
 
-			if (!isset($data['Object'])) {
-				throw new Exception("Input object is not set.");
+			$sql = "SELECT * FROM e_nation WHERE id = :id;";
+			$query = $connection->prepare($sql);
+			$query->bindParam(':id',$id, PDO::PARAM_INT);
+
+			$query->execute();
+
+			if ($query->rowCount() < 1){
+				Flight::notFound("id not found");
 			}
-			
-			$nation = json_decode($data['Object']);
+
+			$row = $query->fetch(PDO::FETCH_ASSOC);
+
+			$nation = new Nation();
+			$nation->Id = (int) $row['id'];
+			$nation->NameShort = $row['nation_short'];
+			$nation->NameLong = $row['nation_long'];
+			$nation->Iso2 = $row['nation_iso2'];
+			$nation->Iso3 = $row['nation_iso3'];
+			$nation->Number = (int) $row['nation_number'];
+			$nation->Uno = (bool) $row['nation_uno'];
+			$nation->DialCode = $row['nation_dial_code'];
+			$nation->Account = $row['nation_account'];
+			$nation->Language = $row['nation_language'];
+			$nation->Ethnic = $row['nation_ethnic'];
+			$nation->Currency = $row['nation_currency'];
+
+			Flight::ok($nation);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
+	}
+
+	public static function insert() {
+
+		$connection = Flight::dbMain();
+
+		try {
+
+			$nation = json_decode(file_get_contents("php://input"));
+
 			if ($nation == null) {
 				throw new Exception(json_get_error());
 			}
+
 
 			$sql = "
 			INSERT INTO e_nation 
@@ -120,48 +140,36 @@ class Nation implements IQuery {
 			$query->bindParam(':nation_ethnic', $nation->Ethnic, PDO::PARAM_STR);
 			$query->bindParam(':nation_currency', $nation->Currency, PDO::PARAM_STR);
 
-
 			$query->execute();
-
+			
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
-			$result->Message = 'Done.';
+			$result->Status = Result::INSERTED;
+			$result->Id = $connection->lastInsertId();
+			$result->Message = 'Done';
+
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-
-		return $result;
 	}
-	public static function onUpdate(Url $url, $data) {
-		$database = Flight::get('database');
-		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
-		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+
+
+	public static function update($id) {
+
+		$connection = Flight::dbMain();
 
 		try {
-			if (empty($url->Id)) {
-				throw new Exception("Input id is empty.");
-			}
 
-			if (!isset($data['Object'])) {
-				throw new Exception("Input object is not set.");
-			}
+			$nation = json_decode(file_get_contents("php://input"));
 
-			$nation = json_decode($data['Object']);
 			if ($nation == null) {
 				throw new Exception(json_get_error());
 			}
-
 
 			$sql = "
 			UPDATE e_nation 
@@ -193,40 +201,32 @@ class Nation implements IQuery {
 			$query->bindParam(':nation_language', $nation->Language, PDO::PARAM_STR);
 			$query->bindParam(':nation_ethnic', $nation->Ethnic, PDO::PARAM_STR);
 			$query->bindParam(':nation_currency', $nation->Currency, PDO::PARAM_STR);
-			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+			
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
+			$result->Status = Result::UPDATED;
+			$result->Id = $id;
 			$result->Message = 'Done.';
 
-		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
-		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
-		}
+			Flight::ok($result);
 
-		$connection = null;
-		return $result;
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
 	}
-	public static function onDelete(Url $url, $data) {
-		$database = Flight::get('database');
-		
-		$connection = new PDO("mysql:host=$database->Ip;dbname=$database->Database", $database->Username, $database->Password);
-		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+
+	public static function delete($id) {
+
+		$connection = Flight::dbMain();
 
 		try {
-			
-			if (empty($url->Id)) {
-				throw new Exception("Input id is empty");
-			}
 
 			$sql = "
 			DELETE FROM e_nation 
@@ -234,28 +234,25 @@ class Nation implements IQuery {
 			id = :id";
 
 			$query = $connection->prepare($sql);
-
-			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+	
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
-			$result->Message = 'Done.';
+			$result->Status = Result::DELETED;
+			$result->Message = 'Done';
+			$result->Id = $id;
+
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-		return $result;
 	}
 }
 

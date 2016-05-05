@@ -10,72 +10,84 @@ class Status implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $data) {
+	public static function selectAll() {
 
 		$connection = Flight::dbMain();
 
 		try {
-
-			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM e_status WHERE id = :id;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($data['imei'])) {
-				$sql = "SELECT * FROM e_status WHERE status_name LIKE :name;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$data['name'], PDO::PARAM_STR);
-			} else {
-				$sql = "SELECT * FROM e_status;";
-				$query = $connection->prepare($sql);
-			}
+			$sql = "SELECT * FROM e_status;";
+			$query = $connection->prepare($sql);
 
 			$query->execute();
 
-			$result = new Result();
-			$result->Item = $query->rowCount();
-			$result->Object = array();
-
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
 
+			$result = array();
 
 			foreach ($rows as $row) {	
-				$e_status = new Status();
-				$e_status->Id = (int) $row['id'];
-				$e_status->Name = $row['status_name'];
-				$e_status->Desc = $row['status_desc'];
-				$e_status->Value = (int)$row['status_value'];
+				$status = new Status();
+				$status->Id = (int) $row['id'];
+				$status->Name = $row['status_name'];
+				$status->Desc = $row['status_desc'];
+				$status->Value = (int)$row['status_value'];
 				
-				array_push($result->Object, $e_status);
+				array_push($result, $status);
 			}
 
-			$result->Status = Result::SUCCESS;
-			$result->Message = 'Done.';
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-
-		return $result;
 	}
-	public static function onInsert(Url $url, $data) {
-		
+
+	public static function select($id) {
+
+		$connection = Flight::dbMain();
+
+		try {
+			$sql = "SELECT * FROM e_status WHERE id = :id;";
+			$query = $connection->prepare($sql);
+			$query->bindParam(':id',$id, PDO::PARAM_INT);
+
+			$query->execute();
+
+			if ($query->rowCount() < 1){
+				Flight::notFound("id not found");
+			}
+
+			$row = $query->fetch(PDO::FETCH_ASSOC);
+
+
+			$status = new Status();
+			$status->Id = (int) $row['id'];
+			$status->Name = $row['status_name'];
+			$status->Desc = $row['status_desc'];
+			$status->Value = (int)$row['status_value'];
+
+			Flight::ok($status);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
+	}
+
+	public static function insert() {
+
 		$connection = Flight::dbMain();
 
 		try {
 
-			if (!isset($data['Object'])) {
-				throw new Exception("Input object is not set.");
-			}
+			$status = json_decode(file_get_contents("php://input"));
 
-			$status = json_decode($data['Object']);
 			if ($status == null) {
 				throw new Exception(json_get_error());
 			}
@@ -94,40 +106,31 @@ class Status implements IQuery {
 			$query->bindParam(':status_value',$status->Value, PDO::PARAM_INT);
 			
 			$query->execute();
-
+			
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
-			$result->Message = 'Done.';
+			$result->Status = Result::INSERTED;
+			$result->Id = $connection->lastInsertId();
+			$result->Message = 'Done';
+
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-
-		return $result;
 	}
-	public static function onUpdate(Url $url, $data) {
-		
+	
+	public static function update($id) {
+
 		$connection = Flight::dbMain();
 
 		try {
-			if (empty($url->Id)) {
-				throw new Exception("Input id is empty.");
-			}
 
-			if (!isset($data['Object'])) {
-				throw new Exception("Input object is not set.");
-			}
+			$status = json_decode(file_get_contents("php://input"));
 
-			$status = json_decode($data['Object']);
 			if ($status == null) {
 				throw new Exception(json_get_error());
 			}
@@ -148,37 +151,31 @@ class Status implements IQuery {
 			$query->bindParam(':status_desc', $status->Desc, PDO::PARAM_STR);
 			$query->bindParam(':status_value', $status->Value, PDO::PARAM_INT);
 
-			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
+			$result->Status = Result::UPDATED;
+			$result->Id = $id;
 			$result->Message = 'Done.';
 
-		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
-		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
-		}
+			Flight::ok($result);
 
-		$connection = null;
-		return $result;
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
 	}
-	public static function onDelete(Url $url, $data) {
-		
+
+	public static function delete($id) {
+
 		$connection = Flight::dbMain();
 
 		try {
-			
-			if (empty($url->Id)) {
-				throw new Exception("Input id is empty");
-			}
 
 			$sql = "
 			DELETE FROM e_status 
@@ -187,27 +184,24 @@ class Status implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
-			$result->Message = 'Done.';
+			$result->Status = Result::DELETED;
+			$result->Message = 'Done';
+			$result->Id = $id;
+
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-		return $result;
 	}
 }
 

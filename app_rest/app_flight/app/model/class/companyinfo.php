@@ -12,32 +12,22 @@ class CompanyInfo implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $data) {
+	public static function selectAll() {
 		
 		$connection = Flight::dbMain();
 
 		try {
-			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM company_info WHERE id = :id;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			//} else if (isset($data['name'])) {
-				// $sql = "SELECT * FROM company_info WHERE company_info_name_f LIKE :name OR  company_info_name_m LIKE :name OR company_info_name_l LIKE :name ;";
-				// $query = $connection->prepare($sql);
-				// $query->bindParam(':name',$data['name'], PDO::PARAM_STR);
-			} else {
-				$sql = "SELECT * FROM company_info;";
-				$query = $connection->prepare($sql);
-			}
 
+			$sql = "SELECT * FROM company_info;";
+			$query = $connection->prepare($sql);
+
+			
 			$query->execute();
 
-			$result = new Result();
-			$result->Item = $query->rowCount();
-			$result->Object = array();
-
-
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
+
+			$result = array();
+
 
 			foreach ($rows as $row) {	
 				$CompanyInfo = new CompanyInfo();
@@ -48,37 +38,67 @@ class CompanyInfo implements IQuery {
 				$CompanyInfo->Theme = $row['info_theme'];
 				$CompanyInfo->Field = $row['e_field_id'];
 				
-				array_push($result->Object, $CompanyInfo);
+				array_push($result, $CompanyInfo);
 			}
 
-			$result->Status = Result::SUCCESS;
-			$result->Message = 'Done.';
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-
-		return $result;
 	}
-	public static function onInsert(Url $url, $data) {
+
+	public static function select($id) {
 		
 		$connection = Flight::dbMain();
 
 		try {
 
-			if (!isset($data['Object'])) {
-				throw new Exception("Input object is not set.");
+			$sql = "SELECT * FROM company_info WHERE id = :id;";
+			$query = $connection->prepare($sql);
+			$query->bindParam(':id',$id, PDO::PARAM_INT);
+
+			$query->execute();
+
+			if ($query->rowCount() < 1){
+				Flight::notFound("id not found");
 			}
 
-			$companyInfo = json_decode($data['Object']);
+			$row = $query->fetch(PDO::FETCH_ASSOC);
+
+
+			$companyInfo = new CompanyInfo();
+			$companyInfo->Id = (int) $row['id'];
+			$companyInfo->Logo = $row['info_logo'];
+			$companyInfo->Alert = (int)$row['info_alert'];
+			$companyInfo->Notify = (int) $row['info_noti'];
+			$companyInfo->Theme = $row['info_theme'];
+			$companyInfo->Field = $row['e_field_id'];
+
+
+			Flight::ok($companyInfo);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
+	}
+
+	public static function insert() {
+
+		$connection = Flight::dbMain();
+
+		try {
+
+			$companyInfo = json_decode(file_get_contents("php://input"));
+
 			if ($companyInfo == null) {
 				throw new Exception(json_get_error());
 			}
@@ -100,40 +120,31 @@ class CompanyInfo implements IQuery {
 			$query->bindParam(':e_field_id', $companyInfo->Field, PDO::PARAM_INT);
 
 			$query->execute();
-
+			
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
-			$result->Message = 'Done.';
+			$result->Status = Result::INSERTED;
+			$result->Id = $connection->lastInsertId();
+			$result->Message = 'Done';
+
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-		return $result;
 	}
-	public static function onUpdate(Url $url, $data) {
+
+	public static function update($id) {
 		
 		$connection = Flight::dbMain();
 
-		//$connection->beginTransaction();
 		try {
-			if (empty($url->Id)) {
-				throw new Exception("Input id is empty.");
-			}
 
-			if (!isset($data['Object'])) {
-				throw new Exception("Input object is not set.");
-			}
+			$companyInfo = json_decode(file_get_contents("php://input"));
 
-			$companyInfo = json_decode($data['Object']);
 			if ($companyInfo == null) {
 				throw new Exception(json_get_error());
 			}
@@ -159,40 +170,31 @@ class CompanyInfo implements IQuery {
 			$query->bindParam(':info_theme', $companyInfo->Theme, PDO::PARAM_STR);
 			$query->bindParam(':e_field_id', $companyInfo->Field, PDO::PARAM_INT);
 
-			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
-			//$connection->commit();
-
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
+			$result->Status = Result::UPDATED;
+			$result->Id = $id;
 			$result->Message = 'Done.';
 
+			Flight::ok($result);
+
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-
-		return $result;
 	}
-	public static function onDelete(Url $url, $data) {
+	
+	public static function delete($id) {
 		
 		$connection = Flight::dbMain();
 
 		try {
-			
-			if (empty($url->Id)) {
-				throw new Exception("Input id is empty");
-			}
 
 			$sql = "
 			DELETE FROM company_info 
@@ -201,27 +203,24 @@ class CompanyInfo implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
-			$result->Message = 'Done.';
+			$result->Status = Result::DELETED;
+			$result->Message = 'Done';
+			$result->Id = $id;
+
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-		return $result;
 	}
 }
 ?>

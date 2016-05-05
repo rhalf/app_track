@@ -11,6 +11,7 @@ class Vehicle implements IQuery {
 	public $SpeedMax;
 	public $Status;
 	public $Fuel;
+	public $FuelMax;
 	public $Model;
 	public $Driver;
 	public $Unit;
@@ -20,84 +21,112 @@ class Vehicle implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $data) {
-		
+
+	public static function selectAll() {
+
 		$connection = Flight::dbMain();
 
 		try {
 
-			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM vehicle WHERE id = :id;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($data['plate'])) {
-				$sql = "SELECT * FROM vehicle WHERE vehicle_plate LIKE :vehicle_plate;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':vehicle_plate',$data['plate'], PDO::PARAM_STR);
-			} else {
-				$sql = "SELECT * FROM vehicle;";
-				$query = $connection->prepare($sql);
-			}
+			$sql = "SELECT * FROM vehicle;";
+			$query = $connection->prepare($sql);
 
 			$query->execute();
 
-			$result = new Result();
-			$result->Item = $query->rowCount();
-			$result->Object = array();
-
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
+
+			$result = array();
 
 			foreach ($rows as $row) {	
 				$vehicle = new Vehicle();
 				$vehicle->Id = (int) $row['id'];
 				$vehicle->DtSubscribed = $row['vehicle_dt_subscribed'];
 				$vehicle->Plate = $row['vehicle_plate'];
-				$vehicle->MaInitial = $row['vehicle_ma_initial'];
-				$vehicle->MaLimit = $row['vehicle_ma_limit'];
-				$vehicle->MaMaintenance = $row['vehicle_ma_maintenance'];
-				$vehicle->SpeedMax = $row['vehicle_speed_max'];
-				$vehicle->Status = $row['e_status_id'];
-				$vehicle->Fuel = $row['vehicle_fuel'];
-				$vehicle->Model = (int) $row['model_id'];
+				$vehicle->MaInitial = (int)$row['vehicle_ma_initial'];
+				$vehicle->MaLimit = (int)$row['vehicle_ma_limit'];
+				$vehicle->MaMaintenance = (int)$row['vehicle_ma_maintenance'];
+				$vehicle->SpeedMax = (int)$row['vehicle_speed_max'];
+				$vehicle->Status = (int)$row['e_status_id'];
+				$vehicle->Fuel = (int)$row['vehicle_fuel'];
+				$vehicle->FuelMax = (int)$row['vehicle_fuel_max'];
+				$vehicle->Model = (int) $row['vehicle_model_id'];
 				$vehicle->Driver = (int) $row['driver_id'];
 				$vehicle->Unit = (int) $row['unit_id'];
 				$vehicle->Company = (int) $row['company_id'];
 
 
-				array_push($result->Object, $vehicle);
+				array_push($result, $vehicle);
 			}
 
-			$result->Status = Result::SUCCESS;
-			$result->Message = 'Done.';
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-
-		return $result;
 	}
-	public static function onInsert(Url $url, $data) {
-		
+
+	public static function select($id) {
+
 		$connection = Flight::dbMain();
 
 		try {
 
-			if (!isset($data['Object'])) {
-				throw new Exception("Input object is not set.");
+			$sql = "SELECT * FROM vehicle WHERE id = :id;";
+			$query = $connection->prepare($sql);
+			$query->bindParam(':id',$id, PDO::PARAM_INT);
+
+			$query->execute();
+
+			if ($query->rowCount() < 1){
+				Flight::notFound("id not found");
 			}
 
-			$vehicle = json_decode($data['Object']);
+			$row = $query->fetch(PDO::FETCH_ASSOC);
+
+			$vehicle = new Vehicle();
+			$vehicle->Id = (int) $row['id'];
+			$vehicle->DtSubscribed = $row['vehicle_dt_subscribed'];
+			$vehicle->Plate = $row['vehicle_plate'];
+			$vehicle->MaInitial = (int)$row['vehicle_ma_initial'];
+			$vehicle->MaLimit = (int)$row['vehicle_ma_limit'];
+			$vehicle->MaMaintenance = (int)$row['vehicle_ma_maintenance'];
+			$vehicle->SpeedMax = (int)$row['vehicle_speed_max'];
+			$vehicle->Status = (int)$row['e_status_id'];
+			$vehicle->Fuel = (int)$row['vehicle_fuel'];
+			$vehicle->FuelMax = (int)$row['vehicle_fuel_max'];
+			$vehicle->Model = (int) $row['vehicle_model_id'];
+			$vehicle->Driver = (int) $row['driver_id'];
+			$vehicle->Unit = (int) $row['unit_id'];
+			$vehicle->Company = (int) $row['company_id'];
+
+
+			Flight::ok($vehicle);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
+	}
+
+	public static function insert() {
+
+		$connection = Flight::dbMain();
+
+		try {
+
+			$vehicle = json_decode(file_get_contents("php://input"));
+
 			if ($vehicle == null) {
 				throw new Exception(json_get_error());
 			}
+
 			
 			$sql = "
 			INSERT INTO vehicle 
@@ -110,7 +139,8 @@ class Vehicle implements IQuery {
 			vehicle_speed_max, 
 			e_status_id, 
 			vehicle_fuel, 
-			model_id, 
+			vehicle_fuel_max, 
+			vehicle_model_id, 
 			driver_id,
 			unit_id, 
 			company_id
@@ -126,7 +156,8 @@ class Vehicle implements IQuery {
 			:vehicle_speed_max, 
 			:e_status_id, 
 			:vehicle_fuel, 
-			:model_id, 
+			:vehicle_fuel_max, 
+			:vehicle_model_id, 
 			:driver_id,
 			:unit_id, 
 			:company_id
@@ -143,47 +174,39 @@ class Vehicle implements IQuery {
 			$query->bindParam(':vehicle_speed_max', $vehicle->SpeedMax, PDO::PARAM_INT);
 			$query->bindParam(':e_status_id', $vehicle->Status, PDO::PARAM_INT);
 			$query->bindParam(':vehicle_fuel', $vehicle->Fuel, PDO::PARAM_INT);
-			$query->bindParam(':model_id', $vehicle->Model, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_fuel_max', $vehicle->FuelMax, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_model_id', $vehicle->Model, PDO::PARAM_INT);
 			$query->bindParam(':driver_id', $vehicle->Driver, PDO::PARAM_INT);
 			$query->bindParam(':unit_id', $vehicle->Unit, PDO::PARAM_INT);
 			$query->bindParam(':company_id', $vehicle->Company, PDO::PARAM_INT);
 
 			$query->execute();
-
+			
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
-			$result->Message = 'Done.';
+			$result->Status = Result::INSERTED;
+			$result->Id = $connection->lastInsertId();
+			$result->Message = 'Done';
+
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-
-		return $result;
 	}
-	public static function onUpdate(Url $url, $data) {
-		
+
+
+	public static function update($id) {
+
 		$connection = Flight::dbMain();
 
 		try {
-			if (empty($url->Id)) {
-				throw new Exception("Input id is empty.");
-			}
 
-			if (!isset($data['Object'])) {
-				throw new Exception("Input object is not set.");
-			}
+			$vehicle = json_decode(file_get_contents("php://input"));
 
-			
-			$vehicle = json_decode($data['Object']);
 			if ($vehicle == null) {
 				throw new Exception(json_get_error());
 			}
@@ -199,7 +222,8 @@ class Vehicle implements IQuery {
 			vehicle_speed_max = :vehicle_speed_max,
 			e_status_id = :e_status_id,
 			vehicle_fuel = :vehicle_fuel,
-			model_id = :model_id,
+			vehicle_fuel_max = :vehicle_fuel_max,
+			vehicle_model_id = :vehicle_model_id,
 			driver_id = :driver_id,
 			unit_id = :unit_id,
 			company_id = :company_id
@@ -217,42 +241,37 @@ class Vehicle implements IQuery {
 			$query->bindParam(':vehicle_speed_max', $vehicle->SpeedMax, PDO::PARAM_INT);
 			$query->bindParam(':e_status_id', $vehicle->Status, PDO::PARAM_INT);
 			$query->bindParam(':vehicle_fuel', $vehicle->Fuel, PDO::PARAM_INT);
-			$query->bindParam(':model_id', $vehicle->Model, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_fuel_max', $vehicle->FuelMax, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_model_id', $vehicle->Model, PDO::PARAM_INT);
 			$query->bindParam(':driver_id', $vehicle->Driver, PDO::PARAM_INT);
 			$query->bindParam(':unit_id', $vehicle->Unit, PDO::PARAM_INT);
 			$query->bindParam(':company_id', $vehicle->Company, PDO::PARAM_INT);
 
-			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
+			$result->Status = Result::UPDATED;
+			$result->Id = $id;
 			$result->Message = 'Done.';
 
-		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
-		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
-		}
+			Flight::ok($result);
 
-		$connection = null;
-		return $result;
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
 	}
-	public static function onDelete(Url $url, $data) {
-		
+	
+	public static function delete($id) {
+
 		$connection = Flight::dbMain();
 
 		try {
-
-			if (empty($url->Id)) {
-				throw new Exception("Input id is empty");
-			}
 
 			$sql = "
 			DELETE FROM vehicle 
@@ -261,27 +280,24 @@ class Vehicle implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
-			$result->Message = 'Done.';
+			$result->Status = Result::DELETED;
+			$result->Message = 'Done';
+			$result->Id = $id;
+
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-		return $result;
 	}
 }
 

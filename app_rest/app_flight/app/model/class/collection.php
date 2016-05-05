@@ -9,33 +9,20 @@ class Collection implements IQuery {
 	public function __construct() {
 	}
 
-	public static function onSelect(Url $url, $data) {
+	public static function selectAll() {
 		
 		$connection = Flight::dbMain();
 
 		try {
-			if (!empty($url->Id)) {
-				$sql = "SELECT * FROM collection WHERE id = :id;";
-				$query = $connection->prepare($sql);
-
-				$query->bindParam(':id',$url->Id, PDO::PARAM_INT);
-			} else if (isset($data['name'])) {
-				$sql = "SELECT * FROM collection WHERE collection_name LIKE :name;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$data['name'], PDO::PARAM_STR);
-			} else {
-				$sql = "SELECT * FROM collection;";
-				$query = $connection->prepare($sql);
-			}
+			
+			$sql = "SELECT * FROM collection;";
+			$query = $connection->prepare($sql);
 
 			$query->execute();
 
-			$result = new Result();
-			$result->Item = $query->rowCount();
-			$result->Object = array();
-
-
 			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
+
+			$result = array();
 
 			foreach ($rows as $row) {	
 				$collection = new Collection();
@@ -43,42 +30,65 @@ class Collection implements IQuery {
 				$collection->Name = $row['collection_name'];
 				$collection->Desc = $row['collection_desc'];
 
-				array_push($result->Object, $collection);
+				array_push($result, $collection);
 			}
 
-			$result->Status = Result::SUCCESS;
-			$result->Message = 'Done.';
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-
-		return $result;
 	}
-	public static function onInsert(Url $url, $data) {
+
+	public static function select($id) {
 		
 		$connection = Flight::dbMain();
 
 		try {
+			
+			$sql = "SELECT * FROM collection WHERE id = :id;";
+			$query = $connection->prepare($sql);
+			$query->bindParam(':id',$id, PDO::PARAM_INT);
 
-			if (!isset($data['Object'])) {
-				throw new Exception("Input object is not set.");
+			$query->execute();
+
+			if ($query->rowCount() < 1){
+				Flight::notFound("id not found");
 			}
 
+			$row = $query->fetch(PDO::FETCH_ASSOC);
 
-			$collection = json_decode($data['Object']);
+			$collection = new Collection();
+			$collection->Id = (int) $row['id'];
+			$collection->Name = $row['collection_name'];
+			$collection->Desc = $row['collection_desc'];
+
+			Flight::ok($collection);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
+	}
+
+	public static function insert() {
+
+		$connection = Flight::dbMain();
+
+		try {
+
+			$collection = json_decode(file_get_contents("php://input"));
+
 			if ($collection == null) {
 				throw new Exception(json_get_error());
 			}
-
 
 			$sql = "
 			INSERT INTO collection 
@@ -92,45 +102,33 @@ class Collection implements IQuery {
 			$query->bindParam(':collection_desc', $collection->Desc, PDO::PARAM_STR);
 
 			$query->execute();
-
+			
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
-			$result->Message = 'Done.';
+			$result->Status = Result::INSERTED;
+			$result->Id = $connection->lastInsertId();
+			$result->Message = 'Done';
+
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-		return $result;
 	}
-	public static function onUpdate(Url $url, $data) {
-		
+	public static function update($id) {
+
 		$connection = Flight::dbMain();
 
-		//$connection->beginTransaction();
-
 		try {
-			if (empty($url->Id)) {
-				throw new Exception("Input id is empty.");
-			}
 
-			if (!isset($data['Object'])) {
-				throw new Exception("Input object is not set.");
-			}
+			$collection = json_decode(file_get_contents("php://input"));
 
-			$collection = json_decode($data['Object']);
 			if ($collection == null) {
 				throw new Exception(json_get_error());
 			}
-
 
 			$sql = "
 			UPDATE collection 
@@ -141,48 +139,36 @@ class Collection implements IQuery {
 			WHERE
 			id = :id;";
 			
-
 			$query = $connection->prepare($sql);
-
 
 			$query->bindParam(':collection_name', $collection->Name, PDO::PARAM_STR);
 			$query->bindParam(':collection_desc', $collection->Desc, PDO::PARAM_STR);
 
-			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
-			//$connection->commit();
-
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
+			$result->Status = Result::UPDATED;
+			$result->Id = $id;
 			$result->Message = 'Done.';
 
+			Flight::ok($result);
+
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-
-		return $result;
 	}
-	public static function onDelete(Url $url, $data) {
+	public static function delete($id) {
 		
 		$connection = Flight::dbMain();
 		
 		try {
 			
-			if (empty($url->Id)) {
-				throw new Exception("Input id is empty");
-			}
-
 			$sql = "
 			DELETE FROM collection 
 			WHERE
@@ -190,27 +176,24 @@ class Collection implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':id', $url->Id, PDO::PARAM_INT);
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Item = $query->rowCount();
-			$result->Message = 'Done.';
+			$result->Status = Result::DELETED;
+			$result->Message = 'Done';
+			$result->Id = $id;
+
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-		return $result;
 	}
 }
 ?>
