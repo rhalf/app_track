@@ -9,7 +9,7 @@ require_once('/app/model/interface/iquery.php');
 
 //System Classes
 require_once('/app/model/class/database.php');
-require_once('/app/model/class/url.php');
+// require_once('/app/model/class/url.php');
 require_once('/app/model/class/result.php');
 require_once('/app/model/class/coordinate.php');
 
@@ -18,7 +18,7 @@ require_once('/app/model/class/company.php');
 require_once('/app/model/class/user.php');
 require_once('/app/model/class/vehicle.php');
 require_once('/app/model/class/vehiclemodel.php');
-require_once('/app/model/class/address.php');
+require_once('/app/model/class/companyaddress.php');
 require_once('/app/model/class/unit.php');
 
 require_once('/app/model/class/driver.php');
@@ -27,6 +27,8 @@ require_once('/app/model/class/unitsim.php');
 require_once('/app/model/class/usersim.php');
 require_once('/app/model/class/unitsim.php');
 require_once('/app/model/class/userinfo.php');
+require_once('/app/model/class/useronline.php');
+
 
 require_once('/app/model/class/collection.php');
 require_once('/app/model/class/vehiclecollection.php');

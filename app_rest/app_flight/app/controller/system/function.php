@@ -49,7 +49,7 @@ function json_indent($json) {
 function json_get_error() {
 	switch (json_last_error()) {
 		case JSON_ERROR_NONE:
-		return 'No json errors or object is empty.';
+		return 'No json object or object is empty.';
 		case JSON_ERROR_DEPTH:
 		return 'Maximum stack depth exceeded.';
 		case JSON_ERROR_STATE_MISMATCH:

@@ -1,5 +1,7 @@
 <?php 
 
+date_default_timezone_set('UTC');
+
 //Database
 Flight::register('dbMain', 'PDO', array('mysql:host=184.107.179.178;dbname=app_main','admin','admin'), function($dbMain){
 	$dbMain->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -21,13 +23,5 @@ $keys = array(
 Flight::set('api_key', $keys);
 Flight::set('api_version', 'v1');
 
-
-// Flight::before('json', function() {
-// 	header('Access-Control-Allow-Origin: *');
-// 	header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS,PATCH');
-// 	header('Access-Control-Allow-Headers: Content-Type');
-// 	header('Content-Type: application/json; charset=UTF-8');
-
-// });
 
 ?>	

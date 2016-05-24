@@ -8,6 +8,7 @@ class CompanyInfo implements IQuery {
 	public $Notify;
 	public $Theme;
 	public $Field;
+	public $Company;
 
 	public function __construct() {
 	}
@@ -36,8 +37,9 @@ class CompanyInfo implements IQuery {
 				$CompanyInfo->Alert = (int)$row['info_alert'];
 				$CompanyInfo->Notify = (int) $row['info_noti'];
 				$CompanyInfo->Theme = $row['info_theme'];
-				$CompanyInfo->Field = $row['e_field_id'];
-				
+				$CompanyInfo->Field = (int)$row['e_field_id'];
+				$CompanyInfo->Company = (int)$row['company_id'];
+
 				array_push($result, $CompanyInfo);
 			}
 
@@ -77,7 +79,8 @@ class CompanyInfo implements IQuery {
 			$companyInfo->Alert = (int)$row['info_alert'];
 			$companyInfo->Notify = (int) $row['info_noti'];
 			$companyInfo->Theme = $row['info_theme'];
-			$companyInfo->Field = $row['e_field_id'];
+			$companyInfo->Field = (int)$row['e_field_id'];
+			$companyInfo->Company = (int)$row['company_id'];
 
 
 			Flight::ok($companyInfo);
@@ -89,6 +92,44 @@ class CompanyInfo implements IQuery {
 		} finally {
 			$connection = null;
 		}
+	}
+	public static function selectByCompany($id) {
+		$connection = Flight::dbMain();
+
+		try {
+
+			$sql = "SELECT * FROM company_info WHERE company_id = :company_id;";
+			$query = $connection->prepare($sql);
+			$query->bindParam(':company_id',$id, PDO::PARAM_INT);
+
+			$query->execute();
+
+			if ($query->rowCount() < 1){
+				Flight::notFound("company_id not found");
+			}
+
+			$row = $query->fetch(PDO::FETCH_ASSOC);
+
+
+			$companyInfo = new CompanyInfo();
+			$companyInfo->Id = (int) $row['id'];
+			$companyInfo->Logo = $row['info_logo'];
+			$companyInfo->Alert = (int)$row['info_alert'];
+			$companyInfo->Notify = (int) $row['info_noti'];
+			$companyInfo->Theme = $row['info_theme'];
+			$companyInfo->Field = (int)$row['e_field_id'];
+			$companyInfo->Company = (int)$row['company_id'];
+
+
+			Flight::ok($companyInfo);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}	
 	}
 
 	public static function insert() {
@@ -106,9 +147,9 @@ class CompanyInfo implements IQuery {
 
 			$sql = "
 			INSERT INTO company_info 
-			(info_logo, info_alert, info_noti, info_theme, e_field_id)
+			(info_logo, info_alert, info_noti, info_theme, e_field_id, company_id)
 			VALUES
-			(:info_logo, :info_alert, :info_noti, :info_theme, :e_field_id);";
+			(:info_logo, :info_alert, :info_noti, :info_theme, :e_field_id, :company_id);";
 
 
 			$query = $connection->prepare($sql);
@@ -118,6 +159,8 @@ class CompanyInfo implements IQuery {
 			$query->bindParam(':info_noti', $companyInfo->Notify, PDO::PARAM_INT);
 			$query->bindParam(':info_theme', $companyInfo->Theme, PDO::PARAM_STR);
 			$query->bindParam(':e_field_id', $companyInfo->Field, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $companyInfo->Company, PDO::PARAM_INT);
+
 
 			$query->execute();
 			
@@ -156,7 +199,8 @@ class CompanyInfo implements IQuery {
 			info_alert = :info_alert,
 			info_noti = :info_noti,
 			info_theme = :info_theme,
-			e_field_id = :e_field_id
+			e_field_id = :e_field_id,
+			company_id = :company_id
 
 			WHERE
 			id = :id;";
@@ -169,6 +213,7 @@ class CompanyInfo implements IQuery {
 			$query->bindParam(':info_noti', $companyInfo->Notify, PDO::PARAM_INT);
 			$query->bindParam(':info_theme', $companyInfo->Theme, PDO::PARAM_STR);
 			$query->bindParam(':e_field_id', $companyInfo->Field, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $companyInfo->Company, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 

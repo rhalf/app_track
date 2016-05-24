@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+ 
+    <!-- /#wrapper -->
+    <div ng-show="!isLoading()">
+        <div id="wrapper" ng-class="{ 'toggled' : getToggle() }">
+            <div panel-left></div>
+            <div panel-center></div>
+        </div>
+    </div>
+
+    <div ng-show="isLoading()">
+        Loading
+    </div>
+    <!-- /#wrapper -->
+
+   
+</body>
+</html>

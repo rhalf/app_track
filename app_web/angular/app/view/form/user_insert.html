@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <h3 class="modal-title">User (Add)</h3>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="noty">
+                <uib-alert ng-repeat="alert in alert.items" type="{{alert.type}}" close="closeAlert($index)" dismiss-on-timeout="3000">{{alert.message}} </uib-alert>
+            </div>
+
+            <uib-tabset active="active">
+                <uib-tab index="0" heading="User">
+                    <form class="form-horizontal" role="form">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Name</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="User.Name" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Password</label>
+                                <div class="col-md-10">
+                                    <input type="password" class="form-control" ng-model="User.Password" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Re-Type Password</label>
+                                <div class="col-md-10">
+                                    <input type="password" class="form-control" ng-model="User.Password1" required />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2">DateTime Created</label>
+                                <div class="col-md-10">
+                                    <p class="input-group">
+                                        <input type="text" class="form-control"
+                                               uib-datepicker-popup="{{dateTimePicker.format[1]}}"
+                                               ng-model="User.DtCreated"
+                                               is-open="dateTimePicker.isOpen[0]"
+                                               datepicker-options="dateTimePicker.options"
+                                               ng-required="true"
+                                               close-text="Close"
+                                               datetime-directive
+                                               disabled />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="dateTimePicker.toggle(0)">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">DateTime Expired</label>
+                                <div class="col-md-10">
+                                    <p class="input-group">
+                                        <input type="text" class="form-control"
+                                               uib-datepicker-popup="{{dateTimePicker.format[1]}}"
+                                               ng-model="User.DtExpired"
+                                               is-open="dateTimePicker.isOpen[0]"
+                                               datepicker-options="dateTimePicker.options"
+                                               ng-required="true"
+                                               close-text="Close"
+                                               datetime-directive />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="dateTimePicker.toggle(0)">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Status</label>
+                                <div class="col-md-10">
+                                    <select class="form-control" ng-model="User.Status" ng-init="User.Status = Flag.Status[0].Value" ng-options="status.Value as status.Name for status in Flag.Status" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Privilege</label>
+                                <div class="col-md-10">
+                                    <select class="form-control" ng-model="User.Privilege" ng-init="User.Privilege = Flag.Privilege[0].Value" ng-options="privilege.Id as privilege.Name for privilege in Flag.Privilege" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Company</label>
+                                <div class="col-md-10">
+                                    <select class="form-control" ng-model="User.Company" ng-init="User.Company = Flag.Company[0].Id" ng-options="company.Id as company.Name for company in Flag.Company" required />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </uib-tab>
+                <uib-tab index="1" heading="UserInfo">
+                    <form class="form-horizontal" role="form">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Email</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="UserInfo.Email" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Password</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control" ng-model="UserInfo.Website" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Telephone</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control" ng-model="UserInfo.Telephone" required />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+
+                </uib-tab>
+
+                <uib-tab index="2" heading="UserSim">
+                    <form class="form-horizontal" role="form">
+                        <fieldset>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Country</label>
+                                <div class="col-md-10">
+                                    <select class="form-control" ng-model="UserSim.AreaCode" ng-init="UserSim.AreaCode = Flag.Nation[178].Id" ng-options="nation.Id as nation.NameShort for nation in Flag.Nation" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">DialCode</label>
+                                <div class="col-md-10">
+                                    <label class="control-label">{{UserSim.AreaCode | nationFilter : 'dialCode' }}</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Number</label>
+                                <div class="col-md-10">
+                                    <input type="number" class="form-control" ng-model="UserSim.Number" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Imei</label>
+                                <div class="col-sm-10">
+                                    <input type="number" class="form-control" ng-model="UserSim.Imei" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Roaming</label>
+                                <div class="col-md-10">
+                                    <input type="checkbox" class="form-control" ng-model="UserSim.Roaming" ng-true-value="true" ng-false-value="false" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Vendor</label>
+                                <div class="col-md-10">
+                                    <select class="form-control" ng-model="UserSim.SimVendor" ng-init="UserSim.SimVendor = Flag.SimVendor[0].Id" ng-options="simVendor.Id as simVendor.Name for simVendor in Flag.SimVendor" required />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="form.save()">Add</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+
+    <style type="text/css">
+        form {
+            margin: 20px;
+        }
+    </style>
+
+</body>
+</html>

@@ -8,6 +8,8 @@ class UserSim implements IQuery {
 	public $Roaming;
 	public $AreaCode;
 	public $SimVendor;
+	public $User;
+
 
 
 	public function __construct() {
@@ -36,6 +38,8 @@ class UserSim implements IQuery {
 				$userSim->Roaming = (bool) $row['sim_roaming'];
 				$userSim->AreaCode = (int) $row['sim_area_code'];
 				$userSim->SimVendor = (int) $row['e_sim_vendor_id'];
+				$userSim->User = (int) $row['user_id'];
+
 
 				array_push($result, $userSim);
 			}
@@ -76,6 +80,7 @@ class UserSim implements IQuery {
 			$userSim->Roaming = (bool) $row['sim_roaming'];
 			$userSim->AreaCode = (int) $row['sim_area_code'];
 			$userSim->SimVendor = (int) $row['e_sim_vendor_id'];
+			$userSim->User = (int) $row['user_id'];
 
 			Flight::ok($userSim);
 
@@ -102,9 +107,9 @@ class UserSim implements IQuery {
 
 			$sql = "
 			INSERT INTO user_sim 
-			(sim_imei, sim_number, sim_roaming, sim_area_code, e_sim_vendor_id)
+			(sim_imei, sim_number, sim_roaming, sim_area_code, e_sim_vendor_id, user_id)
 			VALUES
-			(:sim_imei, :sim_number, :sim_roaming, :sim_area_code, :e_sim_vendor_id);";
+			(:sim_imei, :sim_number, :sim_roaming, :sim_area_code, :e_sim_vendor_id, :user_id);";
 
 
 			$query = $connection->prepare($sql);
@@ -114,12 +119,14 @@ class UserSim implements IQuery {
 			$query->bindParam(':sim_roaming', $userSim->Roaming, PDO::PARAM_BOOL);
 			$query->bindParam(':sim_area_code', $userSim->AreaCode, PDO::PARAM_INT);
 			$query->bindParam(':e_sim_vendor_id', $userSim->SimVendor, PDO::PARAM_INT);
+			$query->bindParam(':user_id', $userSim->User, PDO::PARAM_INT);
+
 
 			$query->execute();
 			
 			$result = new Result();
 			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
+			$result->Id = (int)$connection->lastInsertId();
 			$result->Message = 'Done';
 
 			Flight::ok($result);
@@ -152,7 +159,8 @@ class UserSim implements IQuery {
 			sim_number = :sim_number,
 			sim_roaming = :sim_roaming,
 			sim_area_code = :sim_area_code,
-			e_sim_vendor_id = :e_sim_vendor_id
+			e_sim_vendor_id = :e_sim_vendor_id,
+			user_id = :user_id
 
 			WHERE
 			id = :id;";
@@ -165,6 +173,7 @@ class UserSim implements IQuery {
 			$query->bindParam(':sim_roaming', $userSim->Roaming, PDO::PARAM_BOOL);
 			$query->bindParam(':sim_area_code', $userSim->AreaCode, PDO::PARAM_INT);
 			$query->bindParam(':e_sim_vendor_id', $userSim->SimVendor, PDO::PARAM_INT);
+			$query->bindParam(':user_id', $userSim->User, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
@@ -172,7 +181,7 @@ class UserSim implements IQuery {
 
 			$result = new Result();
 			$result->Status = Result::UPDATED;
-			$result->Id = $id;
+			$result->Id = (int)$id;
 			$result->Message = 'Done.';
 
 			Flight::ok($result);
@@ -206,7 +215,7 @@ class UserSim implements IQuery {
 			$result = new Result();
 			$result->Status = Result::DELETED;
 			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->Id = (int)$id;
 
 			Flight::ok($result);
 

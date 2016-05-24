@@ -2,6 +2,11 @@
 require_once 'app/controller/system/include.php';
 
 
+Flight::route('OPTIONS /*', function() {
+	Flight::preFlight();
+}, true);
+
+
 //AppClient
 Flight::route('GET /v1/main/appclient', array('AppClient', 'selectAll'));
 
@@ -97,7 +102,15 @@ Flight::route('PUT /v1/main/company/@id', array('Company', 'update'));
 Flight::route('DELETE /v1/main/company/@id', array('Company', 'delete'));
 
 //CompanyInfo
-Flight::route('GET /v1/main/companyinfo', array('CompanyInfo', 'selectAll'));
+Flight::route('GET /v1/main/companyinfo', function() {
+	$company = Flight::request()->query->company;
+
+	if ($company) {
+		CompanyInfo::selectByCompany($company);
+	} else {
+		CompanyInfo::selectAll();
+	}
+});
 
 Flight::route('GET /v1/main/companyinfo/@id', array('CompanyInfo', 'select'));
 
@@ -106,6 +119,9 @@ Flight::route('POST /v1/main/companyinfo', array('CompanyInfo', 'insert'));
 Flight::route('PUT /v1/main/companyinfo/@id', array('CompanyInfo', 'update'));
 
 Flight::route('DELETE /v1/main/companyinfo/@id', array('CompanyInfo', 'delete'));
+
+
+
 
 //Driver
 Flight::route('GET /v1/main/driver', array('Driver', 'selectAll'));
@@ -265,7 +281,15 @@ Flight::route('PUT /v1/main/user/@id', array('User', 'update'));
 Flight::route('DELETE /v1/main/user/@id', array('User', 'delete'));
 
 //UserInfo
-Flight::route('GET /v1/main/userinfo', array('UserInfo', 'selectAll'));
+Flight::route('GET /v1/main/userinfo', function() {
+	$user = Flight::request()->query->user;
+
+	if ($user) {
+		UserInfo::selectByUser($user);
+	} else {
+		UserInfo::selectAll();
+	}
+});
 
 Flight::route('GET /v1/main/userinfo/@id', array('UserInfo', 'select'));
 
@@ -308,6 +332,29 @@ Flight::route('POST /v1/main/vehiclecollection', array('VehicleCollection', 'ins
 Flight::route('PUT /v1/main/vehiclecollection/@id', array('VehicleCollection', 'update'));
 
 Flight::route('DELETE /v1/main/vehiclecollection/@id', array('VehicleCollection', 'delete'));
+
+
+//UserOnline
+Flight::route('GET /v1/main/useronline', array('UserOnline', 'selectAll'));
+
+Flight::route('GET /v1/main/useronline/@id', array('UserOnline', 'select'));
+
+Flight::route('POST /v1/main/useronline', array('UserOnline', 'insert'));
+
+Flight::route('PUT /v1/main/useronline/@id', array('UserOnline', 'update'));
+
+Flight::route('DELETE /v1/main/useronline/@id', array('UserOnline', 'delete'));
+
+
+
+//=========================================================================
+
+Flight::route('POST /v1/session/login', array('Session', 'login'));
+
+Flight::route('POST /v1/session/logout', array('Session', 'logout'));
+
+
+//=========================================================================
 
 // 	try {
 // 		$url = new Url();
@@ -389,11 +436,11 @@ Flight::route('DELETE /v1/main/vehiclecollection/@id', array('VehicleCollection'
 // 		case 'POST':
 // 		$post = json_decode(file_get_contents("php://input"), true);
 // 		method_post($url, $post);
-		
+
 // 		case 'PUT':
 // 		$put = json_decode(file_get_contents("php://input"), true);
 // 		method_put($url, $put);
-		
+
 // 		case 'DELETE':
 // 		$delete = json_decode(file_get_contents("php://input"), true);
 // 		method_delete($url, $delete);

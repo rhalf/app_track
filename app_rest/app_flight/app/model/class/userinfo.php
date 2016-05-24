@@ -3,12 +3,10 @@
 class UserInfo implements IQuery {
 
 	public $Id;
-	public $DtCreated;
 	public $Email;
 	public $Website;
 	public $Telephone;
 	public $UserSim;
-	public $Address;
 
 
 	
@@ -33,12 +31,9 @@ class UserInfo implements IQuery {
 			foreach ($rows as $row) {	
 				$userInfo = new UserInfo();
 				$userInfo->Id = (int) $row['id'];
-				$userInfo->DtCreated = $row['info_dt_created'];
 				$userInfo->Email = $row['info_email'];
 				$userInfo->Website = $row['info_website'];
 				$userInfo->Telephone = $row['info_telephone'];
-				$userInfo->UserSim = (int)$row['sim_id'];
-				$userInfo->Address = (int)$row['address_id'];
 
 				array_push($result, $userInfo);
 			}
@@ -75,12 +70,44 @@ class UserInfo implements IQuery {
 
 			$userInfo = new UserInfo();
 			$userInfo->Id = (int) $row['id'];
-			$userInfo->DtCreated = $row['info_dt_created'];
 			$userInfo->Email = $row['info_email'];
 			$userInfo->Website = $row['info_website'];
 			$userInfo->Telephone = $row['info_telephone'];
-			$userInfo->UserSim = (int)$row['sim_id'];
-			$userInfo->Address = (int)$row['address_id'];
+			Flight::ok($userInfo);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
+	}
+
+	public static function selectByUser($id) {
+
+		$connection = Flight::dbMain();
+
+		try {
+			
+			$sql = "SELECT * FROM user_info WHERE user_id = :user_id;";
+			$query = $connection->prepare($sql);
+			$query->bindParam(':user_id',$id, PDO::PARAM_INT);
+
+			$query->execute();
+
+			if ($query->rowCount() < 1){
+				Flight::notFound("user_id not found");
+			}
+
+			$row = $query->fetch(PDO::FETCH_ASSOC);
+
+
+			$userInfo = new UserInfo();
+			$userInfo->Id = (int) $row['id'];
+			$userInfo->Email = $row['info_email'];
+			$userInfo->Website = $row['info_website'];
+			$userInfo->Telephone = $row['info_telephone'];
 
 			Flight::ok($userInfo);
 
@@ -92,6 +119,7 @@ class UserInfo implements IQuery {
 			$connection = null;
 		}
 	}
+
 
 	public static function insert() {
 
@@ -108,26 +136,25 @@ class UserInfo implements IQuery {
 
 			$sql = "
 			INSERT INTO user_info 
-			(info_dt_created, info_email, info_website, info_telephone, sim_id, address_id)
+			(info_email, info_website, info_telephone, user_id)
 			VALUES
-			(:info_dt_created, :info_email, :info_website, :info_telephone, :sim_id, :address_id);";
+			(:info_email, :info_website, :info_telephone, :user_id);";
 
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':info_dt_created', $userInfo->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':info_email', $userInfo->Email, PDO::PARAM_STR);
 			$query->bindParam(':info_website', $userInfo->Website, PDO::PARAM_STR);
 			$query->bindParam(':info_telephone', $userInfo->Telephone, PDO::PARAM_STR);
-			$query->bindParam(':sim_id', $userInfo->UserSim, PDO::PARAM_INT);
-			$query->bindParam(':address_id', $userInfo->Address, PDO::PARAM_INT);
+			$query->bindParam(':user_id', $userInfo->User, PDO::PARAM_INT);
+
 
 
 			$query->execute();
 
 			$result = new Result();
 			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
+			$result->Id = (int)$connection->lastInsertId();
 			$result->Message = 'Done';
 
 			Flight::ok($result);
@@ -153,28 +180,24 @@ class UserInfo implements IQuery {
 				throw new Exception(json_get_error());
 			}
 
-
 			$sql = "
 			UPDATE user_info 
 			SET 
-			info_dt_created = :info_dt_created,
 			info_email = :info_email,
 			info_website = :info_website,
 			info_telephone = :info_telephone,
-			sim_id = :sim_id,
-			address_id = :address_id
+			user_id = :user_id
+
 
 			WHERE
 			id = :id;";
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':info_dt_created', $userInfo->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':info_email', $userInfo->Email, PDO::PARAM_STR);
 			$query->bindParam(':info_website', $userInfo->Website, PDO::PARAM_STR);
 			$query->bindParam(':info_telephone', $userInfo->Telephone, PDO::PARAM_STR);
-			$query->bindParam(':sim_id', $userInfo->UserSim, PDO::PARAM_INT);
-			$query->bindParam(':address_id', $userInfo->Address, PDO::PARAM_INT);
+			$query->bindParam(':user_id', $userInfo->User, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
@@ -182,7 +205,7 @@ class UserInfo implements IQuery {
 
 			$result = new Result();
 			$result->Status = Result::UPDATED;
-			$result->Id = $id;
+			$result->Id = (int)$id;
 			$result->Message = 'Done.';
 
 			Flight::ok($result);
@@ -216,7 +239,7 @@ class UserInfo implements IQuery {
 			$result = new Result();
 			$result->Status = Result::DELETED;
 			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->Id = (int)$id;
 
 			Flight::ok($result);
 

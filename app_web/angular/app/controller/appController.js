@@ -1,80 +1,27 @@
 ﻿var app = angular.module('app');
 
-app.run(function (resourceService) {
-    console.log("<-===Started===->");
-    resourceService.init();
+app.controller('appController', function () {
+
+   
 });
 
-app.controller('appController', function ($scope) {
+app.run(function (
+    $rootScope,
+    $location,
+    authFactory,
 
-});
+    $q,
+    $timeout,
+    uiFactory,
+    flagFactory,
 
-
-
-//Config
-app.config(function ($routeProvider, $locationProvider, $httpProvider) {
-
-
-    //$httpProvider.defaults.useXDomain = true;
-    //$httpProvider.defaults.withCredentials = true;
-    //delete $httpProvider.defaults.headers.common["X-Requested-With"];
-    //$httpProvider.defaults.headers.common["Accept"] = "application/json";
-    //$httpProvider.defaults.headers.common["Content-Type"] = "application/json";
-
-
-    $routeProvider
-        .when('/form', {
-            templateUrl: 'app/template/form/form.html',
-            controller: 'formController',
-            authenticated: true
-        })
-        .when('/', {
-            templateUrl: 'app/template/form/login.html',
-            controller: 'loginController'
-
-        })
-        .otherwise({
-            redirectTo: '/'
-        });
-
-
-
-});
-
-
-
-//Directive
-app.directive('panelMenu', function () {
-    return {
-        templateUrl: '/app/template/directive/panelMenu.html',
-        controller: 'panelMenuController'
-    }
-});
-
-app.directive('panelLeft', function () {
-    return {
-        templateUrl: '/app/template/directive/panelLeft.html',
-        controller: 'panelLeftController'
-    }
-});
-
-app.directive('panelCenter', function () {
-    return {
-        templateUrl: '/app/template/directive/panelCenter.html',
-        controller: 'panelCenterController'
-    }
-});
-
-app.directive('panelMap', function () {
-    return {
-        templateUrl: '/app/template/directive/panelMap.html',
-        controller: 'panelMapController'
-    }
-});
-
-
-
-app.run(["$rootScope", "$location", "authFactory", function ($rootScope, $location, authFactory) {
+    Status,
+    Field,
+    Privilege,
+    Company,
+    Nation,
+    SimVendor
+    ) {
 
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
 
@@ -85,12 +32,38 @@ app.run(["$rootScope", "$location", "authFactory", function ($rootScope, $locati
         //If route is authenticated, then the user should have access
         if (next.$$route.authenticated) {
 
-            var user = authFactory.getAccessToken();
+            console.log("<-=======Initizalization Started=======->");
+            flagFactory.Status = Status.query();
+            flagFactory.Field = Field.query();
+            flagFactory.Privilege = Privilege.query();
+            flagFactory.Nation = Nation.query();
+            flagFactory.SimVendor = SimVendor.query();
 
-            if (!user) {
-                $location.path('/');
-            }
+            flagFactory.Company = Company.query();
+
+            var promises = $q.all(
+                [
+                    flagFactory.Status,
+                    flagFactory.Field,
+                    flagFactory.Privilege,
+                    flagFactory.Company,
+                    flagFactory.Nation,
+                    flagFactory.SimVendor
+                ]
+            );
+
+            promises.then(function () {
+                console.log("<-=======Initizalization Finished=======->");
+
+                uiFactory.isLoading = false;
+                var user = authFactory.getAccessToken();
+
+                if (!user) {
+                    $location.path('/');
+                }
+            });
         }
     });
+});
 
-}]);
+

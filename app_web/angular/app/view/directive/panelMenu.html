@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="navbar-header">
+            <a class="navbar-brand" ng-click="setToggle()" href="">
+                <span class="glyphicon glyphicon-menu-hamburger"></span>
+            </a>
+        </div>
+        <ul class="nav navbar-nav" >
+            <li class="dropdown" ng-show="isAllowed">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                  
+                          System
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a ng-click="showCompanies()" href="">
+                            <span class="glyphicon glyphicon-tree-deciduous"></span>
+                            Companies
+                            <span class="glyphicons glyphicons-group"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-click="showUsers()" href="">
+                            <span class="glyphicon glyphicon-user"></span>
+                            Users
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="glyphicon glyphicon-warning-sign"></span>
+                            Vehicles
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="glyphicon glyphicon-headphones"></span>
+                            Drivers
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                    Company
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu"></ul>
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                    Map
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Geofence</a></li>
+                    <li><a href="#">Poi</a></li>
+                    <li><a href="#">Route</a></li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a><span class="glyphicon glyphicon-user"></span> {{AuthUser.Name}}</a></li>
+            <li><a ng-click="logout()" href=""><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+        </ul>
+    </nav>
+</body>
+</html>

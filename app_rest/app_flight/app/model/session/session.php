@@ -2,103 +2,95 @@
 
 class Session {
 
+
 	public function __construct() {
 	}
 
-	public static function login(Url $url, $data) {
+	public static function login() {
 
 		$connection = Flight::dbMain();
 
 		try {
-			if (isset($data['name']) && isset($data['password'])) {
 
-				$sql = "SELECT * FROM user WHERE user.user_name = :name and user.user_password = :password;";
-				$query = $connection->prepare($sql);
-				$query->bindParam(':name',$data['name'], PDO::PARAM_STR);
+			$session = json_decode(file_get_contents("php://input"));
 
-				$password = sha1($data['password']);
-
-				$query->bindParam(':password',$password, PDO::PARAM_STR);
-			} else {
-				throw new Exception("Username or Password is not set");
+			if ($session == null) {
+				throw new Exception(json_get_error());
 			}
+
+			
+
+			$sql = "SELECT * FROM user WHERE user.user_name = :name and user.user_password = :password;";
+			$query = $connection->prepare($sql);
+
+			$password = hash('sha256', $session->Password);
+
+			$query->bindParam(':name', $session->Name, PDO::PARAM_STR);
+			$query->bindParam(':password', $password , PDO::PARAM_STR);
 
 			$query->execute();
 
-			$result = new Result();
-			$result->Item = $query->rowCount();
-			$result->Object = array();
+			$row = $query->fetch(PDO::FETCH_ASSOC);
 
-			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
-
-
-			if ($query->rowCount() > 0) {
-
-				$user = new User();
-				$user->Id = (int) $rows[0]['id'];
-				$user->Name = $rows[0]['user_name'];
-				$user->Password = $rows[0]['user_password'];
-				$user->Hash = $rows[0]['user_hash'];
-				$user->DtCreated = $rows[0]['user_dt_created'];
-				$user->DtExpired = $rows[0]['user_dt_expired'];
-				$user->DtLogin = $rows[0]['user_dt_login'];
-				$user->DtActive = $rows[0]['user_dt_active'];
-				$user->Privilege = (int) $rows[0]['e_privilege_id'];
-				$user->Status = (int) $rows[0]['e_status_id'];
-				$user->Company = (int) $rows[0]['company_id'];
-				$user->Info = (int) $rows[0]['user_info_id'];
-
-				$result->Status = Result::SUCCESS;
-				$result->Message = 'Done.';
-
-				array_push($result->Object, $user);
-
-			} else {
-				throw new Exception("Unknown username and/or password");
+			if ($query->rowCount() < 1) {
+				throw new Exception("Username or Password is not exist");
 			}
 
+			$user = new User();
+			$user->Id = (int) $row['id'];
+			$user->Name = $row['user_name'];
+			$user->Password = null; //$row['user_password'];
+			$user->Hash = null; //$row['user_hash'];
+			$user->DtCreated = $row['user_dt_created'];
+			$user->DtExpired = $row['user_dt_expired'];
+			$user->Privilege = (int) $row['e_privilege_value'];
+			$user->Status = (int) $row['e_status_value'];
+			$user->Company = (int) $row['company_id'];
+			$user->Info = (int) $row['user_info_id'];
+
+			Flight::ok($user);
+
 		} catch (PDOException $pdoException) {
-
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
-
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
-
-		$connection = null;
-
-		return $result;
 	}
 
-	public static function logout(Url $url, $data) {
-		
+	public static function logout() {
+
 		$connection = Flight::dbMain();
 
 		try {
 
+			// $sql = "
+			// DELETE FROM user 
+			// WHERE
+			// id = :id";
+
+			// $query = $connection->prepare($sql);
+
+			// $query->bindParam(':id', $id, PDO::PARAM_INT);
+
+			// $query->execute();
+
 			$result = new Result();
 			$result->Status = Result::SUCCESS;
-			$result->Message = 'Done.';
+			$result->Message = 'Done';
+			//$result->Id = $id;
 
+			Flight::ok($result);
 
 		} catch (PDOException $pdoException) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $pdoException->getMessage();
+			Flight::error($pdoException);
 		} catch (Exception $exception) {
-			$result = new Result();
-			$result->Status = Result::ERROR;
-			$result->Message = $exception->getMessage();
+			Flight::error($exception);
+		} finally {
+			$connection = null;
 		}
 
-		$connection = null;
-
-		return $result;
 	}
 }
 

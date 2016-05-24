@@ -7,7 +7,6 @@ class Company implements IQuery {
 	public $Desc;
 	public $DtCreated;
 	public $Status;
-	public $CompanyInfo;
 
 	public function __construct() {
 	}
@@ -33,8 +32,7 @@ class Company implements IQuery {
 				$company->Name = $row['company_name'];
 				$company->Desc = $row['company_desc'];
 				$company->DtCreated = $row['company_dt_created'];
-				$company->Status = (int) $row['e_status_id'];
-				$company->CompanyInfo = (int) $row['company_info_id'];
+				$company->Status = (int) $row['e_status_value'];
 
 				array_push($result, $company);
 			}
@@ -74,8 +72,7 @@ class Company implements IQuery {
 			$company->Name = $row['company_name'];
 			$company->Desc = $row['company_desc'];
 			$company->DtCreated = $row['company_dt_created'];
-			$company->Status = (int) $row['e_status_id'];
-			$company->CompanyInfo = (int) $row['company_info_id'];
+			$company->Status = (int) $row['e_status_value'];
 
 			Flight::ok($company);
 
@@ -103,9 +100,9 @@ class Company implements IQuery {
 
 			$sql = "
 			INSERT INTO company 
-			(company_name, company_desc, company_dt_created, e_status_id, company_info_id)
+			(company_name, company_desc, company_dt_created, e_status_value)
 			VALUES
-			(:company_name, :company_desc, :company_dt_created, :e_status_id, :company_info_id);";
+			(:company_name, :company_desc, :company_dt_created, :e_status_value);";
 
 
 			$query = $connection->prepare($sql);
@@ -113,8 +110,7 @@ class Company implements IQuery {
 			$query->bindParam(':company_name', $company->Name, PDO::PARAM_STR);
 			$query->bindParam(':company_desc', $company->Desc, PDO::PARAM_STR);
 			$query->bindParam(':company_dt_created', $company->DtCreated, PDO::PARAM_STR);
-			$query->bindParam(':e_status_id', $company->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_info_id', $company->CompanyInfo, PDO::PARAM_INT);
+			$query->bindParam(':e_status_value', $company->Status, PDO::PARAM_INT);
 
 			$query->execute();
 			
@@ -151,8 +147,8 @@ class Company implements IQuery {
 			company_name = :company_name,
 			company_desc = :company_desc, 
 			company_dt_created = :company_dt_created,
-			e_status_id = :e_status_id, 
-			company_info_id = :company_info_id
+			e_status_value = :e_status_value
+
 			WHERE
 			id = :id;";
 
@@ -163,8 +159,7 @@ class Company implements IQuery {
 			$query->bindParam(':company_name', $company->Name, PDO::PARAM_STR);
 			$query->bindParam(':company_desc', $company->Desc, PDO::PARAM_STR);
 			$query->bindParam(':company_dt_created', $company->DtCreated, PDO::PARAM_STR);
-			$query->bindParam(':e_status_id', $company->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_info_id', $company->CompanyInfo, PDO::PARAM_INT);
+			$query->bindParam(':e_status_value', $company->Status, PDO::PARAM_INT);
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 

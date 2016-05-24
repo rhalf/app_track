@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <h3 class="modal-title">Companies</h3>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="container-fluid">
+
+
+            <table class="table table-responsive table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>DtCreated</th>
+                        <th>Status</th>
+                        <th>Options</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="company in Companies">
+                        <!--<td><input type="checkbox" class="form-control" ng-model="user.Check" ng-true-value="1" ng-false-value="0" style="height:20px;width:20px;" /></td>-->
+                        <td>{{company.Name}}</td>
+                        <td>{{company.Desc}}</td>
+                        <td>{{company.DtCreated | dateFilter}}</td>
+                        <td>{{company.Status | statusFilter }}</td>
+
+                        <td>
+                            <button ng-click="select(company)"><span class="glyphicon glyphicon-cog" /></button>
+                            <button ng-click="delete(company)"><span class="glyphicon glyphicon-trash" /></button>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="add()">Add</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+</body>
+</html>

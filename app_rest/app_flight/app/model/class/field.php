@@ -4,7 +4,7 @@ class Field implements IQuery {
 
 	public $Id;
 	public $Name;
-	public $Value;
+	public $Desc;
 	
 	public function __construct() {
 	}
@@ -28,7 +28,7 @@ class Field implements IQuery {
 				$field = new Field();
 				$field->Id = (int) $row['id'];
 				$field->Name = $row['field_name'];
-				$field->Value = $row['field_value'];
+				$field->Desc = $row['field_desc'];
 				
 				array_push($result, $field);
 			}
@@ -64,7 +64,7 @@ class Field implements IQuery {
 			$field = new Field();
 			$field->Id = (int) $row['id'];
 			$field->Name = $row['field_name'];
-			$field->Value = $row['field_value'];
+			$field->Desc = $row['field_desc'];
 
 			Flight::ok($field);
 
@@ -91,15 +91,15 @@ class Field implements IQuery {
 
 			$sql = "
 			INSERT INTO e_field 
-			(field_name, field_value)
+			(field_name, field_desc)
 			VALUES
-			(:field_name, :field_value);";
+			(:field_name, :field_desc);";
 
 
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':field_name', $field->Name, PDO::PARAM_STR);
-			$query->bindParam(':field_value', $field->Value, PDO::PARAM_STR);
+			$query->bindParam(':field_desc', $field->Desc, PDO::PARAM_STR);
 
 			$query->execute();
 			
@@ -136,14 +136,14 @@ class Field implements IQuery {
 			UPDATE e_field 
 			SET 
 			field_name = :field_name,
-			field_value = :field_value
+			field_desc = :field_desc
 			WHERE
 			id = :id;";
 
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':field_name', $field->Name, PDO::PARAM_STR);
-			$query->bindParam(':field_value', $field->Value, PDO::PARAM_STR);
+			$query->bindParam(':field_desc', $field->Desc, PDO::PARAM_STR);
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 

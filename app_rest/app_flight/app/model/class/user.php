@@ -8,12 +8,9 @@ class User implements IQuery {
 	public $Hash;
 	public $DtCreated;
 	public $DtExpired;
-	public $DtLogin;
-	public $DtActive;
 	public $Privilege;
 	public $Status;
 	public $Company;
-	public $Info;
 
 	
 	public function __construct() {
@@ -38,16 +35,13 @@ class User implements IQuery {
 				$user = new User();
 				$user->Id = (int) $row['id'];
 				$user->Name = $row['user_name'];
-				$user->Password = $row['user_password'];
-				$user->Hash = $row['user_hash'];
+				$user->Password = null; //$row['user_password'];
+				$user->Hash = null;//$row['user_hash'];
 				$user->DtCreated = $row['user_dt_created'];
 				$user->DtExpired = $row['user_dt_expired'];
-				$user->DtLogin = $row['user_dt_login'];
-				$user->DtActive = $row['user_dt_active'];
-				$user->Privilege = (int) $row['e_privilege_id'];
-				$user->Status = (int) $row['e_status_id'];
+				$user->Privilege = (int) $row['e_privilege_value'];
+				$user->Status = (int) $row['e_status_value'];
 				$user->Company = (int) $row['company_id'];
-				$user->Info = (int) $row['user_info_id'];
 
 				array_push($result, $user);
 			}
@@ -83,16 +77,13 @@ class User implements IQuery {
 			$user = new User();
 			$user->Id = (int) $row['id'];
 			$user->Name = $row['user_name'];
-			$user->Password = $row['user_password'];
-			$user->Hash = $row['user_hash'];
+			$user->Password = null;//$row['user_password'];
+			$user->Hash = null; //$row['user_hash'];
 			$user->DtCreated = $row['user_dt_created'];
 			$user->DtExpired = $row['user_dt_expired'];
-			$user->DtLogin = $row['user_dt_login'];
-			$user->DtActive = $row['user_dt_active'];
-			$user->Privilege = (int) $row['e_privilege_id'];
-			$user->Status = (int) $row['e_status_id'];
+			$user->Privilege = (int) $row['e_privilege_value'];
+			$user->Status = (int) $row['e_status_value'];
 			$user->Company = (int) $row['company_id'];
-			$user->Info = (int) $row['user_info_id'];
 
 			Flight::ok($user);
 
@@ -119,30 +110,29 @@ class User implements IQuery {
 
 			$sql = "
 			INSERT INTO user 
-			(user_name, user_password, user_hash, user_dt_created, user_dt_expired, user_dt_login, user_dt_active, e_privilege_id, e_status_id, company_id, user_info_id)
+			(user_name, user_password, user_dt_created, user_dt_expired, e_privilege_value, e_status_value, company_id)
 			VALUES
-			(:user_name, :user_password, :user_hash, :user_dt_created, :user_dt_expired, :user_dt_login, :user_dt_active, :e_privilege_id, :e_status_id, :company_id, :user_info_id);";
+			(:user_name, :user_password, :user_dt_created, :user_dt_expired, :e_privilege_value, :e_status_value, :company_id);";
 
 
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':user_name', $user->Name, PDO::PARAM_STR);
-			$query->bindParam(':user_password', $user->Password, PDO::PARAM_STR);
-			$query->bindParam(':user_hash', $user->Hash, PDO::PARAM_STR);
+
+			$password = hash('sha256', $user->Password);
+			$query->bindParam(':user_password', $password, PDO::PARAM_STR);
+
 			$query->bindParam(':user_dt_created', $user->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':user_dt_expired', $user->DtExpired, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_login', $user->DtLogin, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_active', $user->DtActive, PDO::PARAM_STR);
-			$query->bindParam(':e_privilege_id', $user->Privilege, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $user->Status, PDO::PARAM_INT);
+			$query->bindParam(':e_privilege_value', $user->Privilege, PDO::PARAM_INT);
+			$query->bindParam(':e_status_value', $user->Status, PDO::PARAM_INT);
 			$query->bindParam(':company_id', $user->Company, PDO::PARAM_INT);
-			$query->bindParam(':user_info_id', $user->Info, PDO::PARAM_INT);
 
 			$query->execute();
 			
 			$result = new Result();
 			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
+			$result->Id = (int)$connection->lastInsertId();
 			$result->Message = 'Done';
 
 			Flight::ok($result);
@@ -174,15 +164,11 @@ class User implements IQuery {
 			SET 
 			user_name = :user_name,
 			user_password = :user_password, 
-			user_hash = :user_hash,
 			user_dt_created = :user_dt_created,
 			user_dt_expired = :user_dt_expired,
-			user_dt_login = :user_dt_login,
-			user_dt_active = :user_dt_active,
-			e_privilege_id = :e_privilege_id,
-			e_status_id = :e_status_id,
-			company_id = :company_id,
-			user_info_id = :user_info_id
+			e_privilege_value = :e_privilege_value,
+			e_status_value = :e_status_value,
+			company_id = :company_id
 			WHERE
 			id = :id;";
 
@@ -190,16 +176,15 @@ class User implements IQuery {
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':user_name', $user->Name, PDO::PARAM_STR);
-			$query->bindParam(':user_password', $user->Password, PDO::PARAM_STR);
-			$query->bindParam(':user_hash', $user->Hash, PDO::PARAM_STR);
+			
+			$password = hash('sha256', $user->Password);
+			$query->bindParam(':user_password', $password, PDO::PARAM_STR);
+
 			$query->bindParam(':user_dt_created', $user->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':user_dt_expired', $user->DtExpired, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_login', $user->DtLogin, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_active', $user->DtActive, PDO::PARAM_STR);
-			$query->bindParam(':e_privilege_id', $user->Privilege, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $user->Status, PDO::PARAM_INT);
+			$query->bindParam(':e_privilege_value', $user->Privilege, PDO::PARAM_INT);
+			$query->bindParam(':e_status_value', $user->Status, PDO::PARAM_INT);
 			$query->bindParam(':company_id', $user->Company, PDO::PARAM_INT);
-			$query->bindParam(':user_info_id', $user->Info, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
@@ -207,7 +192,7 @@ class User implements IQuery {
 
 			$result = new Result();
 			$result->Status = Result::UPDATED;
-			$result->Id = $id;
+			$result->Id = (int)$id;
 			$result->Message = 'Done.';
 
 			Flight::ok($result);
@@ -241,7 +226,7 @@ class User implements IQuery {
 			$result = new Result();
 			$result->Status = Result::DELETED;
 			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->Id = (int)$id;
 
 			Flight::ok($result);
 
