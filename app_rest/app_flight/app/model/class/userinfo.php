@@ -6,7 +6,7 @@ class UserInfo implements IQuery {
 	public $Email;
 	public $Website;
 	public $Telephone;
-	public $UserSim;
+	public $User;
 
 
 	
@@ -34,6 +34,8 @@ class UserInfo implements IQuery {
 				$userInfo->Email = $row['info_email'];
 				$userInfo->Website = $row['info_website'];
 				$userInfo->Telephone = $row['info_telephone'];
+				$userInfo->User = $row['user_id'];
+
 
 				array_push($result, $userInfo);
 			}
@@ -73,6 +75,8 @@ class UserInfo implements IQuery {
 			$userInfo->Email = $row['info_email'];
 			$userInfo->Website = $row['info_website'];
 			$userInfo->Telephone = $row['info_telephone'];
+			$userInfo->User = $row['user_id'];
+			
 			Flight::ok($userInfo);
 
 		} catch (PDOException $pdoException) {
@@ -108,6 +112,7 @@ class UserInfo implements IQuery {
 			$userInfo->Email = $row['info_email'];
 			$userInfo->Website = $row['info_website'];
 			$userInfo->Telephone = $row['info_telephone'];
+			$userInfo->User = $row['user_id'];
 
 			Flight::ok($userInfo);
 

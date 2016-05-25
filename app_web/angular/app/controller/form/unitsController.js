@@ -1,7 +1,7 @@
 ﻿var app = angular.module('app');
 
 
-app.controller('usersController', function (
+app.controller('unitsController', function (
     $scope,
     $timeout,
     $location,

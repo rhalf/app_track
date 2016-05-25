@@ -93,6 +93,45 @@ class UserSim implements IQuery {
 		}
 	}
 
+	public static function selectByUser($id) {
+
+		$connection = Flight::dbMain();
+
+		try {
+			
+			$sql = "SELECT * FROM user_sim WHERE user_id = :user_id;";
+			$query = $connection->prepare($sql);
+			$query->bindParam(':user_id',$id, PDO::PARAM_INT);
+
+			$query->execute();
+
+			if ($query->rowCount() < 1){
+				Flight::notFound("user_id not found");
+			}
+
+			$row = $query->fetch(PDO::FETCH_ASSOC);
+
+			$userSim = new UserSim();
+			$userSim->Id = (int) $row['id'];
+			$userSim->Imei = (int) $row['sim_imei'];
+			$userSim->Number = (int) $row['sim_number'];
+			$userSim->Roaming = (bool) $row['sim_roaming'];
+			$userSim->AreaCode = (int) $row['sim_area_code'];
+			$userSim->SimVendor = (int) $row['e_sim_vendor_id'];
+			$userSim->User = (int) $row['user_id'];
+
+			Flight::ok($userSim);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
+	}
+
+
 	public static function insert() {
 
 		$connection = Flight::dbMain();

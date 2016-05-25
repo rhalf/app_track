@@ -8,7 +8,7 @@
 
 
     <div class="modal-header">
-        <h3 class="modal-title">Users</h3>
+        <h3 class="modal-title">Units</h3>
     </div>
 
 
@@ -29,12 +29,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="user in Users">
-                        <td>{{user.Name}}</td>
-                        <td>{{user.DtCreated | dateFilter}}</td>
-                        <td>{{user.DtExpired | dateFilter}}</td>
-                        <td>{{user.Privilege | privilegeFilter }}</td>
-                        <td>{{user.Status | statusFilter }}</td>
+                    <tr ng-repeat="unit in Units">
+                        <td>{{unit.Imei}}</td>
+                        <td>{{unit.SerialNumber}}</td>
+                        <td>{{unit.DtCreated | dateFilter}}</td>
+                        <td>{{unit.Privilege | privilegeFilter }}</td>
+                        <td>{{unit.Status | statusFilter }}</td>
                         <!--<td><span ng-bind="user.Company"/></td>-->
                         <!--<td><span ng-bind="user.Info" /></td>-->
                         <td>

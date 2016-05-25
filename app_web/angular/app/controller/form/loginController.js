@@ -46,7 +46,36 @@ app.controller('loginController', function ($scope, $cookies, $location, $http, 
             }
         })
        .success(function (data, status, headers, config) {
-           console.log(data);
+           //console.log(data);
+           if (data.Privilege > 1) {
+
+               var dateExp = new Date(data.DtExpired);
+               var dateNow = new Date();
+
+               if (dateNow.getTime() > dateExp.getTime()) {
+                   var alert = { type: 'danger', message: 'Your account is EXPIRED.' };
+                   $scope.alert.addItem(alert);
+                   return;
+               }
+
+               switch (data.Status) {
+                   case 0:
+                       var alert = { type: 'danger', message: 'Your account is DISABLED.' };
+                       $scope.alert.addItem(alert);
+                       return;
+                   case 1:
+                       var alert = { type: 'danger', message: data.Message };
+                       $scope.alert.addItem(alert);
+                       break;
+                   case 2:
+                       var alert = { type: 'danger', message: 'Your account is SUSPENDED.' };
+                       $scope.alert.addItem(alert);
+                       return;
+               }
+
+           }
+        
+
            authFactory.setAccessToken(data);
            $location.path('/form');
        })

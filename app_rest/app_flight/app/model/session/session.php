@@ -39,14 +39,11 @@ class Session {
 			$user = new User();
 			$user->Id = (int) $row['id'];
 			$user->Name = $row['user_name'];
-			$user->Password = null; //$row['user_password'];
-			$user->Hash = null; //$row['user_hash'];
 			$user->DtCreated = $row['user_dt_created'];
 			$user->DtExpired = $row['user_dt_expired'];
 			$user->Privilege = (int) $row['e_privilege_value'];
 			$user->Status = (int) $row['e_status_value'];
 			$user->Company = (int) $row['company_id'];
-			$user->Info = (int) $row['user_info_id'];
 
 			Flight::ok($user);
 

@@ -67,8 +67,11 @@ app.factory('Nation', function ($resource) {
 
 
 app.factory('User', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/user/:id', { id: '@id' }, {
+    return $resource('http://184.107.179.181/v1/main/user/:id/:type', { id: '@id', type: '@type'}, {
         'update': {
+            method: 'PUT'
+        },
+        setCredential: {
             method: 'PUT'
         }
     });
@@ -78,6 +81,12 @@ app.factory('UserInfo', function ($resource) {
     return $resource('http://184.107.179.181/v1/main/userinfo/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
+        },
+        getByUser: {
+            method: 'GET',
+            params: {
+                user: '@user'
+            }
         }
     });
 });
@@ -85,6 +94,12 @@ app.factory('UserSim', function ($resource) {
     return $resource('http://184.107.179.181/v1/main/usersim/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
+        },
+        getByUser: {
+            method: 'GET',
+            params: {
+                user: '@user'
+            }
         }
     });
 });

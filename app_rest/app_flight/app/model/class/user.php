@@ -35,8 +35,6 @@ class User implements IQuery {
 				$user = new User();
 				$user->Id = (int) $row['id'];
 				$user->Name = $row['user_name'];
-				$user->Password = null; //$row['user_password'];
-				$user->Hash = null;//$row['user_hash'];
 				$user->DtCreated = $row['user_dt_created'];
 				$user->DtExpired = $row['user_dt_expired'];
 				$user->Privilege = (int) $row['e_privilege_value'];
@@ -77,8 +75,6 @@ class User implements IQuery {
 			$user = new User();
 			$user->Id = (int) $row['id'];
 			$user->Name = $row['user_name'];
-			$user->Password = null;//$row['user_password'];
-			$user->Hash = null; //$row['user_hash'];
 			$user->DtCreated = $row['user_dt_created'];
 			$user->DtExpired = $row['user_dt_expired'];
 			$user->Privilege = (int) $row['e_privilege_value'];
@@ -96,6 +92,8 @@ class User implements IQuery {
 		}
 	}
 
+
+
 	public static function insert() {
 
 		$connection = Flight::dbMain();
@@ -110,18 +108,14 @@ class User implements IQuery {
 
 			$sql = "
 			INSERT INTO user 
-			(user_name, user_password, user_dt_created, user_dt_expired, e_privilege_value, e_status_value, company_id)
+			(user_name, user_dt_created, user_dt_expired, e_privilege_value, e_status_value, company_id)
 			VALUES
-			(:user_name, :user_password, :user_dt_created, :user_dt_expired, :e_privilege_value, :e_status_value, :company_id);";
+			(:user_name, :user_dt_created, :user_dt_expired, :e_privilege_value, :e_status_value, :company_id);";
 
 
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':user_name', $user->Name, PDO::PARAM_STR);
-
-			$password = hash('sha256', $user->Password);
-			$query->bindParam(':user_password', $password, PDO::PARAM_STR);
-
 			$query->bindParam(':user_dt_created', $user->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':user_dt_expired', $user->DtExpired, PDO::PARAM_STR);
 			$query->bindParam(':e_privilege_value', $user->Privilege, PDO::PARAM_INT);
@@ -163,7 +157,6 @@ class User implements IQuery {
 			UPDATE user 
 			SET 
 			user_name = :user_name,
-			user_password = :user_password, 
 			user_dt_created = :user_dt_created,
 			user_dt_expired = :user_dt_expired,
 			e_privilege_value = :e_privilege_value,
@@ -176,10 +169,6 @@ class User implements IQuery {
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':user_name', $user->Name, PDO::PARAM_STR);
-			
-			$password = hash('sha256', $user->Password);
-			$query->bindParam(':user_password', $password, PDO::PARAM_STR);
-
 			$query->bindParam(':user_dt_created', $user->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':user_dt_expired', $user->DtExpired, PDO::PARAM_STR);
 			$query->bindParam(':e_privilege_value', $user->Privilege, PDO::PARAM_INT);
@@ -206,6 +195,54 @@ class User implements IQuery {
 		}
 	}
 	
+	public static function updateCredential($id) {
+
+		$connection = Flight::dbMain();
+
+		try {
+
+			$user = json_decode(file_get_contents("php://input"));
+
+			if ($user == null) {
+				throw new Exception(json_get_error());
+			}
+
+
+			$sql = "
+			UPDATE user 
+			SET 
+
+			user_password = :user_password
+
+			WHERE
+			id = :id;";
+
+
+			$query = $connection->prepare($sql);
+
+			$password = hash('sha256', $user->Password);
+			$query->bindParam(':user_password', $password, PDO::PARAM_STR);
+
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
+
+			$query->execute();
+
+			$result = new Result();
+			$result->Status = Result::UPDATED;
+			$result->Id = (int)$id;
+			$result->Message = 'Done.';
+
+			Flight::ok($result);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
+	}
+
 	public static function delete($id) {
 
 		$connection = Flight::dbMain();

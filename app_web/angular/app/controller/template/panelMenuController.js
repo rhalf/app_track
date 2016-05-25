@@ -37,6 +37,15 @@ app.controller('panelMenuController', function ($scope, $location, $uibModal, ui
         });
     };
 
+    $scope.showUnits = function () {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'app/view/form/units.html',
+            controller: 'unitsController',
+            keyboard: true,
+            size: 'lg',
+        });
+    };
 
     $scope.init = function () {
         $scope.AuthUser = authFactory.getAccessToken();

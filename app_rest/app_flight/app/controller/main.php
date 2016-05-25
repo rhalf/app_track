@@ -278,6 +278,8 @@ Flight::route('POST /v1/main/user', array('User', 'insert'));
 
 Flight::route('PUT /v1/main/user/@id', array('User', 'update'));
 
+Flight::route('PUT /v1/main/user/@id/credential', array('User', 'updateCredential'));
+
 Flight::route('DELETE /v1/main/user/@id', array('User', 'delete'));
 
 //UserInfo
@@ -300,7 +302,15 @@ Flight::route('PUT /v1/main/userinfo/@id', array('UserInfo', 'update'));
 Flight::route('DELETE /v1/main/userinfo/@id', array('UserInfo', 'delete'));
 
 //UserSim
-Flight::route('GET /v1/main/usersim', array('UserSim', 'selectAll'));
+Flight::route('GET /v1/main/usersim', function() {
+	$user = Flight::request()->query->user;
+
+	if ($user) {
+		UserSim::selectByUser($user);
+	} else {
+		UserSim::selectAll();
+	}
+});
 
 Flight::route('GET /v1/main/usersim/@id', array('UserSim', 'select'));
 
