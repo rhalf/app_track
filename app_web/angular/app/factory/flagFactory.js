@@ -12,6 +12,9 @@ app.factory('flagFactory', function () {
     flagFactory.Privilege = {};
     flagFactory.Nation = {};
     flagFactory.SimVendor = {};
+    flagFactory.UnitSim = {};
+    flagFactory.UnitType = {};
+
 
 
 

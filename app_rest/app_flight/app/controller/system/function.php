@@ -65,4 +65,10 @@ function json_get_error() {
 	}
 }
 
+
+Flight::map('dateTime', function(){
+	$dateTime = new DateTime();
+	return $dateTime->format('Y-m-d H:i:s');
+});
+
 ?>

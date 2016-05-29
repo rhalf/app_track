@@ -6,7 +6,6 @@ class Unit implements IQuery {
 	public $Imei;
 	public $DtCreated;
 	public $SerialNumber;
-	public $DataSize;
 	public $UnitSim;
 	public $UnitType;
 	public $Company;
@@ -35,7 +34,6 @@ class Unit implements IQuery {
 				$unit->Imei = $row['unit_imei'];
 				$unit->DtCreated = $row['unit_dt_created'];
 				$unit->SerialNumber = $row['unit_serial_number'];
-				$unit->DataSize = $row['unit_data_size'];
 				$unit->UnitSim = (int) $row['sim_id'];
 				$unit->UnitType = (int) $row['unit_type_id'];
 				$unit->Company = (int) $row['company_id'];
@@ -78,7 +76,6 @@ class Unit implements IQuery {
 			$unit->Imei = $row['unit_imei'];
 			$unit->DtCreated = $row['unit_dt_created'];
 			$unit->SerialNumber = $row['unit_serial_number'];
-			$unit->DataSize = $row['unit_data_size'];
 			$unit->UnitSim = (int) $row['sim_id'];
 			$unit->UnitType = (int) $row['unit_type_id'];
 			$unit->Company = (int) $row['company_id'];
@@ -97,7 +94,6 @@ class Unit implements IQuery {
 	public static function insert() {
 
 		$connection = Flight::dbMain();
-
 		try {
 
 			$unit = json_decode(file_get_contents("php://input"));
@@ -114,9 +110,9 @@ class Unit implements IQuery {
 
 			$sql = "
 			INSERT INTO unit 
-			(unit_imei, unit_dt_created, unit_serial_number, unit_data_size, sim_id, unit_type_id, company_id)
+			(unit_imei, unit_dt_created, unit_serial_number, sim_id, unit_type_id, company_id)
 			VALUES
-			(:unit_imei, :unit_dt_created, :unit_serial_number, :unit_data_size, :sim_id, :unit_type_id, :company_id);";
+			(:unit_imei, :unit_dt_created, :unit_serial_number, :sim_id, :unit_type_id, :company_id);";
 
 
 			$query = $connection->prepare($sql);
@@ -124,7 +120,6 @@ class Unit implements IQuery {
 			$query->bindParam(':unit_imei', $unit->Imei, PDO::PARAM_INT);
 			$query->bindParam(':unit_dt_created', $unit->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':unit_serial_number', $unit->SerialNumber, PDO::PARAM_STR);
-			$query->bindParam(':unit_data_size', $unit->DataSize, PDO::PARAM_INT);
 			$query->bindParam(':sim_id', $unit->UnitSim, PDO::PARAM_INT);
 			$query->bindParam(':unit_type_id', $unit->UnitType, PDO::PARAM_INT);
 			$query->bindParam(':company_id', $unit->UnitType, PDO::PARAM_INT);
@@ -151,59 +146,59 @@ class Unit implements IQuery {
 			$sql = "
 			CREATE TABLE IF NOT EXISTS `" . $schema ."`.`" . $tableName . "` (
 			`id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
-			`data_datetime` DATETIME NULL COMMENT '',
-			`data_command` SMALLINT NULL COMMENT '',
-			`data_event` SMALLINT NULL COMMENT '',
-			`data_res1` TINYINT NULL COMMENT '',
-			`data_latitude` DOUBLE NULL COMMENT '',
-			`data_longitude` DOUBLE NULL COMMENT '',
-			`data_altitude` DOUBLE NULL COMMENT '',
-			`data_rfid` BIGINT NULL COMMENT '',
-			`data_mode` TINYINT NULL COMMENT '',
-			`data_speed` SMALLINT NULL COMMENT '',
-			`data_time` BIGINT NULL COMMENT '',
-			`data_odometer` BIGINT NULL COMMENT '',
-			`data_heading` SMALLINT NULL COMMENT '',
-			`data_picture` BIGINT NULL COMMENT '',
-			`data_gps_satellite` SMALLINT NULL COMMENT '',
-			`data_gps_status` SMALLINT NULL COMMENT '',
-			`data_gps_accuracy` SMALLINT NULL COMMENT '',
-			`data_gprs_signal` SMALLINT NULL COMMENT '',
-			`data_gprs_status` VARCHAR(25) NULL COMMENT '',
-			`data_di_0` TINYINT(1) NULL COMMENT '',
-			`data_di_1` TINYINT(1) NULL COMMENT '',
-			`data_di_2` TINYINT(1) NULL COMMENT '',
-			`data_di_3` TINYINT(1) NULL COMMENT '',
-			`data_di_4` TINYINT(1) NULL COMMENT '',
-			`data_di_5` TINYINT(1) NULL COMMENT '',
-			`data_di_6` SMALLINT NULL COMMENT '',
-			`data_di_7` SMALLINT NULL COMMENT '',
-			`data_di_8` SMALLINT NULL COMMENT '',
-			`data_di_9` TINYINT(1) NULL COMMENT '',
-			`data_di_10` TINYINT(1) NULL COMMENT '',
-			`data_do_0` TINYINT(1) NOT NULL COMMENT '',
-			`data_do_1` TINYINT(1) NULL COMMENT '',
-			`data_do_2` TINYINT(1) NULL COMMENT '',
-			`data_do_3` TINYINT(1) NULL COMMENT '',
-			`data_ai_0` SMALLINT NULL COMMENT '',
-			`data_ai_1` SMALLINT NULL COMMENT '',
-			`data_ai_2` SMALLINT NULL COMMENT '',
-			`data_ai_3` SMALLINT NULL COMMENT '',
-			`data_ai_4` SMALLINT NULL COMMENT '',
-			`data_ai_5` SMALLINT NULL COMMENT '',
-			`data_ai_6` SMALLINT NULL COMMENT '',
-			`data_ai_7` SMALLINT NULL COMMENT '',
-			`data_ai_8` SMALLINT NULL COMMENT '',
-			`data_ai_9` SMALLINT NULL COMMENT '',
-			`data_ao_0` SMALLINT NULL COMMENT '',
-			`data_ao_1` SMALLINT NULL COMMENT '',
-			`data_ao_2` SMALLINT NULL COMMENT '',
-			`data_ao_3` SMALLINT NULL COMMENT '',
-			PRIMARY KEY (`id`, `data_do_0`)  COMMENT '')
+			`dt_server` TIMESTAMP NULL COMMENT '',
+			`dt_device` TIMESTAMP NULL COMMENT '',
+			`command` SMALLINT NULL COMMENT '',
+			`event` SMALLINT NULL COMMENT '',
+			`byte` BIGINT NULL COMMENT '',
+			`latitude` DOUBLE NULL COMMENT '',
+			`longitude` DOUBLE NULL COMMENT '',
+			`altitude` DOUBLE NULL COMMENT '',
+			`rfid` BIGINT NULL COMMENT '',
+			`mode` TINYINT NULL COMMENT '',
+			`speed` SMALLINT NULL COMMENT '',
+			`time` BIGINT NULL COMMENT '',
+			`odometer` BIGINT NULL COMMENT '',
+			`heading` SMALLINT NULL COMMENT '',
+			`picture` BIGINT NULL COMMENT '',
+			`gps_satellite` SMALLINT NULL COMMENT '',
+			`gps_status` SMALLINT NULL COMMENT '',
+			`gps_accuracy` SMALLINT NULL COMMENT '',
+			`gprs_signal` SMALLINT NULL COMMENT '',
+			`gprs_status` VARCHAR(25) NULL COMMENT '',
+			`di_0` TINYINT(1) NULL COMMENT '',
+			`di_1` TINYINT(1) NULL COMMENT '',
+			`di_2` TINYINT(1) NULL COMMENT '',
+			`di_3` TINYINT(1) NULL COMMENT '',
+			`di_4` TINYINT(1) NULL COMMENT '',
+			`di_5` TINYINT(1) NULL COMMENT '',
+			`di_6` SMALLINT NULL COMMENT '',
+			`di_7` SMALLINT NULL COMMENT '',
+			`di_8` SMALLINT NULL COMMENT '',
+			`di_9` TINYINT(1) NULL COMMENT '',
+			`di_10` TINYINT(1) NULL COMMENT '',
+			`do_0` TINYINT(1) NULL COMMENT '',
+			`do_1` TINYINT(1) NULL COMMENT '',
+			`do_2` TINYINT(1) NULL COMMENT '',
+			`do_3` TINYINT(1) NULL COMMENT '',
+			`ai_0` SMALLINT NULL COMMENT '',
+			`ai_1` SMALLINT NULL COMMENT '',
+			`ai_2` SMALLINT NULL COMMENT '',
+			`ai_3` SMALLINT NULL COMMENT '',
+			`ai_4` SMALLINT NULL COMMENT '',
+			`ai_5` SMALLINT NULL COMMENT '',
+			`ai_6` SMALLINT NULL COMMENT '',
+			`ai_7` SMALLINT NULL COMMENT '',
+			`ai_8` SMALLINT NULL COMMENT '',
+			`ai_9` SMALLINT NULL COMMENT '',
+			`ao_0` SMALLINT NULL COMMENT '',
+			`ao_1` SMALLINT NULL COMMENT '',
+			`ao_2` SMALLINT NULL COMMENT '',
+			`ao_3` SMALLINT NULL COMMENT '',
+			PRIMARY KEY (`id`)  COMMENT '')
 			ENGINE = InnoDB
 			PACK_KEYS = DEFAULT
-			KEY_BLOCK_SIZE = 8
-			";
+			KEY_BLOCK_SIZE = 8;";
 
 			$query = $connection->prepare($sql);	
 
@@ -300,9 +295,9 @@ class Unit implements IQuery {
 
 			$sql = "
 			ALTER TABLE 
-				$schema.$tableNameOld
+			$schema.$tableNameOld
 			RENAME TO 
-				$schema.$tableNameNew;
+			$schema.$tableNameNew;
 			";
 
 			$query = $connection->prepare($sql);

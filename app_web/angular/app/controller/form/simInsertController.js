@@ -1,7 +1,7 @@
 ﻿var app = angular.module('app');
 
 
-app.controller('companyInsertController', function (
+app.controller('simInsertController', function (
     $scope,
     $filter,
     $timeout,
@@ -15,8 +15,7 @@ app.controller('companyInsertController', function (
     uiFactory,
 
 
-    Company,
-    CompanyInfo,
+    Sim,
     parent
 
     ) {
@@ -32,28 +31,14 @@ app.controller('companyInsertController', function (
     };
 
     //Form
-    $scope.form = {};
+
     $scope.add = function () {
-        Company.save($scope.Company,
+        Sim.save($scope.Sim,
             //Success
             function (result) {
-
-                console.log(result);
-
-                $scope.CompanyInfo.Company = result.Id;
-
-                CompanyInfo.save($scope.CompanyInfo,
-                    //Success
-                    function (result) {
-                        var alert = { type: 'success', message: '1 company has been added successfully.' };
-                        $scope.alert.addItem(alert);
-                        parent.load();
-                    },
-                    //Failed
-                    function (result) {
-                        var alert = { type: 'danger', message: result.data.Message };
-                        $scope.alert.addItem(alert);
-                    });
+                var alert = { type: 'success', message: '1 sim has been added successfully.' };
+                $scope.alert.addItem(alert);
+                parent.load();
             },
             //Failed
             function (result) {
@@ -73,16 +58,13 @@ app.controller('companyInsertController', function (
         $scope.Flag = flagFactory;
         $scope.AuthUser = authFactory.getAccessToken();
 
-    
         uiFactory.alert.items = [];
         $scope.alert = uiFactory.alert;
     }
 
 
     $scope.load = function () {
-        $scope.Company = new Company();
-        $scope.Company.DtCreated = $filter('date')(new Date(), 'yyyy-MM-dd');
-        $scope.CompanyInfo = new CompanyInfo();
+        $scope.Sim = new Sim();
     }
 
     $scope.cancel = function () {

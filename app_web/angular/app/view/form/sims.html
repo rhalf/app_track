@@ -8,7 +8,7 @@
 
 
     <div class="modal-header">
-        <h3 class="modal-title">Companies</h3>
+        <h3 class="modal-title">Sims</h3>
     </div>
 
 
@@ -17,23 +17,29 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name</th>
-                    <th>Description</th>
+                    <th>Imei</th>
+                    <th>Number</th>
+                    <th>Roaming</th>
                     <th>DtCreated</th>
+                    <th>Vendor</th>
                     <th>Status</th>
                     <th>Options</th>
             </thead>
             <tbody>
-                <tr ng-repeat="company in Companies | startFromFilter : (pagination.currentPage - 1 ) * pagination.pageSize | limitTo : pagination.pageSize">
+                <tr ng-repeat="sim in Sims| startFromFilter : (pagination.currentPage - 1 ) * pagination.pageSize | limitTo : pagination.pageSize">
                     <td>{{$index + 1 + (pagination.currentPage - 1 ) * pagination.pageSize }}</td>
-                    <td>{{company.Name}}</td>
-                    <td>{{company.Desc}}</td>
-                    <td>{{company.DtCreated | dateFilter : 'date'}}</td>
-                    <td>{{company.Status | statusFilter : 'name' }}</td>
+                    <td>{{sim.Imei}}</td>
+                    <td>{{sim.Number}}</td>
+                    <td>{{sim.Roaming}}</td>
+                    <td>{{sim.DtCreated | dateFilter : 'date'}}</td>
+                    <td>{{sim.SimVendor| simVendorFilter : 'name'}}</td>
+                    <td>{{sim.Status | statusFilter : 'name' }}</td>
+
                     <td>
-                        <button ng-click="select(company)"><span class="glyphicon glyphicon-cog" /></button>
-                        <button ng-click="delete(company)"><span class="glyphicon glyphicon-trash" /></button>
+                        <button ng-click="select(sim)"><span class="glyphicon glyphicon-cog" /></button>
+                        <button ng-click="delete(sim)"><span class="glyphicon glyphicon-trash" /></button>
                     </td>
+
                 </tr>
             </tbody>
         </table>
@@ -46,7 +52,6 @@
                         class="center-block">
         </uib-pagination>
     </div>
-
 
     <div class="modal-footer">
         <button class="btn btn-default" type="button" ng-click="add()">Add</button>

@@ -11,6 +11,10 @@ class User implements IQuery {
 	public $Privilege;
 	public $Status;
 	public $Company;
+	public $Sim;
+	public $Info;
+
+
 
 	
 	public function __construct() {
@@ -40,6 +44,8 @@ class User implements IQuery {
 				$user->Privilege = (int) $row['e_privilege_value'];
 				$user->Status = (int) $row['e_status_value'];
 				$user->Company = (int) $row['company_id'];
+				$user->Sim = (int) $row['sim_id'];
+				$user->Info = (int) $row['info_id'];
 
 				array_push($result, $user);
 			}
@@ -80,6 +86,8 @@ class User implements IQuery {
 			$user->Privilege = (int) $row['e_privilege_value'];
 			$user->Status = (int) $row['e_status_value'];
 			$user->Company = (int) $row['company_id'];
+			$user->Sim = (int) $row['sim_id'];
+			$user->Info = (int) $row['info_id'];
 
 			Flight::ok($user);
 
@@ -97,6 +105,7 @@ class User implements IQuery {
 	public static function insert() {
 
 		$connection = Flight::dbMain();
+		$dateTime = Flight::dateTime();
 
 		try {
 
@@ -108,19 +117,26 @@ class User implements IQuery {
 
 			$sql = "
 			INSERT INTO user 
-			(user_name, user_dt_created, user_dt_expired, e_privilege_value, e_status_value, company_id)
+			(user_name, user_password, user_dt_created, user_dt_expired, e_privilege_value, e_status_value, company_id, sim_id, info_id)
 			VALUES
-			(:user_name, :user_dt_created, :user_dt_expired, :e_privilege_value, :e_status_value, :company_id);";
+			(:user_name, :user_password, :user_dt_created, :user_dt_expired, :e_privilege_value, :e_status_value, :company_id, :sim_id, :info_id);";
 
 
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':user_name', $user->Name, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_created', $user->DtCreated, PDO::PARAM_STR);
+
+			$password = hash('sha256', $user->Password);
+			$query->bindParam(':user_password', $password, PDO::PARAM_STR);
+
+			$query->bindParam(':user_dt_created', $dateTime, PDO::PARAM_STR);
 			$query->bindParam(':user_dt_expired', $user->DtExpired, PDO::PARAM_STR);
 			$query->bindParam(':e_privilege_value', $user->Privilege, PDO::PARAM_INT);
 			$query->bindParam(':e_status_value', $user->Status, PDO::PARAM_INT);
 			$query->bindParam(':company_id', $user->Company, PDO::PARAM_INT);
+			$query->bindParam(':sim_id', $user->Sim, PDO::PARAM_INT);
+			$query->bindParam(':info_id', $user->Info, PDO::PARAM_INT);
+
 
 			$query->execute();
 			
@@ -157,11 +173,13 @@ class User implements IQuery {
 			UPDATE user 
 			SET 
 			user_name = :user_name,
-			user_dt_created = :user_dt_created,
 			user_dt_expired = :user_dt_expired,
 			e_privilege_value = :e_privilege_value,
 			e_status_value = :e_status_value,
-			company_id = :company_id
+			company_id = :company_id,
+			sim_id = :sim_id,
+			info_id = :info_id
+
 			WHERE
 			id = :id;";
 
@@ -169,11 +187,12 @@ class User implements IQuery {
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':user_name', $user->Name, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_created', $user->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':user_dt_expired', $user->DtExpired, PDO::PARAM_STR);
 			$query->bindParam(':e_privilege_value', $user->Privilege, PDO::PARAM_INT);
 			$query->bindParam(':e_status_value', $user->Status, PDO::PARAM_INT);
 			$query->bindParam(':company_id', $user->Company, PDO::PARAM_INT);
+			$query->bindParam(':sim_id', $user->Sim, PDO::PARAM_INT);
+			$query->bindParam(':info_id', $user->Info, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 

@@ -23,10 +23,8 @@ require_once('/app/model/class/unit.php');
 
 require_once('/app/model/class/driver.php');
 require_once('/app/model/class/companyinfo.php');
-require_once('/app/model/class/unitsim.php');
-require_once('/app/model/class/usersim.php');
-require_once('/app/model/class/unitsim.php');
-require_once('/app/model/class/userinfo.php');
+require_once('/app/model/class/sim.php');
+require_once('/app/model/class/info.php');
 require_once('/app/model/class/useronline.php');
 
 

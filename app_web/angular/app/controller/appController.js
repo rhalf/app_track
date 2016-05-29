@@ -2,7 +2,7 @@
 
 app.controller('appController', function () {
 
-   
+
 });
 
 app.run(function (
@@ -20,7 +20,10 @@ app.run(function (
     Privilege,
     Company,
     Nation,
-    SimVendor
+    SimVendor,
+    Sim,
+    UnitType
+
     ) {
 
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
@@ -38,6 +41,10 @@ app.run(function (
             flagFactory.Privilege = Privilege.query();
             flagFactory.Nation = Nation.query();
             flagFactory.SimVendor = SimVendor.query();
+            flagFactory.Sim = Sim.query();
+            flagFactory.UnitType = UnitType.query();
+
+
 
             flagFactory.Company = Company.query();
 
@@ -48,12 +55,15 @@ app.run(function (
                     flagFactory.Privilege,
                     flagFactory.Company,
                     flagFactory.Nation,
-                    flagFactory.SimVendor
+                    flagFactory.SimVendor,
+                    flagFactory.Sim,
+                    flagFactory.UnitType
                 ]
             );
 
             promises.then(function () {
-                console.log("<-=======Initizalization Finished=======->");
+                //console.log(flagFactory.UnitSim);
+                console.log("<-=======Initizalization Finished======->");
 
                 uiFactory.isLoading = false;
                 var user = authFactory.getAccessToken();

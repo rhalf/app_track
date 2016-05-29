@@ -18,8 +18,8 @@ app.controller('userInsertController', function (
 
 
     User,
-    UserInfo,
-    UserSim,
+    Info,
+    Sim,
 
     parent
 
@@ -39,6 +39,12 @@ app.controller('userInsertController', function (
     $scope.form = {};
     $scope.form.save = function () {
 
+        if (validationFactory.isNullOrEmpty($scope.User.Name)) {
+            var alert = { type: 'danger', message: 'Username is null or Empty...' };
+            $scope.alert.addItem(alert);
+            return;
+        }
+
         if (validationFactory.password.notMatch($scope.User.Password, $scope.User.Password1)) {
             var alert = { type: 'danger', message: 'Password don\'t match...' };
             $scope.alert.addItem(alert);
@@ -51,56 +57,57 @@ app.controller('userInsertController', function (
             return;
         }
 
-        User.save(
+
+
+        var q1 = Sim.save(
+             $scope.Sim,
+             function (result) {
+                 //Success
+                 $scope.User.Sim = result.Id;
+
+             },
+             function (result) {
+                 //Failed
+                 var alert = { type: 'danger', message: result.data.Message };
+                 $scope.alert.addItem(alert);
+                 return;
+             });
+
+        var q2 = Info.save(
+                      $scope.Info,
+                      function (result) {
+                          //Success
+                          //console.log(result);
+                          $scope.User.Info = result.Id;
+                      },
+                      function (result) {
+                          //Failed
+                          var alert = { type: 'danger', message: result.data.Message };
+                          $scope.alert.addItem(alert);
+                          return;
+                      });
+
+
+        var promises = $q.all([q1,q2]);
+
+        promises.then(function () {
+
+            console.log($scope.User);
+
+            User.save(
             $scope.User,
             function (result) {
-                //Success
-                $scope.UserInfo.User = result.Id;
-                $scope.UserSim.User = result.Id;
-
-                var q1 = UserSim.save(
-                    $scope.UserSim,
-                    function (result) {
-                        //Success
-                    },
-                    function (result) {
-                        //Failed
-                        var alert = { type: 'danger', message: result.data.Message };
-                        $scope.alert.addItem(alert);
-                    });
-                  
-                  
-               var q2 = UserInfo.save(
-                    $scope.UserInfo,
-                    function (result) {
-                        //Success
-                    },
-                    function (result) {
-                        //Failed
-                        var alert = { type: 'danger', message: result.data.Message };
-                        $scope.alert.addItem(alert);
-                    });
-                   
-               
-               var promises = $q.all(
-                   [
-                       q1,
-                       q2
-                   ]
-                );
-
-               promises.then(function () {
-                   var alert = { type: 'success', message: '1 user has been added.' };
-                   $scope.alert.addItem(alert);
-                   $timeout(parent.form.load,200);
-               });
-
+                var alert = { type: 'success', message: '1 user has been added.' };
+                $scope.alert.addItem(alert);
+                $timeout(parent.form.load, 200);
             },
             function (result) {
-                //Failed
                 var alert = { type: 'danger', message: result.data.Message };
                 $scope.alert.addItem(alert);
+                return;
             });
+        });
+
     };
 
     //Alert
@@ -115,8 +122,8 @@ app.controller('userInsertController', function (
         $scope.AuthUser = authFactory.getAccessToken();
 
         $scope.User = new User();
-        $scope.UserInfo = new UserInfo();
-        $scope.UserSim = new UserSim();
+        $scope.Info = new Info();
+        $scope.Sim = new Sim();
 
 
         $scope.User.DtCreated = $filter('date')(new Date(), 'yyyy-MM-dd');

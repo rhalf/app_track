@@ -89,6 +89,7 @@ class Company implements IQuery {
 	public static function insert() {
 
 		$connection = Flight::dbMain();
+		$dateTime = Flight::dateTime();
 
 		try {
 
@@ -109,7 +110,7 @@ class Company implements IQuery {
 
 			$query->bindParam(':company_name', $company->Name, PDO::PARAM_STR);
 			$query->bindParam(':company_desc', $company->Desc, PDO::PARAM_STR);
-			$query->bindParam(':company_dt_created', $company->DtCreated, PDO::PARAM_STR);
+			$query->bindParam(':company_dt_created', $dateTime, PDO::PARAM_STR);
 			$query->bindParam(':e_status_value', $company->Status, PDO::PARAM_INT);
 
 			$query->execute();
@@ -146,7 +147,6 @@ class Company implements IQuery {
 			SET 
 			company_name = :company_name,
 			company_desc = :company_desc, 
-			company_dt_created = :company_dt_created,
 			e_status_value = :e_status_value
 
 			WHERE
@@ -158,7 +158,6 @@ class Company implements IQuery {
 
 			$query->bindParam(':company_name', $company->Name, PDO::PARAM_STR);
 			$query->bindParam(':company_desc', $company->Desc, PDO::PARAM_STR);
-			$query->bindParam(':company_dt_created', $company->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':e_status_value', $company->Status, PDO::PARAM_INT);
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);

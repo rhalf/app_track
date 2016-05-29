@@ -4,18 +4,20 @@ app.filter('nationFilter', function ($filter, flagFactory) {
     return function (id, option) {
         var result = "UNKNOWN";
 
-        angular.forEach(flagFactory.Nation, function (nation) {
-            if (nation.Id === id) {
+        angular.forEach(flagFactory.Nation, function (object) {
+            if (object.Id === id) {
                 switch (option) {
                     case 'nameShort':
-                        result = nation.NameShort;
+                        result = object.NameShort;
                         break;
                     case 'nameLong':
-                        result = nation.NameLong;
+                        result = object.NameLong;
                         break;
                     case 'dialCode':
-                        result = nation.DialCode;
+                        result = object.DialCode;
                         break;
+                    default:
+                        result = object.NameShort;
                 }
             }
         });

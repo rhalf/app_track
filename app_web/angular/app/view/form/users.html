@@ -24,19 +24,18 @@
                         <th>DtExpired</th>
                         <th>Privilege</th>
                         <th>Status</th>
-
+                        <th>Company</th>
                         <th>Options</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="user in Users">
                         <td>{{user.Name}}</td>
-                        <td>{{user.DtCreated | dateFilter}}</td>
-                        <td>{{user.DtExpired | dateFilter}}</td>
-                        <td>{{user.Privilege | privilegeFilter }}</td>
-                        <td>{{user.Status | statusFilter }}</td>
-                        <!--<td><span ng-bind="user.Company"/></td>-->
-                        <!--<td><span ng-bind="user.Info" /></td>-->
+                        <td>{{user.DtCreated | dateFilter : 'date'}}</td>
+                        <td>{{user.DtExpired | dateFilter : 'date'}}</td>
+                        <td>{{user.Privilege | privilegeFilter : 'name' }}</td>
+                        <td>{{user.Status | statusFilter  : 'name'}}</td>
+                        <td>{{user.Company | companyFilter  : 'name'}}</td>
                         <td>
                             <button ng-click="select(user)"><span class="glyphicon glyphicon-cog" /></button>
                             <button ng-click="delete(user)"><span class="glyphicon glyphicon-trash" /></button>

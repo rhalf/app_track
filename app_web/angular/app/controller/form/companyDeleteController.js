@@ -13,6 +13,7 @@ app.controller('companyDeleteController', function (
     flagFactory,
     uiFactory,
 
+    Company,
     CompanyInfo,
 
     company,
@@ -35,7 +36,7 @@ app.controller('companyDeleteController', function (
 
     $scope.delete = function () {
         Company.delete({ id: $scope.Company.Id }, function (result) {
-            $timeout(parent.form.load, 500);
+            parent.load();
             $scope.cancel();
         });
     };

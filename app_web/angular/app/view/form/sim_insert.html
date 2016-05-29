@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="cancel()"><span aria-hidden="true">&times;</span></button>-->
+        <h3 class="modal-title">Sim (Add)</h3>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="noty">
+                <uib-alert ng-repeat="alert in alert.items" type="{{alert.type}}" close="closeAlert($index)" dismiss-on-timeout="3000">{{alert.message}} </uib-alert>
+            </div>
+
+
+            <form class="form-horizontal" role="form">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">Imei</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" ng-model="Sim.Imei" required/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Number</label>
+                        <div class="col-md-10">
+                            <input type="number" class="form-control" ng-model="Sim.Number" required/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Roaming</label>
+                        <div class="col-md-10">
+                            <input type="checkbox" class="form-control" ng-model="Sim.Roaming" ng-true-value="true" ng-false-value="false" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">SimVendor</label>
+                        <div class="col-md-10">
+                            <select class="form-control" ng-model="Sim.SimVendor" ng-init="Sim.SimVendor = Flag.SimVendor[0].Id" ng-options="simVendor.Id as simVendor.Name for simVendor in Flag.SimVendor" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Status</label>
+                        <div class="col-md-10">
+                            <select class="form-control" ng-model="Sim.Status" ng-init="Sim.Status = Flag.Status[0].Value" ng-options="status.Value as status.Name for status in Flag.Status" required />
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="add()">Add</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+
+    <style type="text/css">
+        form {
+            margin: 20px;
+        }
+    </style>
+</body>
+</html>

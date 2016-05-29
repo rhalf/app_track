@@ -11,7 +11,7 @@ app.controller('unitsController', function (
     authFactory,
     flagFactory,
 
-    User
+    Unit
 
     ) {
 
@@ -23,33 +23,33 @@ app.controller('unitsController', function (
     }
 
     $scope.form.load = function () {
-        User.query(function (users) {
-            $scope.Users = users;
+        Unit.query(function (units) {
+            $scope.Units = units;
         });
     }
 
-    $scope.select = function (user) {
+    $scope.select = function (unit) {
         $uibModal.open({
             animation: true,
-            templateUrl: 'app/view/form/user_update.html',
-            controller: 'userUpdateController',
+            templateUrl: 'app/view/form/unit_update.html',
+            controller: 'unitUpdateController',
             keyboard: true,
             size: 'md',
             resolve: {
-                user: user,
+                unit: unit,
                 parent: $scope
             }
         });
     }
-    $scope.delete = function (user) {
+    $scope.delete = function (unit) {
         $uibModal.open({
             animation: true,
-            templateUrl: 'app/view/form/user_delete.html',
-            controller: 'userDeleteController',
+            templateUrl: 'app/view/form/unit_delete.html',
+            controller: 'unitDeleteController',
             keyboard: true,
             size: 'md',
             resolve: {
-                user: user,
+                unit: unit,
                 parent: $scope
             }
         });
@@ -58,8 +58,8 @@ app.controller('unitsController', function (
     $scope.add = function () {
         $uibModal.open({
             animation: true,
-            templateUrl: 'app/view/form/user_insert.html',
-            controller: 'userInsertController',
+            templateUrl: 'app/view/form/unit_insert.html',
+            controller: 'unitInsertController',
             keyboard: true,
             size: 'md',
             resolve: {
@@ -68,7 +68,7 @@ app.controller('unitsController', function (
         });
     }
 
-    $scope.credential = function (user) {
+    $scope.credential = function (unit) {
         $uibModal.open({
             animation: true,
             templateUrl: 'app/view/form/user_update_credential.html',
@@ -76,7 +76,7 @@ app.controller('unitsController', function (
             keyboard: true,
             size: 'md',
             resolve: {
-                user: user,
+                user: unit,
                 parent: $scope
             }
         });

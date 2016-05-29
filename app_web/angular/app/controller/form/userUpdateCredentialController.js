@@ -16,8 +16,8 @@ app.controller('userUpdateCredentialController', function (
     validationFactory,
 
     User,
-    UserInfo,
-    UserSim,
+    Info,
+    Sim,
 
     user,
     parent
@@ -54,7 +54,6 @@ app.controller('userUpdateCredentialController', function (
                      var alert = { type: 'danger', message: result.data.Message };
                      $scope.alert.addItem(alert);
                  }
-
          );
 
     }

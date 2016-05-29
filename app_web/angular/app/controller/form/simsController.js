@@ -1,7 +1,7 @@
 ﻿var app = angular.module('app');
 
 
-app.controller('companiesController', function (
+app.controller('simsController', function (
     $scope,
     $timeout,
     $location,
@@ -13,11 +13,9 @@ app.controller('companiesController', function (
     flagFactory,
     uiFactory,
 
-    Company
+    Sim
 
     ) {
-
-    $scope.form = {};
 
 
     $scope.init = function () {
@@ -27,24 +25,22 @@ app.controller('companiesController', function (
     }
 
     $scope.load = function () {
-        $scope.Companies = Company.query();
+        $scope.Sims = Sim.query();
     }
-
-   
 
     $scope.cancel = function () {
         $uibModalInstance.close();
     };
 
-    $scope.select = function (company) {
+    $scope.select = function (sim) {
         $uibModal.open({
             animation: true,
-            templateUrl: 'app/view/form/company_update.html',
-            controller: 'companyUpdateController',
+            templateUrl: 'app/view/form/sim_update.html',
+            controller: 'simUpdateController',
             keyboard: true,
             size: 'md',
             resolve: {
-                company: company,
+                sim: sim,
                 parent: $scope
             }
         });
@@ -53,8 +49,8 @@ app.controller('companiesController', function (
     $scope.add = function () {
         $uibModal.open({
             animation: true,
-            templateUrl: 'app/view/form/company_insert.html',
-            controller: 'companyInsertController',
+            templateUrl: 'app/view/form/sim_insert.html',
+            controller: 'simInsertController',
             keyboard: true,
             size: 'md',
             resolve: {
@@ -63,15 +59,15 @@ app.controller('companiesController', function (
         });
     }
 
-    $scope.delete = function (company) {
+    $scope.delete = function (sim) {
         $uibModal.open({
             animation: true,
-            templateUrl: 'app/view/form/company_delete.html',
-            controller: 'companyDeleteController',
+            templateUrl: 'app/view/form/sim_delete.html',
+            controller: 'simDeleteController',
             keyboard: true,
             size: 'md',
             resolve: {
-                company: company,
+                sim: sim,
                 parent: $scope
             }
         });

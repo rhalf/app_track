@@ -35,29 +35,6 @@
                                     <input type="text" class="form-control" ng-model="Company.Desc" required />
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-2">DateTime Created</label>
-                                <div class="col-md-10">
-                                    <p class="input-group">
-                                        <input type="text" class="form-control"
-                                               uib-datepicker-popup="{{dateTimePicker.format[1]}}"
-                                               ng-model="Company.DtCreated"
-                                               is-open="dateTimePicker.isOpen[0]"
-                                               datepicker-options="dateTimePicker.options"
-                                               ng-required="true"
-                                               close-text="Close"
-                                               datetime-directive
-                                               disabled />
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-default" ng-click="dateTimePicker.toggle(0)">
-                                                <i class="glyphicon glyphicon-calendar"></i>
-                                            </button>
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-
                             <div class="form-group">
                                 <label class="control-label col-md-2">Status</label>
                                 <div class="col-md-10">
@@ -70,7 +47,6 @@
                 <uib-tab index="1" heading="CompanyInfo">
                     <form class="form-horizontal" role="form">
                         <fieldset>
-
                             <div class="form-group">
                                 <label class="control-label col-md-2">Logo</label>
                                 <div class="col-md-10">
@@ -84,9 +60,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-2">Noti</label>
+                                <label class="control-label col-md-2">Notify</label>
                                 <div class="col-md-10">
-                                    <input type="number" class="form-control" ng-model="CompanyInfo.Noti" required disabled />
+                                    <input type="number" class="form-control" ng-model="CompanyInfo.Notify" required disabled />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -110,7 +86,7 @@
     </div>
 
     <div class="modal-footer">
-        <button class="btn btn-default" type="button" ng-click="form.save()">Add</button>
+        <button class="btn btn-default" type="button" ng-click="add()">Add</button>
         <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
     </div>
 

@@ -77,29 +77,41 @@ app.factory('User', function ($resource) {
     });
 });
 
-app.factory('UserInfo', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/userinfo/:id', { id: '@id' }, {
+app.factory('Info', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/info/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
-        },
-        getByUser: {
-            method: 'GET',
-            params: {
-                user: '@user'
-            }
         }
     });
 });
-app.factory('UserSim', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/usersim/:id', { id: '@id' }, {
+app.factory('Sim', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/sim/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
-        },
-        getByUser: {
-            method: 'GET',
-            params: {
-                user: '@user'
-            }
+        }
+    });
+});
+
+app.factory('Unit', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/unit/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
+        }
+    });
+});
+
+app.factory('UnitSim', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/unitsim/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
+        }
+    });
+});
+
+app.factory('UnitType', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/unittype/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
         }
     });
 });

@@ -36,7 +36,7 @@ class CompanyInfo implements IQuery {
 				$CompanyInfo->Logo = $row['info_logo'];
 				$CompanyInfo->Alert = (int)$row['info_alert'];
 				$CompanyInfo->Notify = (int) $row['info_noti'];
-				$CompanyInfo->Theme = $row['info_theme'];
+				$CompanyInfo->Theme = (int)$row['info_theme'];
 				$CompanyInfo->Field = (int)$row['e_field_id'];
 				$CompanyInfo->Company = (int)$row['company_id'];
 
@@ -60,7 +60,7 @@ class CompanyInfo implements IQuery {
 
 		try {
 
-			$sql = "SELECT * FROM company_info WHERE id = :id;";
+			$sql = "SELECT * FROM company_info WHERE id = :id LIMIT 1;";
 			$query = $connection->prepare($sql);
 			$query->bindParam(':id',$id, PDO::PARAM_INT);
 
@@ -78,7 +78,7 @@ class CompanyInfo implements IQuery {
 			$companyInfo->Logo = $row['info_logo'];
 			$companyInfo->Alert = (int)$row['info_alert'];
 			$companyInfo->Notify = (int) $row['info_noti'];
-			$companyInfo->Theme = $row['info_theme'];
+			$companyInfo->Theme = (int)$row['info_theme'];
 			$companyInfo->Field = (int)$row['e_field_id'];
 			$companyInfo->Company = (int)$row['company_id'];
 
@@ -98,7 +98,7 @@ class CompanyInfo implements IQuery {
 
 		try {
 
-			$sql = "SELECT * FROM company_info WHERE company_id = :company_id;";
+			$sql = "SELECT * FROM company_info WHERE company_id = :company_id LIMIT 1;";
 			$query = $connection->prepare($sql);
 			$query->bindParam(':company_id',$id, PDO::PARAM_INT);
 
@@ -116,7 +116,7 @@ class CompanyInfo implements IQuery {
 			$companyInfo->Logo = $row['info_logo'];
 			$companyInfo->Alert = (int)$row['info_alert'];
 			$companyInfo->Notify = (int) $row['info_noti'];
-			$companyInfo->Theme = $row['info_theme'];
+			$companyInfo->Theme = (int)$row['info_theme'];
 			$companyInfo->Field = (int)$row['e_field_id'];
 			$companyInfo->Company = (int)$row['company_id'];
 
@@ -157,7 +157,7 @@ class CompanyInfo implements IQuery {
 			$query->bindParam(':info_logo', $companyInfo->Logo, PDO::PARAM_STR);
 			$query->bindParam(':info_alert', $companyInfo->Alert, PDO::PARAM_INT);
 			$query->bindParam(':info_noti', $companyInfo->Notify, PDO::PARAM_INT);
-			$query->bindParam(':info_theme', $companyInfo->Theme, PDO::PARAM_STR);
+			$query->bindParam(':info_theme', $companyInfo->Theme, PDO::PARAM_INT);
 			$query->bindParam(':e_field_id', $companyInfo->Field, PDO::PARAM_INT);
 			$query->bindParam(':company_id', $companyInfo->Company, PDO::PARAM_INT);
 
@@ -211,7 +211,7 @@ class CompanyInfo implements IQuery {
 			$query->bindParam(':info_logo', $companyInfo->Logo, PDO::PARAM_STR);
 			$query->bindParam(':info_alert', $companyInfo->Alert, PDO::PARAM_INT);
 			$query->bindParam(':info_noti', $companyInfo->Notify, PDO::PARAM_INT);
-			$query->bindParam(':info_theme', $companyInfo->Theme, PDO::PARAM_STR);
+			$query->bindParam(':info_theme', $companyInfo->Theme, PDO::PARAM_INT);
 			$query->bindParam(':e_field_id', $companyInfo->Field, PDO::PARAM_INT);
 			$query->bindParam(':company_id', $companyInfo->Company, PDO::PARAM_INT);
 

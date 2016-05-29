@@ -11,11 +11,11 @@
                 <span class="glyphicon glyphicon-menu-hamburger"></span>
             </a>
         </div>
-        <ul class="nav navbar-nav" >
+        <ul class="nav navbar-nav">
             <li class="dropdown" ng-show="isAllowed">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="">
-                  
-                          System
+
+                    System
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
@@ -27,11 +27,18 @@
                         </a>
                     </li>
                     <li>
+                        <a ng-click="showSims()" href="">
+                            <span class="glyphicon glyphicon-signal"></span>
+                            Sims
+                        </a>
+                    </li>
+                    <li>
                         <a ng-click="showUsers()" href="">
                             <span class="glyphicon glyphicon-user"></span>
                             Users
                         </a>
                     </li>
+
                     <li>
                         <a ng-click="showUnits()" href="">
                             <span class="glyphicon glyphicon-send"></span>

@@ -16,8 +16,8 @@ app.controller('userUpdateController', function (
     validationFactory,
 
     User,
-    UserInfo,
-    UserSim,
+    Info,
+    Sim,
 
     user,
     parent
@@ -40,52 +40,66 @@ app.controller('userUpdateController', function (
 
     $scope.form.update = function () {
 
-        var q1 = User.update(
-                { id: $scope.User.Id },
-                $scope.User,
-                function (result) {
-                    $timeout(parent.form.load, 500);
-                });
+        if (validationFactory.isNullOrEmpty($scope.User.Name)) {
+            var alert = { type: 'danger', message: 'Username is null or Empty...' };
+            $scope.alert.addItem(alert);
+            return;
+        }
 
-        var q2 = UserSim.update(
-                { id: $scope.UserSim.Id },
-                $scope.UserSim,
-                function (result) {
-                    //Success
-                },
-                function (result) {
-                    //Failed
-                    var alert = { type: 'danger', message: result.data.Message };
-                    $scope.alert.addItem(alert);
-                });
+        var q1 = Sim.update(
+            { id: $scope.Sim.Id },
+            $scope.Sim,
+            function (result) {
+                //Success
+                $scope.User.Sim = result.Id;
 
-        var q3 = UserInfo.update(
-                { id: $scope.UserInfo.Id },
-                 $scope.UserInfo,
-                 function (result) {
-                     //Success
-                 },
-                 function (result) {
-                     //Failed
-                     var alert = { type: 'danger', message: result.data.Message };
-                     $scope.alert.addItem(alert);
-                 });
+            },
+            function (result) {
+                //Failed
+                var alert = { type: 'danger', message: result.data.Message };
+                $scope.alert.addItem(alert);
+                return;
+            });
+
+        var q2 = Info.update(
+            { id: $scope.Info.Id },
+            $scope.Info,
+            function (result) {
+                //Success
+                $scope.User.Info = result.Id;
+            },
+            function (result) {
+                //Failed
+                var alert = { type: 'danger', message: result.data.Message };
+                $scope.alert.addItem(alert);
+                return;
+            });
 
 
         var promises = $q.all(
             [
                 q1,
-                q2,
-                q3
+                q2
             ]
-         );
+        );
 
         promises.then(function () {
-            var alert = { type: 'success', message: 'This user has been updated.' };
-            $scope.alert.addItem(alert);
-            $timeout(parent.form.load, 200);
+            User.update(
+            { id: $scope.User.Id },
+            $scope.User,
+            function (result) {
+                var alert = { type: 'success', message: '1 user has been updated.' };
+                $scope.alert.addItem(alert);
+                $timeout(parent.form.load, 200);
+                $scope.form.toggle();
+
+            },
+            function (result) {
+                var alert = { type: 'danger', message: result.data.Message };
+                $scope.alert.addItem(alert);
+                return;
+            });
         });
-        $scope.form.toggle();
     }
 
 
@@ -107,9 +121,10 @@ app.controller('userUpdateController', function (
 
 
     $scope.form.load = function () {
+        console.log(user);
         $scope.User = user;
-        $scope.UserInfo = UserInfo.getByUser({ user: user.Id });
-        $scope.UserSim = UserSim.getByUser({ user: user.Id });
+        $scope.Info = Info.get({ id: user.Info });
+        $scope.Sim = Sim.get({ id: user.Sim });
 
     }
 

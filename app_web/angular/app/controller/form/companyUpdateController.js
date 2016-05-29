@@ -30,12 +30,12 @@ app.controller('companyUpdateController', function (
         $scope.dateTimePicker.isOpen[index] = !$scope.dateTimePicker.isOpen[index];
     };
 
-    $scope.form = {};
-    $scope.form.toggle = function () {
+ 
+    $scope.toggle = function () {
         $scope.form.isDisabled = !$scope.form.isDisabled;
     }
 
-    $scope.form.update = function () {
+    $scope.update = function () {
         $scope.form.isDisabled = !$scope.form.isDisabled;
 
         CompanyInfo.update(
@@ -49,8 +49,9 @@ app.controller('companyUpdateController', function (
                     $scope.Company,
                 function (result) {
                     //Success
-                    $timeout(parent.form.load, 250);
-                    $scope.cancel();
+                    var alert = { type: 'success', message: '1 company has been updated successfully.' };
+                    $scope.alert.addItem(alert);
+                    parent.load();
                 },
                 function (result) {
                     //Failed
@@ -67,8 +68,10 @@ app.controller('companyUpdateController', function (
         $scope.alert.closeItem(index);
     }
 
-    $scope.form.init = function () {
+    $scope.init = function () {
+        $scope.form = {};
         $scope.form.isDisabled = true;
+
         $scope.Flag = flagFactory;
         $scope.AuthUser = authFactory.getAccessToken();
 
@@ -77,7 +80,8 @@ app.controller('companyUpdateController', function (
     }
 
 
-    $scope.form.load = function () {
+    $scope.load = function () {
+
         $scope.Company = company;
         $scope.CompanyInfo = CompanyInfo.getByCompany({
             company: $scope.Company.Id
@@ -89,7 +93,7 @@ app.controller('companyUpdateController', function (
         $uibModalInstance.close();
     };
 
-    $scope.form.init();
-    $scope.form.load();
+    $scope.init();
+    $scope.load();
 });
 

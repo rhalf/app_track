@@ -40,28 +40,6 @@
                                     <input type="password" class="form-control" ng-model="User.Password1" required />
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-2">DateTime Created</label>
-                                <div class="col-md-10">
-                                    <p class="input-group">
-                                        <input type="text" class="form-control"
-                                               uib-datepicker-popup="{{dateTimePicker.format[1]}}"
-                                               ng-model="User.DtCreated"
-                                               is-open="dateTimePicker.isOpen[0]"
-                                               datepicker-options="dateTimePicker.options"
-                                               ng-required="true"
-                                               close-text="Close"
-                                               datetime-directive
-                                               disabled />
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-default" ng-click="dateTimePicker.toggle(0)">
-                                                <i class="glyphicon glyphicon-calendar"></i>
-                                            </button>
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <label class="control-label col-md-2">DateTime Expired</label>
                                 <div class="col-md-10">
@@ -103,25 +81,25 @@
                         </fieldset>
                     </form>
                 </uib-tab>
-                <uib-tab index="1" heading="UserInfo">
+                <uib-tab index="1" heading="Info">
                     <form class="form-horizontal" role="form">
                         <fieldset>
                             <div class="form-group">
                                 <label class="control-label col-sm-2">Email</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" ng-model="UserInfo.Email" />
+                                    <input type="text" class="form-control" ng-model="Info.Email" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-2">Password</label>
                                 <div class="col-md-10">
-                                    <input type="text" class="form-control" ng-model="UserInfo.Website" required />
+                                    <input type="text" class="form-control" ng-model="Info.Website" required />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-2">Telephone</label>
                                 <div class="col-md-10">
-                                    <input type="text" class="form-control" ng-model="UserInfo.Telephone" required />
+                                    <input type="text" class="form-control" ng-model="Info.Telephone" required />
                                 </div>
                             </div>
                         </fieldset>
@@ -129,44 +107,44 @@
 
                 </uib-tab>
 
-                <uib-tab index="2" heading="UserSim">
+                <uib-tab index="2" heading="Sim">
                     <form class="form-horizontal" role="form">
                         <fieldset>
 
                             <div class="form-group">
                                 <label class="control-label col-md-2">Country</label>
                                 <div class="col-md-10">
-                                    <select class="form-control" ng-model="UserSim.AreaCode" ng-init="UserSim.AreaCode = Flag.Nation[178].Id" ng-options="nation.Id as nation.NameShort for nation in Flag.Nation" required />
+                                    <select class="form-control" ng-model="Sim.AreaCode" ng-init="Sim.AreaCode = Flag.Nation[178].Id" ng-options="nation.Id as nation.NameShort for nation in Flag.Nation" required />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-2">DialCode</label>
                                 <div class="col-md-10">
-                                    <label class="control-label">{{UserSim.AreaCode | nationFilter : 'dialCode' }}</label>
+                                    <label class="control-label">{{Sim.AreaCode | nationFilter : 'dialCode' }}</label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-2">Number</label>
                                 <div class="col-md-10">
-                                    <input type="number" class="form-control" ng-model="UserSim.Number" required />
+                                    <input type="number" class="form-control" ng-model="Sim.Number" required />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-2">Imei</label>
                                 <div class="col-sm-10">
-                                    <input type="number" class="form-control" ng-model="UserSim.Imei" />
+                                    <input type="number" class="form-control" ng-model="Sim.Imei" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-2">Roaming</label>
                                 <div class="col-md-10">
-                                    <input type="checkbox" class="form-control" ng-model="UserSim.Roaming" ng-true-value="true" ng-false-value="false" required />
+                                    <input type="checkbox" class="form-control" ng-model="Sim.Roaming" ng-true-value="true" ng-false-value="false" required />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-2">Vendor</label>
                                 <div class="col-md-10">
-                                    <select class="form-control" ng-model="UserSim.SimVendor" ng-init="UserSim.SimVendor = Flag.SimVendor[0].Id" ng-options="simVendor.Id as simVendor.Name for simVendor in Flag.SimVendor" required />
+                                    <select class="form-control" ng-model="Sim.SimVendor" ng-init="Sim.SimVendor = Flag.SimVendor[0].Id" ng-options="simVendor.Id as simVendor.Name for simVendor in Flag.SimVendor" required />
                                 </div>
                             </div>
                         </fieldset>

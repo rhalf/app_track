@@ -36,28 +36,6 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-2">DateTime Created</label>
-                                <div class="col-md-10">
-                                    <!--<input type="date" class="form-control" ng-model="User.DtCreated"   datetime-directive/>-->
-                                    <p class="input-group">
-                                        <input type="text" class="form-control"
-                                               uib-datepicker-popup="{{dateTimePicker.format[1]}}"
-                                               ng-model="Company.DtCreated"
-                                               is-open="dateTimePicker.isOpen[0]"
-                                               datepicker-options="dateTimePicker.options"
-                                               ng-required="true"
-                                               close-text="Close"
-                                               datetime-directive />
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-default" ng-click="dateTimePicker.toggle(0)">
-                                                <i class="glyphicon glyphicon-calendar"></i>
-                                            </button>
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
                                 <label class="control-label col-md-2">Status</label>
                                 <div class="col-md-10">
                                     <select class="form-control" ng-model="Company.Status" ng-options="status.Value as status.Name for status in Flag.Status" required />
@@ -107,8 +85,8 @@
     </div>
 
     <div class="modal-footer">
-        <button ng-show="form.isDisabled" class="btn btn-default" type="button" ng-click="form.toggle()">Edit</button>
-        <button ng-show="!form.isDisabled" class="btn btn-default" type="button" ng-click="form.update()">Update</button>
+        <button ng-show="form.isDisabled" class="btn btn-default" type="button" ng-click="toggle()">Edit</button>
+        <button ng-show="!form.isDisabled" class="btn btn-default" type="button" ng-click="update()">Update</button>
         <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
     </div>
 

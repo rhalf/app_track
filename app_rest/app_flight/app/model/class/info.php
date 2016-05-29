@@ -1,12 +1,11 @@
 <?php 
 
-class UserInfo implements IQuery {
+class Info implements IQuery {
 
 	public $Id;
 	public $Email;
 	public $Website;
 	public $Telephone;
-	public $User;
 
 
 	
@@ -19,7 +18,7 @@ class UserInfo implements IQuery {
 
 		try {
 
-			$sql = "SELECT * FROM user_info;";
+			$sql = "SELECT * FROM info;";
 			$query = $connection->prepare($sql);
 
 			$query->execute();
@@ -29,12 +28,11 @@ class UserInfo implements IQuery {
 			$result = array();
 
 			foreach ($rows as $row) {	
-				$userInfo = new UserInfo();
+				$userInfo = new Info();
 				$userInfo->Id = (int) $row['id'];
 				$userInfo->Email = $row['info_email'];
 				$userInfo->Website = $row['info_website'];
 				$userInfo->Telephone = $row['info_telephone'];
-				$userInfo->User = $row['user_id'];
 
 
 				array_push($result, $userInfo);
@@ -57,7 +55,7 @@ class UserInfo implements IQuery {
 
 		try {
 			
-			$sql = "SELECT * FROM user_info WHERE id = :id;";
+			$sql = "SELECT * FROM info WHERE id = :id;";
 			$query = $connection->prepare($sql);
 			$query->bindParam(':id',$id, PDO::PARAM_INT);
 
@@ -70,12 +68,11 @@ class UserInfo implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 
-			$userInfo = new UserInfo();
+			$userInfo = new Info();
 			$userInfo->Id = (int) $row['id'];
 			$userInfo->Email = $row['info_email'];
 			$userInfo->Website = $row['info_website'];
 			$userInfo->Telephone = $row['info_telephone'];
-			$userInfo->User = $row['user_id'];
 			
 			Flight::ok($userInfo);
 
@@ -87,44 +84,6 @@ class UserInfo implements IQuery {
 			$connection = null;
 		}
 	}
-
-	public static function selectByUser($id) {
-
-		$connection = Flight::dbMain();
-
-		try {
-			
-			$sql = "SELECT * FROM user_info WHERE user_id = :user_id;";
-			$query = $connection->prepare($sql);
-			$query->bindParam(':user_id',$id, PDO::PARAM_INT);
-
-			$query->execute();
-
-			if ($query->rowCount() < 1){
-				Flight::notFound("user_id not found");
-			}
-
-			$row = $query->fetch(PDO::FETCH_ASSOC);
-
-
-			$userInfo = new UserInfo();
-			$userInfo->Id = (int) $row['id'];
-			$userInfo->Email = $row['info_email'];
-			$userInfo->Website = $row['info_website'];
-			$userInfo->Telephone = $row['info_telephone'];
-			$userInfo->User = $row['user_id'];
-
-			Flight::ok($userInfo);
-
-		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
-		} catch (Exception $exception) {
-			Flight::error($exception);
-		} finally {
-			$connection = null;
-		}
-	}
-
 
 	public static function insert() {
 
@@ -140,10 +99,10 @@ class UserInfo implements IQuery {
 
 
 			$sql = "
-			INSERT INTO user_info 
-			(info_email, info_website, info_telephone, user_id)
+			INSERT INTO info 
+			(info_email, info_website, info_telephone)
 			VALUES
-			(:info_email, :info_website, :info_telephone, :user_id);";
+			(:info_email, :info_website, :info_telephone);";
 
 
 			$query = $connection->prepare($sql);
@@ -151,7 +110,6 @@ class UserInfo implements IQuery {
 			$query->bindParam(':info_email', $userInfo->Email, PDO::PARAM_STR);
 			$query->bindParam(':info_website', $userInfo->Website, PDO::PARAM_STR);
 			$query->bindParam(':info_telephone', $userInfo->Telephone, PDO::PARAM_STR);
-			$query->bindParam(':user_id', $userInfo->User, PDO::PARAM_INT);
 
 
 
@@ -186,13 +144,11 @@ class UserInfo implements IQuery {
 			}
 
 			$sql = "
-			UPDATE user_info 
+			UPDATE info 
 			SET 
 			info_email = :info_email,
 			info_website = :info_website,
-			info_telephone = :info_telephone,
-			user_id = :user_id
-
+			info_telephone = :info_telephone
 
 			WHERE
 			id = :id;";
@@ -202,7 +158,6 @@ class UserInfo implements IQuery {
 			$query->bindParam(':info_email', $userInfo->Email, PDO::PARAM_STR);
 			$query->bindParam(':info_website', $userInfo->Website, PDO::PARAM_STR);
 			$query->bindParam(':info_telephone', $userInfo->Telephone, PDO::PARAM_STR);
-			$query->bindParam(':user_id', $userInfo->User, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
@@ -231,7 +186,7 @@ class UserInfo implements IQuery {
 		try {
 
 			$sql = "
-			DELETE FROM user_info 
+			DELETE FROM info 
 			WHERE
 			id = :id";
 

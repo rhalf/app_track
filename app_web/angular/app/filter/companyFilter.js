@@ -1,22 +1,20 @@
 ﻿var app = angular.module('app');
 
-app.filter('fieldFilter', function ($filter, flagFactory) {
+app.filter('companyFilter', function ($filter, flagFactory) {
     return function (id, option) {
         var result = "UNKNOWN";
 
-        
-        angular.forEach(flagFactory.Field, function (object) {
-            if (object.Id === id) {
+        angular.forEach(flagFactory.Company, function (company) {
+            if (company.Id === id) {
                 switch (option) {
                     case 'name':
-                        result = object.Name;
+                        result = company.Name;
                         break;
                     case 'desc':
-                        result = object.Desc;
+                        result = company.Desc;
                         break;
-                    default:
-                        result = object.Name;
                 }
+
             }
         });
         return result;

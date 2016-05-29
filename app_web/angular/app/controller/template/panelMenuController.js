@@ -37,6 +37,17 @@ app.controller('panelMenuController', function ($scope, $location, $uibModal, ui
         });
     };
 
+
+    $scope.showSims = function () {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'app/view/form/sims.html',
+            controller: 'simsController',
+            keyboard: true,
+            size: 'lg',
+        });
+    };
+
     $scope.showUnits = function () {
         $uibModal.open({
             animation: true,

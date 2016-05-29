@@ -19,11 +19,12 @@
             <table class="table table-responsive table-hover">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Imei</th>
+                        <th>Serial</th>
                         <th>DtCreated</th>
-                        <th>DtExpired</th>
-                        <th>Privilege</th>
-                        <th>Status</th>
+                        <th>UnitType</th>
+                        <th>Sim</th>
+                        <th>Company</th>
 
                         <th>Options</th>
                     </tr>
@@ -32,16 +33,13 @@
                     <tr ng-repeat="unit in Units">
                         <td>{{unit.Imei}}</td>
                         <td>{{unit.SerialNumber}}</td>
-                        <td>{{unit.DtCreated | dateFilter}}</td>
-                        <td>{{unit.Privilege | privilegeFilter }}</td>
-                        <td>{{unit.Status | statusFilter }}</td>
-                        <!--<td><span ng-bind="user.Company"/></td>-->
-                        <!--<td><span ng-bind="user.Info" /></td>-->
+                        <td>{{unit.DtCreated | dateFilter : 'date'}}</td>
+                        <td>{{unit.UnitType | unitTypeFilter : 'name' }}</td>
+                        <td>{{unit.UnitSim | unitSimFilter : 'number' }}</td>
+                        <td>{{unit.Company | companyFilter : 'name' }}</td>
                         <td>
-                            <button ng-click="select(user)"><span class="glyphicon glyphicon-cog" /></button>
-                            <button ng-click="delete(user)"><span class="glyphicon glyphicon-trash" /></button>
-                            <button ng-click="credential(user)"><span class="glyphicon glyphicon-asterisk" /></button>
-
+                            <button ng-click="select(unit)"><span class="glyphicon glyphicon-cog" /></button>
+                            <button ng-click="delete(unit)"><span class="glyphicon glyphicon-trash" /></button>
                         </td>
                     </tr>
                 </tbody>

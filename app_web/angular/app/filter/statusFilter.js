@@ -1,17 +1,20 @@
 ﻿var app = angular.module('app');
 
 app.filter('statusFilter', function ($filter, flagFactory) {
-    return function (value) {
+    return function (value, option) {
         var result = "UNKNOWN";
-        angular.forEach(flagFactory.Status, function (status) {
-
-            //console.log("Value:");
-            //console.log(value);
-            //console.log("StatusValue:");
-            //console.log(status.Value);
-
-            if (status.Value === value) {
-                result = status.Name;
+        angular.forEach(flagFactory.Status, function (object) {
+            if (object.Value === value) {
+                switch (option) {
+                    case 'name':
+                        result = object.Name;
+                        break;
+                    case 'desc':
+                        result = object.Desc;
+                        break;
+                    default:
+                        result = object.Name;
+                }
             }
         });
         return result;

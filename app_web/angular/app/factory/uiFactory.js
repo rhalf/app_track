@@ -26,6 +26,11 @@ app.factory('uiFactory', function () {
     };
 
 
+    uiFactory.pagination = {};
+    uiFactory.pagination.pageSize = 20;
+    uiFactory.pagination.currentPage = 1;
+
+
     return uiFactory;
 
 });

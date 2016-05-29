@@ -9,7 +9,7 @@ class Nation implements IQuery {
 	public $Iso3;
 	public $Number;
 	public $Uno;
-	public $DialCode;
+	public $CountryCode;
 	public $Account;
 	public $Language;
 	public $Ethnic;
@@ -43,7 +43,7 @@ class Nation implements IQuery {
 				$nation->Iso3 = $row['nation_iso3'];
 				$nation->Number = (int) $row['nation_number'];
 				$nation->Uno = (bool) $row['nation_uno'];
-				$nation->DialCode = $row['nation_dial_code'];
+				$nation->CountryCode = $row['nation_country_code'];
 				$nation->Account = $row['nation_account'];
 				$nation->Language = $row['nation_language'];
 				$nation->Ethnic = $row['nation_ethnic'];
@@ -89,7 +89,7 @@ class Nation implements IQuery {
 			$nation->Iso3 = $row['nation_iso3'];
 			$nation->Number = (int) $row['nation_number'];
 			$nation->Uno = (bool) $row['nation_uno'];
-			$nation->DialCode = $row['nation_dial_code'];
+			$nation->CountryCode = $row['nation_country_code'];
 			$nation->Account = $row['nation_account'];
 			$nation->Language = $row['nation_language'];
 			$nation->Ethnic = $row['nation_ethnic'];
@@ -121,9 +121,9 @@ class Nation implements IQuery {
 
 			$sql = "
 			INSERT INTO e_nation 
-			(nation_iso2, nation_iso3, nation_short, nation_long, nation_number, nation_uno, nation_dial_code, nation_account, nation_language, nation_ethnic, nation_currency)
+			(nation_iso2, nation_iso3, nation_short, nation_long, nation_number, nation_uno, nation_country_code, nation_account, nation_language, nation_ethnic, nation_currency)
 			VALUES
-			(:nation_iso2, :nation_iso3, :nation_short, :nation_long, :nation_number, :nation_uno, :nation_dial_code, :nation_account, :nation_language, :nation_ethnic, :nation_currency);";
+			(:nation_iso2, :nation_iso3, :nation_short, :nation_long, :nation_number, :nation_uno, :nation_country_code, :nation_account, :nation_language, :nation_ethnic, :nation_currency);";
 
 
 			$query = $connection->prepare($sql);
@@ -134,7 +134,7 @@ class Nation implements IQuery {
 			$query->bindParam(':nation_long', $nation->NameLong, PDO::PARAM_STR);
 			$query->bindParam(':nation_number', $nation->Number, PDO::PARAM_INT);
 			$query->bindParam(':nation_uno', $nation->Uno, PDO::PARAM_BOOL);
-			$query->bindParam(':nation_dial_code', $nation->DialCode, PDO::PARAM_STR);
+			$query->bindParam(':nation_country_code', $nation->CountryCode, PDO::PARAM_STR);
 			$query->bindParam(':nation_account', $nation->Account, PDO::PARAM_STR);
 			$query->bindParam(':nation_language', $nation->Language, PDO::PARAM_STR);
 			$query->bindParam(':nation_ethnic', $nation->Ethnic, PDO::PARAM_STR);
@@ -180,7 +180,7 @@ class Nation implements IQuery {
 			nation_long = :nation_long,
 			nation_number = :nation_number, 
 			nation_uno = :nation_uno, 
-			nation_dial_code = :nation_dial_code, 
+			nation_country_code = :nation_country_code, 
 			nation_account = :nation_account,
 			nation_language = :nation_language, 
 			nation_ethnic = :nation_ethnic, 
@@ -196,7 +196,7 @@ class Nation implements IQuery {
 			$query->bindParam(':nation_long', $nation->NameLong, PDO::PARAM_STR);
 			$query->bindParam(':nation_number', $nation->Number, PDO::PARAM_INT);
 			$query->bindParam(':nation_uno', $nation->Uno, PDO::PARAM_BOOL);
-			$query->bindParam(':nation_dial_code', $nation->DialCode, PDO::PARAM_STR);
+			$query->bindParam(':nation_country_code', $nation->CountryCode, PDO::PARAM_STR);
 			$query->bindParam(':nation_account', $nation->Account, PDO::PARAM_STR);
 			$query->bindParam(':nation_language', $nation->Language, PDO::PARAM_STR);
 			$query->bindParam(':nation_ethnic', $nation->Ethnic, PDO::PARAM_STR);
