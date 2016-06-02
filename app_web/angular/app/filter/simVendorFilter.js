@@ -1,10 +1,10 @@
 ﻿var app = angular.module('app');
 
-app.filter('simVendorFilter', function ($filter, flagFactory) {
+app.filter('simVendorFilter', function (flagFactory) {
     return function (id, option) {
         var result = "UNKNOWN";
 
-        angular.forEach(flagFactory.SimVendor, function (object) {
+        angular.forEach(flagFactory.SimVendors, function (object) {
             if (object.Id === id) {
                 switch (option) {
                     case 'name':

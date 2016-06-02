@@ -44,6 +44,8 @@ class Session {
 			$user->Privilege = (int) $row['e_privilege_value'];
 			$user->Status = (int) $row['e_status_value'];
 			$user->Company = (int) $row['company_id'];
+			$user->Sim = (int) $row['sim_id'];
+
 
 			Flight::ok($user);
 

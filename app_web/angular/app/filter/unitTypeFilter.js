@@ -1,10 +1,10 @@
 ﻿var app = angular.module('app');
 
-app.filter('unitTypeFilter', function ($filter, flagFactory) {
+app.filter('unitTypeFilter', function (flagFactory) {
     return function (id, option) {
         var result = "UNKNOWN";
 
-        angular.forEach(flagFactory.UnitType, function (object) {
+        angular.forEach(flagFactory.UnitTypes, function (object) {
             if (object.Id === id) {
                 switch (option) {
                     case 'name':

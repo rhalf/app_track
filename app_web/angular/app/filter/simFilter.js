@@ -1,10 +1,10 @@
 ﻿var app = angular.module('app');
 
-app.filter('simFilter', function ($filter, flagFactory) {
-    return function (id, option) {
+app.filter('simFilter', function (flagFactory) {
+    function filter(id, option) {
         var result = "UNKNOWN";
 
-        angular.forEach(flagFactory.Sim, function (object) {
+        angular.forEach(flagFactory.Sims, function (object) {
             if (object.Id === id) {
                 switch (option) {
                     case 'number':
@@ -23,4 +23,6 @@ app.filter('simFilter', function ($filter, flagFactory) {
         });
         return result;
     }
+    filter.$stateful = true;
+    return filter;
 });

@@ -1,9 +1,9 @@
 ﻿var app = angular.module('app');
 
-app.filter('statusFilter', function ($filter, flagFactory) {
-    return function (value, option) {
+app.filter('statusFilter', function (flagFactory) {
+    function filter(value, option) {
         var result = "UNKNOWN";
-        angular.forEach(flagFactory.Status, function (object) {
+        angular.forEach(flagFactory.Statuses, function (object) {
             if (object.Value === value) {
                 switch (option) {
                     case 'name':
@@ -19,4 +19,6 @@ app.filter('statusFilter', function ($filter, flagFactory) {
         });
         return result;
     }
+    filter.$stateful = true;
+    return filter;
 });

@@ -6,7 +6,7 @@ class Unit implements IQuery {
 	public $Imei;
 	public $DtCreated;
 	public $SerialNumber;
-	public $UnitSim;
+	public $Sim;
 	public $UnitType;
 	public $Company;
 	
@@ -34,10 +34,10 @@ class Unit implements IQuery {
 				$unit->Imei = $row['unit_imei'];
 				$unit->DtCreated = $row['unit_dt_created'];
 				$unit->SerialNumber = $row['unit_serial_number'];
-				$unit->UnitSim = (int) $row['sim_id'];
+				$unit->Sim = (int) $row['sim_id'];
 				$unit->UnitType = (int) $row['unit_type_id'];
 				$unit->Company = (int) $row['company_id'];
-
+				$unit->UnitStatus = (int) $row['e_status_unit_id'];
 				
 				array_push($result, $unit);
 			}
@@ -76,9 +76,10 @@ class Unit implements IQuery {
 			$unit->Imei = $row['unit_imei'];
 			$unit->DtCreated = $row['unit_dt_created'];
 			$unit->SerialNumber = $row['unit_serial_number'];
-			$unit->UnitSim = (int) $row['sim_id'];
+			$unit->Sim = (int) $row['sim_id'];
 			$unit->UnitType = (int) $row['unit_type_id'];
 			$unit->Company = (int) $row['company_id'];
+			$unit->UnitStatus = (int) $row['e_status_unit_id'];
 
 			Flight::ok($unit);
 
@@ -94,6 +95,8 @@ class Unit implements IQuery {
 	public static function insert() {
 
 		$connection = Flight::dbMain();
+		$dateTime = Flight::dateTime();
+
 		try {
 
 			$unit = json_decode(file_get_contents("php://input"));
@@ -110,21 +113,21 @@ class Unit implements IQuery {
 
 			$sql = "
 			INSERT INTO unit 
-			(unit_imei, unit_dt_created, unit_serial_number, sim_id, unit_type_id, company_id)
+			(unit_imei, unit_serial_number, sim_id, unit_type_id, company_id, e_status_unit_id, unit_dt_created)
 			VALUES
-			(:unit_imei, :unit_dt_created, :unit_serial_number, :sim_id, :unit_type_id, :company_id);";
+			(:unit_imei, :unit_serial_number, :sim_id, :unit_type_id, :company_id, :e_status_unit_id, :unit_dt_created);";
 
 
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':unit_imei', $unit->Imei, PDO::PARAM_INT);
-			$query->bindParam(':unit_dt_created', $unit->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':unit_serial_number', $unit->SerialNumber, PDO::PARAM_STR);
-			$query->bindParam(':sim_id', $unit->UnitSim, PDO::PARAM_INT);
+			$query->bindParam(':sim_id', $unit->Sim, PDO::PARAM_INT);
 			$query->bindParam(':unit_type_id', $unit->UnitType, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $unit->UnitType, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $unit->Company, PDO::PARAM_INT);
+			$query->bindParam(':e_status_unit_id', $unit->UnitStatus, PDO::PARAM_INT);
+			$query->bindParam(':unit_dt_created',$dateTime, PDO::PARAM_STR);
 
-			
 			$query->execute();
 
 			$result = new Result();
@@ -249,11 +252,10 @@ class Unit implements IQuery {
 			$unitOld->Imei = $row['unit_imei'];
 			$unitOld->DtCreated = $row['unit_dt_created'];
 			$unitOld->SerialNumber = $row['unit_serial_number'];
-			$unitOld->DataSize = $row['unit_data_size'];
-			$unitOld->UnitSim = (int) $row['sim_id'];
+			$unitOld->Sim = (int) $row['sim_id'];
 			$unitOld->UnitType = (int) $row['unit_type_id'];
 			$unitOld->Company = (int) $row['company_id'];
-
+			$unitOld->UnitStatus = (int) $row['e_status_unit_id'];
 
 			/*Query 2 Update unit*/
 			$sql = "
@@ -262,10 +264,10 @@ class Unit implements IQuery {
 			unit_imei = :unit_imei,
 			unit_dt_created = :unit_dt_created, 
 			unit_serial_number = :unit_serial_number,
-			unit_data_size = :unit_data_size,
 			sim_id = :sim_id, 
 			unit_type_id = :unit_type_id,
-			company_id = :company_id
+			company_id = :company_id,
+			e_status_unit_id = :e_status_unit_id
 			WHERE
 			id = :id;";
 
@@ -273,10 +275,11 @@ class Unit implements IQuery {
 			$query->bindParam(':unit_imei', $unitNew->Imei, PDO::PARAM_INT);
 			$query->bindParam(':unit_dt_created', $unitNew->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':unit_serial_number', $unitNew->SerialNumber, PDO::PARAM_STR);
-			$query->bindParam(':unit_data_size', $unitNew->DataSize, PDO::PARAM_STR);
-			$query->bindParam(':sim_id', $unitNew->UnitSim, PDO::PARAM_INT);
+			$query->bindParam(':sim_id', $unitNew->Sim, PDO::PARAM_INT);
 			$query->bindParam(':unit_type_id', $unitNew->UnitType, PDO::PARAM_BOOL);
-			$query->bindParam(':company_id', $unitNew->UnitType, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $unitNew->Company, PDO::PARAM_INT);
+			$query->bindParam(':e_status_unit_id', $unitNew->UnitStatus, PDO::PARAM_INT);
+
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
@@ -332,7 +335,6 @@ class Unit implements IQuery {
 			/* Begin Transaction */
 			$connection->beginTransaction();
 
-
 			/*Query 1 Select unit*/
 			$sql = "SELECT * FROM unit WHERE id = :id;";
 			$query = $connection->prepare($sql);
@@ -348,10 +350,12 @@ class Unit implements IQuery {
 			$unit->Imei = $row['unit_imei'];
 			$unit->DtCreated = $row['unit_dt_created'];
 			$unit->SerialNumber = $row['unit_serial_number'];
-			$unit->DataSize = $row['unit_data_size'];
-			$unit->UnitSim = (int) $row['sim_id'];
+			$unit->Sim = (int) $row['sim_id'];
 			$unit->UnitType = (int) $row['unit_type_id'];
 			$unit->Company = (int) $row['company_id'];
+			$unit->UnitStatus = (int) $row['e_status_unit_id'];
+
+
 
 			/*Query 2 Delete unit*/
 			$sql = "

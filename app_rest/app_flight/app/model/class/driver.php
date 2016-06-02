@@ -7,7 +7,7 @@ class Driver implements IQuery {
 	public $NameFirst;
 	public $NameMiddle;
 	public $NameLast;
-	public $Info;
+	public $DtCreated;
 	public $Rfid;
 	public $Company;
 	public $Status;
@@ -39,9 +39,9 @@ class Driver implements IQuery {
 				$driver->NameMiddle = $row['driver_name_m'];
 				$driver->NameLast = $row['driver_name_l'];
 				$driver->Rfid = (int) $row['driver_id'];
-				$driver->Status = (int) $row['e_status_id'];
+				$driver->Status = (int) $row['e_status_value'];
 				$driver->Company = (int) $row['company_id'];
-				$driver->Info = (int) $row['info_id'];
+				$driver->DtCreated = $row['driver_dt_created'];
 
 				array_push($result, $driver);
 			}
@@ -81,9 +81,10 @@ class Driver implements IQuery {
 			$driver->NameMiddle = $row['driver_name_m'];
 			$driver->NameLast = $row['driver_name_l'];
 			$driver->Rfid = (int) $row['driver_id'];
-			$driver->Status = (int) $row['e_status_id'];
+			$driver->Status = (int) $row['e_status_value'];
 			$driver->Company = (int) $row['company_id'];
-			$driver->Info = (int) $row['info_id'];
+			$driver->DtCreated = $row['driver_dt_created'];
+
 
 			Flight::ok($driver);
 
@@ -110,9 +111,9 @@ class Driver implements IQuery {
 
 			$sql = "
 			INSERT INTO driver 
-			(driver_id, driver_name_f, driver_name_m, driver_name_l, driver_rfid, e_status_id, company_id, info_id)
+			(driver_id, driver_name_f, driver_name_m, driver_name_l, driver_rfid, e_status_value, company_id, driver_dt_created)
 			VALUES
-			(:driver_id, :driver_name_f, :driver_name_m, :driver_name_l, :driver_rfid, :e_status_id, :company_id, :info_id);";
+			(:driver_id, :driver_name_f, :driver_name_m, :driver_name_l, :driver_rfid, :e_status_value, :company_id, :driver_dt_created);";
 
 
 			$query = $connection->prepare($sql);
@@ -122,9 +123,9 @@ class Driver implements IQuery {
 			$query->bindParam(':driver_name_m', $driver->NameMiddle, PDO::PARAM_STR);
 			$query->bindParam(':driver_name_l', $driver->NameLast, PDO::PARAM_STR);
 			$query->bindParam(':driver_rfid', $driver->Rfid, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $driver->Status, PDO::PARAM_INT);
+			$query->bindParam(':e_status_value', $driver->Status, PDO::PARAM_INT);
 			$query->bindParam(':company_id', $driver->Company, PDO::PARAM_INT);
-			$query->bindParam(':info_id', $driver->Info, PDO::PARAM_INT);
+			$query->bindParam(':driver_dt_created', $driver->DtCreated, PDO::PARAM_STR);
 
 			$query->execute();
 			
@@ -164,9 +165,9 @@ class Driver implements IQuery {
 			driver_name_m = :driver_name_m,
 			driver_name_l = :driver_name_l,
 			driver_rfid = :driver_rfid,
-			e_status_id = :e_status_id,
+			e_status_value = :e_status_value,
 			company_id = :company_id,
-			info_id = :info_id
+			driver_dt_created = :driver_dt_created
 
 			WHERE
 			id = :id;";
@@ -179,9 +180,9 @@ class Driver implements IQuery {
 			$query->bindParam(':driver_name_m', $driver->NameMiddle, PDO::PARAM_STR);
 			$query->bindParam(':driver_name_l', $driver->NameLast, PDO::PARAM_STR);
 			$query->bindParam(':driver_rfid', $driver->Rfid, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $driver->Status, PDO::PARAM_INT);
+			$query->bindParam(':e_status_value', $driver->Status, PDO::PARAM_INT);
 			$query->bindParam(':company_id', $driver->Company, PDO::PARAM_INT);
-			$query->bindParam(':info_id', $driver->Info, PDO::PARAM_INT);
+			$query->bindParam(':driver_dt_created', $driver->DtCreated, PDO::PARAM_STR);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 

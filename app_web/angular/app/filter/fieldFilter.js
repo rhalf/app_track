@@ -1,11 +1,11 @@
 ﻿var app = angular.module('app');
 
-app.filter('fieldFilter', function ($filter, flagFactory) {
+app.filter('fieldFilter', function (flagFactory) {
     return function (id, option) {
         var result = "UNKNOWN";
 
         
-        angular.forEach(flagFactory.Field, function (object) {
+        angular.forEach(flagFactory.Fields, function (object) {
             if (object.Id === id) {
                 switch (option) {
                     case 'name':

@@ -16,18 +16,17 @@ app.factory('uiFactory', function () {
 
     uiFactory.alert = {};
     uiFactory.alert.items = [];
+    uiFactory.alert.timeout = 2500;
     uiFactory.alert.addItem = function (alert) {
-        console.log(alert);
         uiFactory.alert.items.push(alert);
     };
     uiFactory.alert.closeItem = function (index) {
-        console.log(index);
         uiFactory.alert.items.splice(index, 1);
     };
 
 
     uiFactory.pagination = {};
-    uiFactory.pagination.pageSize = 20;
+    uiFactory.pagination.pageSize = 10;
     uiFactory.pagination.currentPage = 1;
 
 

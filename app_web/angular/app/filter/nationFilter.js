@@ -1,10 +1,10 @@
 ﻿var app = angular.module('app');
 
-app.filter('nationFilter', function ($filter, flagFactory) {
-    return function (id, option) {
+app.filter('nationFilter', function (flagFactory) {
+    function filter(id, option) {
         var result = "UNKNOWN";
 
-        angular.forEach(flagFactory.Nation, function (object) {
+        angular.forEach(flagFactory.Nations, function (object) {
             if (object.Id === id) {
                 switch (option) {
                     case 'nameShort':
@@ -23,4 +23,7 @@ app.filter('nationFilter', function ($filter, flagFactory) {
         });
         return result;
     }
+
+    filter.$stateful = true;
+    return filter;
 });

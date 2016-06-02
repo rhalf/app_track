@@ -1,9 +1,10 @@
 ﻿var app = angular.module('app');
 
-app.filter('privilegeFilter', function ($filter, flagFactory) {
-    return function (value, option) {
+app.filter('privilegeFilter', function (flagFactory) {
+    function filter(value, option) {
         var result = "UNKNOWN";
-        angular.forEach(flagFactory.Privilege, function (object) {
+
+        angular.forEach(flagFactory.Privileges, function (object) {
             if (object.Value === value) {
                 switch (option) {
                     case 'name':
@@ -17,6 +18,10 @@ app.filter('privilegeFilter', function ($filter, flagFactory) {
                 }
             }
         });
+
         return result;
     }
+
+    filter.$stateful = true;
+    return filter;
 });

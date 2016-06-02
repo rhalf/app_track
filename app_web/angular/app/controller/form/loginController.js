@@ -1,10 +1,17 @@
 ﻿var app = angular.module('app');
 
-app.controller('loginController', function ($scope, $cookies, $location, $http, authFactory, uiFactory) {
-
+app.controller('loginController', function (
+    $scope,
+    $cookies,
+    $location,
+    $http,
+    authFactory,
+    uiFactory,
+    flagFactory
+    ) {
 
     $scope.init = function () {
-        $scope.alert = uiFactory.alert;
+        $scope.ui = uiFactory;
 
         $scope.authUser = { Name: "", Password: "" };
 
@@ -16,7 +23,7 @@ app.controller('loginController', function ($scope, $cookies, $location, $http, 
     }
 
     $scope.closeAlert = function(index) {
-        $scope.alert.closeItem(index);
+        $scope.ui.alert.closeItem(index);
     }
 
 
@@ -24,12 +31,12 @@ app.controller('loginController', function ($scope, $cookies, $location, $http, 
     $scope.login = function () {
         if (!$scope.loginForm.userName.$valid) {
             var alert = { type: 'danger', message: 'Username is empty or null.' };
-            $scope.alert.addItem(alert);
+            $scope.ui.alert.addItem(alert);
             return;
         }
         if (!$scope.loginForm.userPassword.$valid) {
             var alert = { type: 'danger', message: 'Password is empty or null.' };
-            $scope.alert.addItem(alert);
+            $scope.ui.alert.addItem(alert);
             return;
         }
 
@@ -46,7 +53,7 @@ app.controller('loginController', function ($scope, $cookies, $location, $http, 
             }
         })
        .success(function (data, status, headers, config) {
-           //console.log(data);
+           console.log(data);
            if (data.Privilege > 1) {
 
                var dateExp = new Date(data.DtExpired);
@@ -54,22 +61,22 @@ app.controller('loginController', function ($scope, $cookies, $location, $http, 
 
                if (dateNow.getTime() > dateExp.getTime()) {
                    var alert = { type: 'danger', message: 'Your account is EXPIRED.' };
-                   $scope.alert.addItem(alert);
+                   $scope.ui.alert.addItem(alert);
                    return;
                }
 
                switch (data.Status) {
                    case 0:
                        var alert = { type: 'danger', message: 'Your account is DISABLED.' };
-                       $scope.alert.addItem(alert);
+                       $scope.ui.alert.addItem(alert);
                        return;
                    case 1:
                        var alert = { type: 'danger', message: data.Message };
-                       $scope.alert.addItem(alert);
+                       $scope.ui.alert.addItem(alert);
                        break;
                    case 2:
                        var alert = { type: 'danger', message: 'Your account is SUSPENDED.' };
-                       $scope.alert.addItem(alert);
+                       $scope.ui.alert.addItem(alert);
                        return;
                }
 
@@ -81,7 +88,7 @@ app.controller('loginController', function ($scope, $cookies, $location, $http, 
        })
        .error(function (data, status, header, config) {
            var alert = { type: 'danger', message: data.Message };
-           $scope.alert.addItem(alert);
+           $scope.ui.alert.addItem(alert);
            authFactory.setAccessToken(null);
 
        });

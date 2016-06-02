@@ -24,7 +24,7 @@ require_once('/app/model/class/unit.php');
 require_once('/app/model/class/driver.php');
 require_once('/app/model/class/companyinfo.php');
 require_once('/app/model/class/sim.php');
-require_once('/app/model/class/info.php');
+require_once('/app/model/class/userinfo.php');
 require_once('/app/model/class/useronline.php');
 
 
@@ -41,6 +41,8 @@ require_once('/app/model/class/privilege.php');
 require_once('/app/model/class/field.php');
 require_once('/app/model/class/status.php');
 require_once('/app/model/class/unittype.php');
+require_once('/app/model/class/unitstatus.php');
+
 require_once('/app/model/class/simvendor.php');
 
 require_once('app/model/class/appnote.php');

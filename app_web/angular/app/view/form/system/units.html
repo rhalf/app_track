@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <div class="col-md-4">
+            <h3 class="modal-title">Units</h3>
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="input-group" ng-show="authUser.Privilege < 4">
+                <select class="form-control" ng-model="selectedCompany" ng-options="company.Id as company.Name for company in flag.Companies" required />
+                <div class="input-group-btn">
+                    <button class="btn btn-default" ng-click="clearCompany()">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-body">
+        <table class="table table-responsive table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Imei</th>
+                    <th>Serial</th>
+                    <th>DtCreated</th>
+                    <th>UnitType</th>
+                    <th>Sim</th>
+                    <th>Company</th>
+                    <th>UnitStatus</th>
+
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="unit in flag.Units | filter : { Company : selectedCompany } | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize | limitTo : ui.pagination.pageSize">
+                    <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize }}</td>
+                    <td>{{unit.Imei}}</td>
+                    <td>{{unit.SerialNumber}}</td>
+                    <td>{{unit.DtCreated | dateFilter : 'date'}}</td>
+                    <td>{{unit.UnitType | unitTypeFilter : 'name' }}</td>
+                    <td>{{unit.Sim | simFilter : 'number' }}</td>
+                    <td>{{unit.Company | companyFilter : 'name' }}</td>
+                    <td>{{unit.UnitStatus | unitStatusFilter : 'name' }}</td>
+
+                    <td>
+                        <button ng-click="select(unit)"><span class="glyphicon glyphicon-cog" /></button>
+                        <button ng-click="delete(unit)"><span class="glyphicon glyphicon-trash" /></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <uib-pagination boundary-links="true"
+                        force-ellipses="true"
+                        total-items="flag.Units.length"
+                        ng-model="ui.pagination.currentPage"
+                        items-per-page="ui.pagination.pageSize"
+                        class="center-block">
+        </uib-pagination>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="add()">Add</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+</body>
+</html>

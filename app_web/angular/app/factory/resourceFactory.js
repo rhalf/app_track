@@ -77,10 +77,16 @@ app.factory('User', function ($resource) {
     });
 });
 
-app.factory('Info', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/info/:id', { id: '@id' }, {
+app.factory('UserInfo', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/userinfo/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
+        },
+        getByUser: {
+            method: 'GET',
+            params: {
+                user: '@user'
+            }
         }
     });
 });
@@ -110,6 +116,31 @@ app.factory('UnitSim', function ($resource) {
 
 app.factory('UnitType', function ($resource) {
     return $resource('http://184.107.179.181/v1/main/unittype/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
+        }
+    });
+});
+
+app.factory('UnitStatus', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/unitstatus/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
+        }
+    });
+});
+
+
+app.factory('Driver', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/driver/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
+        }
+    });
+});
+
+app.factory('Driver', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/driver/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         }

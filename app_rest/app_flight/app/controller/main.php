@@ -224,6 +224,17 @@ Flight::route('PUT /v1/main/status/@id', array('Status', 'update'));
 
 Flight::route('DELETE /v1/main/status/@id', array('Status', 'delete'));
 
+//UnitStatus
+Flight::route('GET /v1/main/unitstatus', array('UnitStatus', 'selectAll'));
+
+Flight::route('GET /v1/main/unitstatus/@id', array('UnitStatus', 'select'));
+
+Flight::route('POST /v1/main/unitstatus', array('UnitStatus', 'insert'));
+
+Flight::route('PUT /v1/main/unitstatus/@id', array('UnitStatus', 'update'));
+
+Flight::route('DELETE /v1/main/unitstatus/@id', array('UnitStatus', 'delete'));
+
 //Unit
 Flight::route('GET /v1/main/unit', array('Unit', 'selectAll'));
 
@@ -273,16 +284,23 @@ Flight::route('PUT /v1/main/user/@id/credential', array('User', 'updateCredentia
 
 Flight::route('DELETE /v1/main/user/@id', array('User', 'delete'));
 
-//Info
-Flight::route('GET /v1/main/info', array('Info', 'selectAll'));
+//UserInfo
+Flight::route('GET /v1/main/userinfo', function() {
+	$user = Flight::request()->query->user;
+	if ($user) {
+		UserInfo::selectByUser($user);
+	} else {
+		UserInfo::selectAll();
+	}
+});
 
-Flight::route('GET /v1/main/info/@id', array('Info', 'select'));
+Flight::route('GET /v1/main/userinfo/@id', array('UserInfo', 'select'));
 
-Flight::route('POST /v1/main/info', array('Info', 'insert'));
+Flight::route('POST /v1/main/userinfo', array('UserInfo', 'insert'));
 
-Flight::route('PUT /v1/main/info/@id', array('Info', 'update'));
+Flight::route('PUT /v1/main/userinfo/@id', array('UserInfo', 'update'));
 
-Flight::route('DELETE /v1/main/info/@id', array('Info', 'delete'));
+Flight::route('DELETE /v1/main/userinfo/@id', array('UserInfo', 'delete'));
 
 
 //Sim

@@ -2,22 +2,15 @@
 
 app.controller('panelContainerController', function (
     $scope,
-    uiFactory
+    uiFactory,
+    flagFactory
     ) {
 
+
     $scope.init = function () {
-        $scope.alert = uiFactory.alert;
-    }
-
-    $scope.closeAlert = function (index) {
-        $scope.alert.closeAlert(index);
-    }
-
-    $scope.getToggle = function () {
-        return uiFactory.panelLeft;
+        $scope.flag = flagFactory;
+        $scope.ui = uiFactory;
     };
 
-    $scope.isLoading = function () {
-        return uiFactory.isLoading;
-    };
+    $scope.init();
 });

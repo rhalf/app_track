@@ -10,6 +10,7 @@ class Sim implements IQuery {
 	public $SimVendor;
 	public $Status;
 	public $DtCreated;
+	public $Company;
 
 
 	public function __construct() {
@@ -39,6 +40,7 @@ class Sim implements IQuery {
 				$sim->SimVendor = (int) $row['e_sim_vendor_id'];
 				$sim->Status = (int) $row['e_status_id'];
 				$sim->DtCreated = $row['sim_dt_created'];
+				$sim->Company = (int) $row['company_id'];
 
 				array_push($result, $sim);
 			}
@@ -80,6 +82,7 @@ class Sim implements IQuery {
 			$sim->SimVendor = (int) $row['e_sim_vendor_id'];
 			$sim->Status = (int) $row['e_status_id'];
 			$sim->DtCreated = $row['sim_dt_created'];
+			$sim->Company = (int) $row['company_id'];
 			
 
 			Flight::ok($sim);
@@ -109,9 +112,9 @@ class Sim implements IQuery {
 
 			$sql = "
 			INSERT INTO sim 
-			(sim_imei, sim_number, sim_roaming,  e_sim_vendor_id, e_status_id, sim_dt_created)
+			(sim_imei, sim_number, sim_roaming,  e_sim_vendor_id, e_status_id, sim_dt_created, company_id)
 			VALUES
-			(:sim_imei, :sim_number, :sim_roaming, :e_sim_vendor_id, :e_status_id, :sim_dt_created);";
+			(:sim_imei, :sim_number, :sim_roaming, :e_sim_vendor_id, :e_status_id, :sim_dt_created, :company_id);";
 
 
 			$query = $connection->prepare($sql);
@@ -122,6 +125,8 @@ class Sim implements IQuery {
 			$query->bindParam(':e_sim_vendor_id', $sim->SimVendor, PDO::PARAM_INT);
 			$query->bindParam(':e_status_id', $sim->Status, PDO::PARAM_INT);
 			$query->bindParam(':sim_dt_created', $dateTime, PDO::PARAM_STR);
+			$query->bindParam(':company_id', $sim->Company, PDO::PARAM_INT);
+
 
 
 			$query->execute();
@@ -161,7 +166,8 @@ class Sim implements IQuery {
 			sim_number = :sim_number,
 			sim_roaming = :sim_roaming,
 			e_sim_vendor_id = :e_sim_vendor_id,
-			e_status_id = :e_status_id
+			e_status_id = :e_status_id,
+			company_id = :company_id
 
 			WHERE
 			id = :id;";
@@ -174,6 +180,7 @@ class Sim implements IQuery {
 			$query->bindParam(':sim_roaming', $sim->Roaming, PDO::PARAM_BOOL);
 			$query->bindParam(':e_sim_vendor_id', $sim->SimVendor, PDO::PARAM_INT);
 			$query->bindParam(':e_status_id', $sim->Status, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $sim->Company, PDO::PARAM_INT);
 
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);

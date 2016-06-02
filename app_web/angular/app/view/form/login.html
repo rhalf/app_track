@@ -6,7 +6,7 @@
 </head>
 <body>
     <div class="noty">
-        <uib-alert ng-repeat="alert in alert.items" type="{{alert.type}}" close="closeAlert($index)" dismiss-on-timeout="3000">{{alert.message}} </uib-alert>
+        <uib-alert ng-repeat="alert in ui.alert.items" type="{{alert.type}}" close="closeAlert($index)" dismiss-on-timeout="{{ui.alert.timeout}}">{{alert.message}} </uib-alert>
     </div>
 
     <div class="content">
