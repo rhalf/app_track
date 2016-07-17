@@ -48,14 +48,14 @@
                     <div class="form-group">
                         <label class="control-label col-md-2">Company</label>
                         <div class="col-md-10">
-                            <select class="form-control" ng-model="unit.Company" ng-init="unit.Company = flag.Companies[0].Id" ng-options="company.Id as company.Name for company in flag.Companies" required />
+                            <select class="form-control" ng-model="unit.Company" ng-init="unit.Company = companies[0].Id" ng-options="company.Id as company.Name for company in companies" required />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-2">Sim</label>
                         <div class="col-md-10">
                             <div class="input-group">
-                                <select class="form-control" allow-clear="true" ng-model="unit.Sim" ng-options="sim.Id as sim.Number for sim in flag.Sims" required />
+                                <select class="form-control" allow-clear="true" ng-model="unit.Sim" ng-options="sim.Id as sim.Number for sim in sims" required />
                                 <div class="input-group-btn">
                                     <button class="btn btn-default" ng-click="clearSim()">Clear</button>
                                 </div>
@@ -70,7 +70,7 @@
 
     <div class="modal-footer">
         <button class="btn btn-default" type="button" ng-click="add()">Add</button>
-        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+        <!--<button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>-->
     </div>
 
     <style type="text/css">

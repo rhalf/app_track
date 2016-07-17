@@ -29,7 +29,6 @@ class VehicleCollection implements IQuery {
 				$vehicleCollection = new VehicleCollection();
 				$vehicleCollection->Id = (int) $row['id'];
 				$vehicleCollection->Vehicle =  (int) $row['vehicle_id'];
-				$vehicleCollection->User =  (int) $row['user_id'];
 				$vehicleCollection->Collection =  (int) $row['collection_id'];
 
 				array_push($result, $vehicleCollection);
@@ -67,7 +66,6 @@ class VehicleCollection implements IQuery {
 			$vehicleCollection = new VehicleCollection();
 			$vehicleCollection->Id = (int) $row['id'];
 			$vehicleCollection->Vehicle =  (int) $row['vehicle_id'];
-			$vehicleCollection->User =  (int) $row['user_id'];
 			$vehicleCollection->Collection =  (int) $row['collection_id'];
 
 			Flight::ok($vehicleCollection);
@@ -81,6 +79,42 @@ class VehicleCollection implements IQuery {
 		}
 	}
 
+
+	public static function selectByCollection($id) {
+
+		$connection = Flight::dbMain();
+
+		try {
+
+			$sql = "SELECT * FROM vehicle_collection WHERE collection_id = :collection_id;";
+			$query = $connection->prepare($sql);
+			$query->bindParam(':collection_id',$id, PDO::PARAM_INT);
+
+			$query->execute();
+
+			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
+
+			$result = array();
+
+			foreach ($rows as $row) {	
+				$vehicleCollection = new VehicleCollection();
+				$vehicleCollection->Id = (int) $row['id'];
+				$vehicleCollection->Vehicle =  (int) $row['vehicle_id'];
+				$vehicleCollection->Collection =  (int) $row['collection_id'];
+
+				array_push($result, $vehicleCollection);
+			}
+
+			Flight::ok($result);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
+	}
 
 	public static function insert() {
 
@@ -96,14 +130,13 @@ class VehicleCollection implements IQuery {
 
 			$sql = "
 			INSERT INTO vehicle_collection 
-			(vehicle_id, user_id, collection_id)
+			(vehicle_id,  collection_id)
 			VALUES
-			(:vehicle_id, :user_id, :collection_id);";
+			(:vehicle_id, :collection_id);";
 
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':vehicle_id', $vehicleCollection->Vehicle, PDO::PARAM_STR);
-			$query->bindParam(':user_id', $vehicleCollection->User, PDO::PARAM_STR);
 			$query->bindParam(':collection_id', $vehicleCollection->Collection, PDO::PARAM_STR);
 
 
@@ -142,7 +175,6 @@ class VehicleCollection implements IQuery {
 			UPDATE vehicle_collection 
 			SET 
 			vehicle_id = :vehicle_id,
-			user_id = :user_id, 
 			collection_id = :collection_id
 			
 			WHERE
@@ -152,7 +184,6 @@ class VehicleCollection implements IQuery {
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':vehicle_id', $vehicleCollection->Vehicle, PDO::PARAM_STR);
-			$query->bindParam(':user_id', $vehicleCollection->User, PDO::PARAM_STR);
 			$query->bindParam(':collection_id', $vehicleCollection->Collection, PDO::PARAM_STR);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
@@ -188,7 +219,7 @@ class VehicleCollection implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-				$query->bindParam(':id', $id, PDO::PARAM_INT);
+			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 

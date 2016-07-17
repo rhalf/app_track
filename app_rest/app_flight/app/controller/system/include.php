@@ -17,7 +17,7 @@ require_once('/app/model/class/coordinate.php');
 require_once('/app/model/class/company.php');
 require_once('/app/model/class/user.php');
 require_once('/app/model/class/vehicle.php');
-require_once('/app/model/class/vehiclemodel.php');
+require_once('/app/model/class/trackeetype.php');
 require_once('/app/model/class/companyaddress.php');
 require_once('/app/model/class/unit.php');
 

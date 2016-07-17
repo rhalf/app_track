@@ -43,7 +43,7 @@ class User implements IQuery {
 				$user->Privilege = (int) $row['e_privilege_value'];
 				$user->Status = (int) $row['e_status_value'];
 				$user->Company = (int) $row['company_id'];
-				$user->Sim = (int) $row['sim_id'];
+				$user->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
 
 				array_push($result, $user);
 			}
@@ -84,7 +84,7 @@ class User implements IQuery {
 			$user->Privilege = (int) $row['e_privilege_value'];
 			$user->Status = (int) $row['e_status_value'];
 			$user->Company = (int) $row['company_id'];
-			$user->Sim = (int) $row['sim_id'];
+			$user->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
 
 			Flight::ok($user);
 
@@ -97,6 +97,47 @@ class User implements IQuery {
 		}
 	}
 
+
+	public static function selectByCompany($id) {
+		
+		$connection = Flight::dbMain();
+
+		try {
+
+			$sql = "SELECT * FROM user WHERE company_id = :company;";
+			$query = $connection->prepare($sql);
+			$query->bindParam(':company',$id, PDO::PARAM_INT);
+
+			$query->execute();
+
+			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
+
+			$result = array();
+
+			foreach ($rows as $row) {	
+				$user = new User();
+				$user->Id = (int) $row['id'];
+				$user->Name = $row['user_name'];
+				$user->DtCreated = $row['user_dt_created'];
+				$user->DtExpired = $row['user_dt_expired'];
+				$user->Privilege = (int) $row['e_privilege_value'];
+				$user->Status = (int) $row['e_status_value'];
+				$user->Company = (int) $row['company_id'];
+				$user->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
+
+				array_push($result, $user);
+			}
+
+			Flight::ok($result);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
+	}
 
 
 	public static function insert() {

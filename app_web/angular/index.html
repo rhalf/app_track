@@ -8,18 +8,19 @@
     <base href="/" />
 
 </head>
-<body ng-app="app" ng-controller="appController" >
-
+<body ng-app="app" ng-controller="appController">
     <div ng-view></div>
+    <!-- ======================================================================================= -->
     <!--Jquery-->
-    <!--<script src="Scripts/jquery-1.9.1.js"></script>-->
-    <script src="Scripts/jquery-2.2.3.min.js"></script>
+    <script src="Scripts/jquery-1.9.1.min.js"></script>
 
     <!--Jquery-->
     <!--BootStrap-->
     <script src="Scripts/bootstrap.min.js"></script>
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
     <!--BootStrap-->
+    <!-- ======================================================================================= -->
+
     <!--Angular-->
     <script src="Scripts/angular.js"></script>
     <script src="Scripts/angular-animate.js"></script>
@@ -27,16 +28,14 @@
     <script src="Scripts/angular-cookies.js"></script>
     <script src="Scripts/angular-resource.js"></script>
 
+    <!-- Loaders -->
     <!--Angular-->
     <!--Angular Bootstrap-->
     <link href="Content/ui-bootstrap-csp.css" rel="stylesheet" />
     <script src="Scripts/angular-ui/ui-bootstrap.min.js"></script>
     <script src="Scripts/angular-ui/ui-bootstrap-tpls.min.js"></script>
     <!-- Angular Bootstrap-->
-    <!--Jasny BootStrap (Conflict with bootstrap)-->
-    <!--<link href="Content/jasny-bootstrap.css" rel="stylesheet" />-->
-    <!--<script src="Scripts/jasny-bootstrap.js"></script>-->
-    <!--Jasny BootStrap-->
+
     <!--Leaflets-->
     <link href="Content/leaflet.css" rel="stylesheet" />
     <script src="Scripts/leaflet-0.7.3.min.js"></script>
@@ -62,39 +61,20 @@
     <!-- Filter -->
     <script src="app/filter/appFilter.js"></script>
     <script src="app/filter/dateFilter.js"></script>
-    <script src="app/filter/statusFilter.js"></script>
-    <script src="app/filter/fieldFilter.js"></script>
-    <script src="app/filter/privilegeFilter.js"></script>
-    <script src="app/filter/nationFilter.js"></script>
-    <script src="app/filter/companyFilter.js"></script>
-    <script src="app/filter/simFilter.js"></script>
-    <script src="app/filter/simVendorFilter.js"></script>
-    <script src="app/filter/unitTypeFilter.js"></script>
-    <script src="app/filter/unitStatusFilter.js"></script>
-
-
-
     <script src="app/filter/startFromFilter.js"></script>
-    <script src="app/filter/valueFromFilter.js"></script>
-
-
-
-
-
-
-
-
-
+    <script src="app/filter/flagByIdFilter.js"></script>
+    <script src="app/filter/flagByValueFilter.js"></script>
+    <script src="app/filter/collectionFilter.js"></script>
 
 
     <!-- Service -->
+    <script src="app/service/sessionService.js"></script>
+
     <!-- Directive -->
     <script src="app/directive/appDirective.js"></script>
     <script src="app/directive/datetimeDirective.js"></script>
     <script src="app/directive/dateDirective.js"></script>
 
-
-    
     <!-- Config -->
     <script src="app/config/appConfig.js"></script>
     <script src="app/run/appRun.js"></script>
@@ -106,11 +86,12 @@
     <script src="app/controller/template/panelMapController.js"></script>
     <script src="app/controller/template/panelMenuController.js"></script>
     <script src="app/controller/template/panelContainerController.js"></script>
-    <script src="app/controller/template/panelLoadController.js"></script>
+    <script src="app/controller/template/panelLoadingController.js"></script>
 
 
     <script src="app/controller/form/loginController.js"></script>
 
+    <!-- System -->
     <!--Company-->
     <script src="app/controller/form/system/companiesController.js"></script>
     <script src="app/controller/form/system/companyInsertController.js"></script>
@@ -135,16 +116,56 @@
     <script src="app/controller/form/system/userUpdateCredentialController.js"></script>
     <script src="app/controller/form/system/userInsertController.js"></script>
     <script src="app/controller/form/system/userDeleteController.js"></script>
-   
+
     <!--Drivers-->
     <script src="app/controller/form/system/driversController.js"></script>
-    <!--<script src="app/controller/form/system/driverUpdateController.js"></script>
-    <script src="app/controller/form/system/driverUpdateCredentialController.js"></script>
+    <script src="app/controller/form/system/driverUpdateController.js"></script>
     <script src="app/controller/form/system/driverInsertController.js"></script>
-    <script src="app/controller/form/system/driverDeleteController.js"></script>-->
+    <script src="app/controller/form/system/driverDeleteController.js"></script>
+
+    <!--Vehicles-->
+    <script src="app/controller/form/system/vehiclesController.js"></script>
+    <script src="app/controller/form/system/vehicleUpdateController.js"></script>
+    <script src="app/controller/form/system/vehicleInsertController.js"></script>
+    <script src="app/controller/form/system/vehicleDeleteController.js"></script>
+
+    <!-- Administrate -->
+    <script src="app/controller/form/client/ctCompanyUpdateController.js"></script>
+
+
+
+    <script src="app/controller/form/client/ctUsersController.js"></script>
+    <script src="app/controller/form/client/ctUserInsertController.js"></script>
+    <script src="app/controller/form/client/ctUserUpdateController.js"></script>
+    <script src="app/controller/form/client/ctUserUpdateCredentialController.js"></script>
+    <script src="app/controller/form/client/ctUserDeleteController.js"></script>
+
+    <script src="app/controller/form/client/ctDriversController.js"></script>
+    <script src="app/controller/form/client/ctDriverUpdateController.js"></script>
+    <script src="app/controller/form/client/ctDriverInsertController.js"></script>
+    <script src="app/controller/form/client/ctDriverDeleteController.js"></script>
+
+    <script src="app/controller/form/client/ctVehiclesController.js"></script>
+    <script src="app/controller/form/client/ctVehicleUpdateController.js"></script>
+
+    <script src="app/controller/form/client/ctUnitsController.js"></script>
+    <script src="app/controller/form/client/ctUnitUpdateController.js"></script>
+
+    <script src="app/controller/form/client/ctSimsController.js"></script>
+    <script src="app/controller/form/client/ctSimUpdateController.js"></script>
+
+    <script src="app/controller/form/client/ctCollectionsController.js"></script>
+    <script src="app/controller/form/client/ctCollectionInsertController.js"></script>
+    <script src="app/controller/form/client/ctCollectionDeleteController.js"></script>
+    <script src="app/controller/form/client/ctCollectionUpdateController.js"></script>
+
+    <script src="app/controller/form/client/ctDistributeController.js"></script>
+
+    
+
 
     <script src="app/controller/appController.js"></script>
-  
+
 
     <link rel="stylesheet" href="app/view/directive/panelMenu.css" />
     <!--=============================================================================================================================-->

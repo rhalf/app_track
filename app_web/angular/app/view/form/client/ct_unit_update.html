@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <h3 class="modal-title">Unit</h3>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="noty">
+                <uib-alert ng-repeat="alert in ui.alert.items" type="{{alert.type}}" close="closeAlert($index)" dismiss-on-timeout="{{ui.alert.timeout}}">{{alert.message}} </uib-alert>
+            </div>
+            <form class="form-horizontal" role="form">
+                <fieldset ng-disabled="form.isDisabled">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">Imei</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="unit.Imei" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">Serial Number</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="unit.SerialNumber" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Unit Type</label>
+                        <div class="col-md-10">
+                            <select class="form-control" ng-model="unit.UnitType" ng-init="unit.UnitType = flag.UnitTypes[0].Id" ng-options="unit.Id as unit.Name for unit in flag.UnitTypes" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Unit Status</label>
+                        <div class="col-md-10">
+                            <select class="form-control" ng-model="unit.UnitStatus" ng-init="unit.UnitStatus = flag.UnitStatuses[0].Id" ng-options="unitStatus.Id as unitStatus.Name for unitStatus in flag.UnitStatuses" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Company</label>
+                        <div class="col-md-10">
+                            <select class="form-control" ng-model="unit.Company" ng-options="company.Id as company.Name for company in companies" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Sim</label>
+                        <div class="col-md-10">
+                            <div class="input-group">
+                                <select class="form-control" allow-clear="true" ng-model="unit.Sim" ng-options="sim.Id as sim.Number for sim in sims" required />
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default" ng-click="clearSim()">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="modal-footer">
+        <!--<button ng-show="form.isDisabled" class="btn btn-default" type="button" ng-click="toggle()">Edit</button>-->
+        <!--<button ng-show="!form.isDisabled" class="btn btn-default" type="button" ng-click="update()">Update</button>-->
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+
+
+
+    <style type="text/css">
+        form {
+            margin: 20px;
+        }
+    </style>
+</body>
+</html>

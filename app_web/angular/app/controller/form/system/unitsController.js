@@ -6,22 +6,32 @@ app.controller('unitsController', function (
     $timeout,
     $location,
     $uibModal,
-    $uibModalInstance,
+    //$uibModalInstance,
 
     authFactory,
     flagFactory,
     uiFactory,
 
-    Unit
+   
+    Company,
+    Unit,
+    Sim
 
     ) {
 
 
     $scope.init = function () {
         $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
         $scope.ui = uiFactory;
-        $scope.selectedCompany = $scope.authUser.Company;
+        $scope.load();
+    };
+
+    $scope.load = function () {
+        $scope.units = Unit.query();
+        $scope.companies = Company.query();
+        $scope.sims = Sim.query();
     };
 
     $scope.select = function (unit) {
@@ -32,7 +42,8 @@ app.controller('unitsController', function (
             keyboard: true,
             size: 'md',
             resolve: {
-                unit: unit
+                unit: unit,
+                parent: $scope
             }
         });
     };
@@ -45,7 +56,8 @@ app.controller('unitsController', function (
             keyboard: true,
             size: 'md',
             resolve: {
-                unit: unit
+                unit: unit,
+                parent: $scope
             }
         });
     };
@@ -56,7 +68,10 @@ app.controller('unitsController', function (
             templateUrl: 'app/view/form/system/unit_insert.html',
             controller: 'unitInsertController',
             keyboard: true,
-            size: 'md'
+            size: 'md',
+            resolve: {
+                parent: $scope
+            }
         });
     };
 

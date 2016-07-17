@@ -6,6 +6,9 @@ app.factory('uiFactory', function () {
 
     uiFactory.isLoading = true;
     uiFactory.panelLeft = true;
+    uiFactory.panelAdmin = false;
+
+    uiFactory.panelAdminTemplate = 'app/view/form/system/companies.html';
 
 
     uiFactory.dateTimePicker = {};
@@ -26,7 +29,9 @@ app.factory('uiFactory', function () {
 
 
     uiFactory.pagination = {};
-    uiFactory.pagination.pageSize = 10;
+    uiFactory.pagination.pageSize1 = 10;
+    uiFactory.pagination.pageSize2 = 20;
+
     uiFactory.pagination.currentPage = 1;
 
 

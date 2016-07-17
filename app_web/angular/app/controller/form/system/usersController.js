@@ -6,18 +6,28 @@ app.controller('usersController', function (
     $timeout,
     $location,
     $uibModal,
-    $uibModalInstance,
+    //$uibModalInstance,
 
     authFactory,
     flagFactory,
-    uiFactory
+    uiFactory,
+
+    Company,
+    User
+
     ) {
 
     $scope.init = function () {
         $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
         $scope.ui = uiFactory;
-        $scope.selectedCompany = $scope.authUser.Company;
+        $scope.load();
+    };
+
+    $scope.load = function () {
+        $scope.users = User.query();
+        $scope.companies = Company.query();
     };
 
     $scope.select = function (user) {
@@ -28,7 +38,8 @@ app.controller('usersController', function (
             keyboard: true,
             size: 'md',
             resolve: {
-                user: user
+                user: user,
+                parent : $scope
             }
         });
     };
@@ -40,7 +51,8 @@ app.controller('usersController', function (
             keyboard: true,
             size: 'md',
             resolve: {
-                user: user
+                user: user,
+                parent: $scope
             }
         });
     };
@@ -51,7 +63,10 @@ app.controller('usersController', function (
             templateUrl: 'app/view/form/system/user_insert.html',
             controller: 'userInsertController',
             keyboard: true,
-            size: 'md'
+            size: 'md',
+            resolve: {
+                parent : $scope
+            }
         });
     };
 

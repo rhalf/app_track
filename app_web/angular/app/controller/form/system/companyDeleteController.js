@@ -15,7 +15,8 @@ app.controller('companyDeleteController', function (
     Company,
     CompanyInfo,
 
-    company
+    company,
+    parent
 
     ) {
 
@@ -23,13 +24,16 @@ app.controller('companyDeleteController', function (
 
     $scope.init = function () {
         $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
+
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
+
         $scope.company = company;
     }
 
     $scope.delete = function () {
         Company.delete({ id: $scope.company.Id }, function (result) {
-            $scope.flag.load('companies');
+            parent.load();
             $scope.cancel();
         });
     };

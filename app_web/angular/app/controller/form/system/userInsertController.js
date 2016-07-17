@@ -18,7 +18,11 @@ app.controller('userInsertController', function (
 
 
     User,
-    UserInfo
+    UserInfo,
+    Company,
+
+    parent
+
     ) {
 
     //Form
@@ -43,6 +47,7 @@ app.controller('userInsertController', function (
         }
 
 
+        $scope.ui.isLoading = true;
 
 
         User.save(
@@ -58,12 +63,14 @@ app.controller('userInsertController', function (
                         //Success
                         var alert = { type: 'success', message: '1 userinfo has been added successfully.' };
                         $scope.ui.alert.addItem(alert);
-                        $scope.flag.load('users');
+                        parent.load();
+                        $scope.ui.isLoading = false;
                     },
                     function (result) {
                         //Failed
                         var alert = { type: 'danger', message: result.data.Message };
                         $scope.ui.alert.addItem(alert);
+                        $scope.ui.isLoading = false;
                         return;
                     });
             },
@@ -71,7 +78,7 @@ app.controller('userInsertController', function (
                 //Failed
                 var alert = { type: 'danger', message: result.data.Message };
                 $scope.ui.alert.addItem(alert);
-                return;
+                $scope.ui.isLoading = false;
             });
     };
 
@@ -85,7 +92,10 @@ app.controller('userInsertController', function (
 
     $scope.init = function () {
         $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
+       
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
+
         $scope.ui = uiFactory;
 
         $scope.ui.dateTimePicker.isOpen = [
@@ -102,14 +112,14 @@ app.controller('userInsertController', function (
 
         $scope.user = new User();
         $scope.userInfo = new UserInfo();
+        $scope.companies = Company.query();
 
         $scope.user.DtExpired = $filter('date')(new Date(), 'yyyy-MM-dd');
 
     };
 
-
     $scope.clearSim = function () {
-        $scope.unit.Sim = 0;
+        $scope.user.Sim = null;
     };
 
     $scope.cancel = function () {

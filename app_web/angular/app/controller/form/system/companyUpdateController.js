@@ -16,7 +16,8 @@ app.controller('companyUpdateController', function (
     Company,
     CompanyInfo,
 
-    company
+    company,
+    parent
     ) {
 
     $scope.toggle = function () {
@@ -24,7 +25,8 @@ app.controller('companyUpdateController', function (
     };
 
     $scope.update = function () {
-        $scope.toggle();
+
+        $scope.ui.isLoading = true;
 
         CompanyInfo.update(
             { id: $scope.companyInfo.Id },
@@ -39,14 +41,24 @@ app.controller('companyUpdateController', function (
                     //Success
                     var alert = { type: 'success', message: '1 company has been updated successfully.' };
                     $scope.ui.alert.addItem(alert);
-                    $scope.flag.load('companies');
+                    parent.load();
+                    $scope.ui.isLoading = false;
+                    $scope.toggle();
+
                 },
                 function (result) {
                     //Failed
+                    var alert = { type: 'danger', message: result.data.Message };
+                    $scope.ui.alert.addItem(alert);
+                    $scope.ui.isLoading = false;
                 });
             },
             function (result) {
                 //Failed
+                var alert = { type: 'danger', message: result.data.Message };
+                $scope.ui.alert.addItem(alert);
+                $scope.ui.isLoading = false;
+
             }
         );
     };
@@ -61,7 +73,9 @@ app.controller('companyUpdateController', function (
         $scope.form.isDisabled = true;
 
         $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
+
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
         $scope.ui.dateTimePicker.isOpen = [

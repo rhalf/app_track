@@ -10,7 +10,11 @@
         <!--Navigation Bar-->
        <div panel-menu></div>
         <!--Navigation Bar-->
-        <div panel-map></div>
+        <div panel-map ng-show="!ui.panelAdmin"></div>
+        <div panel-admin ng-show="ui.panelAdmin">
+            <ng-include src="ui.panelAdminTemplate"></ng-include>
+        </div>
+
 
     </div>
 

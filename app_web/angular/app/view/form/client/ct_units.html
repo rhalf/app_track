@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="modal-title">Units</h3>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="selected" required />
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" ng-click="clear()">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-body">
+        <table class="table table-responsive table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Imei</th>
+                    <th>Serial</th>
+                    <th>DtCreated</th>
+                    <th>UnitType</th>
+                    <th>UnitStatus</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="unit in units | filter : selected | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize1 | limitTo : ui.pagination.pageSize1">
+                    <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize1 }}</td>
+                    <td>{{unit.Imei}}</td>
+                    <td>{{unit.SerialNumber}}</td>
+                    <td>{{unit.DtCreated | dateFilter : 'date'}}</td>
+                    <td>{{unit.UnitType | flagByIdFilter : flag.UnitTypes : 'name' }}</td>
+                    <td>{{unit.UnitStatus | flagByValueFilter : flag.UnitStatuses : 'name' }}</td>
+                    <td>
+                        <button ng-click="select(unit)" ng-hide="authUser.Privilege > 3"><span class="glyphicon glyphicon-cog" /></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <uib-pagination boundary-links="true"
+                        force-ellipses="true"
+                        total-items="units.length"
+                        ng-model="ui.pagination.currentPage"
+                        items-per-page="ui.pagination.pageSize1"
+                        class="center-block">
+        </uib-pagination>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+</body>
+</html>

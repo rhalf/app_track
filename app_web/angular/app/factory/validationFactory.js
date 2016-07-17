@@ -41,6 +41,7 @@ app.factory('validationFactory', function () {
         }
     };
 
+
     return validationFactory;
 });
 

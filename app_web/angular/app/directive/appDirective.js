@@ -27,3 +27,10 @@ app.directive('panelMap', function () {
         controller: 'panelMapController'
     }
 });
+
+app.directive('panelLoading', function () {
+    return {
+        templateUrl: '/app/view/directive/panelLoading.html',
+        controller: 'panelLoadingController'
+    }
+});

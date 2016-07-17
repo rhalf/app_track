@@ -6,21 +6,31 @@ app.controller('simsController', function (
     $timeout,
     $location,
     $uibModal,
-    $uibModalInstance,
+    //$uibModalInstance,
 
 
     authFactory,
     flagFactory,
-    uiFactory
+    uiFactory,
 
+    Company,
+    Sim
 
     ) {
 
 
     $scope.init = function () {
         $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
         $scope.ui = uiFactory;
+
+        $scope.load();
+    };
+
+    $scope.load = function () {
+        $scope.sims = Sim.query();
+        $scope.companies = Company.query();
     };
 
     $scope.select = function (sim) {
@@ -31,7 +41,8 @@ app.controller('simsController', function (
             keyboard: true,
             size: 'md',
             resolve: {
-                sim: sim
+                sim: sim,
+                parent: $scope
             }
         });
     };
@@ -42,7 +53,10 @@ app.controller('simsController', function (
             templateUrl: 'app/view/form/system/sim_insert.html',
             controller: 'simInsertController',
             keyboard: true,
-            size: 'md'
+            size: 'md',
+            resolve: {
+                parent: $scope
+            }
         });
     };
 
@@ -54,7 +68,8 @@ app.controller('simsController', function (
             keyboard: true,
             size: 'md',
             resolve: {
-                sim: sim
+                sim: sim,
+                parent: $scope
             }
         });
     };

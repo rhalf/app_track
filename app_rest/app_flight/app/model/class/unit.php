@@ -34,7 +34,52 @@ class Unit implements IQuery {
 				$unit->Imei = $row['unit_imei'];
 				$unit->DtCreated = $row['unit_dt_created'];
 				$unit->SerialNumber = $row['unit_serial_number'];
-				$unit->Sim = (int) $row['sim_id'];
+
+				$unit->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
+
+				$unit->UnitType = (int) $row['unit_type_id'];
+				$unit->Company = (int) $row['company_id'];
+				$unit->UnitStatus = (int) $row['e_status_unit_id'];
+				
+				array_push($result, $unit);
+			}
+
+			Flight::ok($result);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
+	}
+
+	public static function selectByCompany($id) {
+		
+		$connection = Flight::dbMain();
+
+		try {
+
+			$sql = "SELECT * FROM unit WHERE company_id = :company;";
+			$query = $connection->prepare($sql);
+			$query->bindParam(':company',$id, PDO::PARAM_INT);
+
+			$query->execute();
+
+			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
+
+			$result = array();
+
+			foreach ($rows as $row) {	
+				$unit = new Unit();
+				$unit->Id = (int) $row['id'];
+				$unit->Imei = $row['unit_imei'];
+				$unit->DtCreated = $row['unit_dt_created'];
+				$unit->SerialNumber = $row['unit_serial_number'];
+
+				$unit->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
+
 				$unit->UnitType = (int) $row['unit_type_id'];
 				$unit->Company = (int) $row['company_id'];
 				$unit->UnitStatus = (int) $row['e_status_unit_id'];
@@ -76,7 +121,9 @@ class Unit implements IQuery {
 			$unit->Imei = $row['unit_imei'];
 			$unit->DtCreated = $row['unit_dt_created'];
 			$unit->SerialNumber = $row['unit_serial_number'];
-			$unit->Sim = (int) $row['sim_id'];
+
+			$unit->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
+
 			$unit->UnitType = (int) $row['unit_type_id'];
 			$unit->Company = (int) $row['company_id'];
 			$unit->UnitStatus = (int) $row['e_status_unit_id'];

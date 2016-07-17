@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="modal-title">Distribute</h3>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="input-group">
+                    <select class="form-control"
+                            ng-model="selectedCollection"
+                            ng-options="collection.Id as collection.Name for collection in collections"
+                            ng-change="getVehicles()" />
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" ng-click="clear()">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-body" >
+
+        <table class="table" >
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Vechile(Name)</th>
+                    <th>Vehicle(Plate)</th>
+                    <th>Unit(Imei)</th>
+                    <th>Sim(Number)</th>
+                    <th>Driver(Name)</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tr ng-repeat="vehicle in vehicles" ng-cloak>
+                <td>{{$index + 1}}</td>
+                <td>{{vehicle.Name}}</td>
+                <td>{{vehicle.Plate}}</td>
+                <td>{{vehicle.Unit.Imei}}</td>
+                <td>{{vehicle.Unit.Sim.Number}}</td>
+                <td>{{vehicle.Driver.Name}}</td>
+
+                <td><input type="checkbox" ng-model="vehicle.Checked"></td>
+               
+            </tr>
+        </table>
+
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="add()" ng-hide="authUser.Privilege > 4">Add</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+
+    <style type="text/css">
+        .col1 {
+            background-color: skyblue;
+        }
+
+        .col2 {
+            background-color: yellow;
+        }
+
+        .col3 {
+            background-color: skyblue;
+        }
+    </style>
+</body>
+</html>

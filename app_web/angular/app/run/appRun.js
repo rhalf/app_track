@@ -22,17 +22,20 @@ app.run(function (
 
         //If route is authenticated, then the user should have access
         if (next.$$route.authenticated) {
-            var user = authFactory.getAccessToken();
-            if (!user) {
+
+            var user = authFactory.getUser();
+            var company = authFactory.getCompany();
+
+            if (!user || !company) {
                 $location.path('/');
             }
 
         }
     });
 
-    $rootScope.$on('$routeChangeSuccess', function (event, next, current) {
-        // Hide loading message
-    });
+    //$rootScope.$on('$routeChangeSuccess', function (event, next, current) {
+    //    // Hide loading message
+    //});
 
 
 });

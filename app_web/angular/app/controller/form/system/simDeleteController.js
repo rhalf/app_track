@@ -14,7 +14,8 @@ app.controller('simDeleteController', function (
 
     Sim,
 
-    sim
+    sim,
+    parent
 
     ) {
 
@@ -22,13 +23,14 @@ app.controller('simDeleteController', function (
 
     $scope.init = function () {
         $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
         $scope.sim = sim;
     }
 
     $scope.delete = function () {
         Sim.delete({ id: $scope.sim.Id }, function (result) {
-            $scope.flag.load('sims');
+            parent.load();
             $scope.cancel();
         });
     };

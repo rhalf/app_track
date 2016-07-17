@@ -5,6 +5,8 @@
     <meta charset="utf-8" />
 </head>
 <body>
+    <div panel-loading ng-cloak ng-show="ui.isLoading"></div>
+
     <div class="noty">
         <uib-alert ng-repeat="alert in ui.alert.items" type="{{alert.type}}" close="closeAlert($index)" dismiss-on-timeout="{{ui.alert.timeout}}">{{alert.message}} </uib-alert>
     </div>

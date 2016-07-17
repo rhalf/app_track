@@ -14,19 +14,24 @@ app.controller('unitDeleteController', function (
     uiFactory,
 
     Unit,
-    unit
+
+    unit,
+    parent
 
     ) {
 
     $scope.init = function () {
         $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
+  
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
+
         $scope.unit = unit;
     }
 
     $scope.delete = function () {
         Unit.delete({ id: $scope.unit.Id }, function (result) {
-            $scope.flag.load('units');
+            parent.load();
             $scope.cancel();
         });
     };

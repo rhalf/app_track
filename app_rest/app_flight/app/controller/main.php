@@ -80,7 +80,15 @@ Flight::route('PUT /v1/main/address/@id', array('Address', 'update'));
 Flight::route('DELETE /v1/main/address/@id', array('Address', 'delete'));
 
 //Collection
-Flight::route('GET /v1/main/collection', array('Collection', 'selectAll'));
+Flight::route('GET /v1/main/collection', function() {
+	$company = Flight::request()->query->company;
+	if ($company) {
+		Collection::selectByCompany($company);
+	} else {
+		Collection::selectAll();
+	}
+});
+
 
 Flight::route('GET /v1/main/collection/@id', array('Collection', 'select'));
 
@@ -121,10 +129,15 @@ Flight::route('PUT /v1/main/companyinfo/@id', array('CompanyInfo', 'update'));
 Flight::route('DELETE /v1/main/companyinfo/@id', array('CompanyInfo', 'delete'));
 
 
-
-
 //Driver
-Flight::route('GET /v1/main/driver', array('Driver', 'selectAll'));
+Flight::route('GET /v1/main/driver', function() {
+	$company = Flight::request()->query->company;
+	if ($company) {
+		Driver::selectByCompany($company);
+	} else {
+		Driver::selectAll();
+	}
+});
 
 Flight::route('GET /v1/main/driver/@id', array('Driver', 'select'));
 
@@ -236,7 +249,14 @@ Flight::route('PUT /v1/main/unitstatus/@id', array('UnitStatus', 'update'));
 Flight::route('DELETE /v1/main/unitstatus/@id', array('UnitStatus', 'delete'));
 
 //Unit
-Flight::route('GET /v1/main/unit', array('Unit', 'selectAll'));
+Flight::route('GET /v1/main/unit', function() {
+	$company = Flight::request()->query->company;
+	if ($company) {
+		Unit::selectByCompany($company);
+	} else {
+		Unit::selectAll();
+	}
+});
 
 Flight::route('GET /v1/main/unit/@id', array('Unit', 'select'));
 
@@ -260,19 +280,26 @@ Flight::route('PUT /v1/main/unittype/@id', array('UnitType', 'update'));
 Flight::route('DELETE /v1/main/unittype/@id', array('UnitType', 'delete'));
 
 
-//VehicleModel
-Flight::route('GET /v1/main/vehiclemodel', array('VehicleModel', 'selectAll'));
+//TrackeeType
+Flight::route('GET /v1/main/trackeetype', array('TrackeeType', 'selectAll'));
 
-Flight::route('GET /v1/main/vehiclemodel/@id', array('VehicleModel', 'select'));
+Flight::route('GET /v1/main/trackeetype/@id', array('TrackeeType', 'select'));
 
-Flight::route('POST /v1/main/vehiclemodel', array('VehicleModel', 'insert'));
+Flight::route('POST /v1/main/trackeetype', array('TrackeeType', 'insert'));
 
-Flight::route('PUT /v1/main/vehiclemodel/@id', array('VehicleModel', 'update'));
+Flight::route('PUT /v1/main/trackeetype/@id', array('TrackeeType', 'update'));
 
-Flight::route('DELETE /v1/main/vehiclemodel/@id', array('VehicleModel', 'delete'));
+Flight::route('DELETE /v1/main/trackeetype/@id', array('TrackeeType', 'delete'));
 
 //User
-Flight::route('GET /v1/main/user', array('User', 'selectAll'));
+Flight::route('GET /v1/main/user',function() {
+	$company = Flight::request()->query->company;
+	if ($company) {
+		User::selectByCompany($company);
+	} else {
+		User::selectAll();
+	}
+});
 
 Flight::route('GET /v1/main/user/@id', array('User', 'select'));
 
@@ -304,7 +331,14 @@ Flight::route('DELETE /v1/main/userinfo/@id', array('UserInfo', 'delete'));
 
 
 //Sim
-Flight::route('GET /v1/main/sim', array('Sim', 'selectAll'));
+Flight::route('GET /v1/main/sim', function() {
+	$company = Flight::request()->query->company;
+	if ($company) {
+		Flight::ok(Sim::selectByCompany($company));
+	} else {
+		Flight::ok(Sim::selectAll());
+	}
+});
 
 Flight::route('GET /v1/main/sim/@id', array('Sim', 'select'));
 
@@ -316,7 +350,14 @@ Flight::route('DELETE /v1/main/sim/@id', array('Sim', 'delete'));
 
 
 //Vehicle
-Flight::route('GET /v1/main/vehicle', array('Vehicle', 'selectAll'));
+Flight::route('GET /v1/main/vehicle', function() {
+	$company = Flight::request()->query->company;
+	if ($company) {
+		Vehicle::selectByCompany($company);
+	} else {
+		Vehicle::selectAll();
+	}
+});
 
 Flight::route('GET /v1/main/vehicle/@id', array('Vehicle', 'select'));
 
@@ -327,7 +368,14 @@ Flight::route('PUT /v1/main/vehicle/@id', array('Vehicle', 'update'));
 Flight::route('DELETE /v1/main/vehicle/@id', array('Vehicle', 'delete'));
 
 //VehicleCollection
-Flight::route('GET /v1/main/vehiclecollection', array('VehicleCollection', 'selectAll'));
+Flight::route('GET /v1/main/vehiclecollection', function() {
+	$collection = Flight::request()->query->collection;
+	if ($collection) {
+		VehicleCollection::selectByCollection($collection);
+	} else {
+		VehicleCollection::selectAll();
+	}
+});
 
 Flight::route('GET /v1/main/vehiclecollection/@id', array('VehicleCollection', 'select'));
 

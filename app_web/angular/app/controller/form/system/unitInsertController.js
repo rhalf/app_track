@@ -16,26 +16,33 @@ app.controller('unitInsertController', function (
     uiFactory,
     validationFactory,
 
+    Company,
+    Sim,
+    Unit,
 
-    Unit
+    parent
 
     ) {
 
     //Form
     $scope.add = function () {
+        $scope.ui.isLoading = true;
+
         Unit.save(
             $scope.unit,
             function (result) {
                 //Success
                 var alert = { type: 'success', message: '1 unit has been added successfully.' };
                 $scope.ui.alert.addItem(alert);
-                $scope.flag.load('units');
+                parent.load();
+                $scope.ui.isLoading = false;
+
             },
             function (result) {
                 //Failed
                 var alert = { type: 'danger', message: result.data.Message };
                 $scope.ui.alert.addItem(alert);
-                return;
+                $scope.ui.isLoading = false;
             });
     };
 
@@ -49,11 +56,17 @@ app.controller('unitInsertController', function (
 
     $scope.init = function () {
         $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
+       
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
+
         $scope.ui = uiFactory;
 
         $scope.ui.alert.items = [];
+
         $scope.unit = new Unit();
+        $scope.companies = Company.query();
+        $scope.sims = Sim.getByCompany({ company: $scope.authCompany.Id });
     }
 
 
@@ -62,7 +75,7 @@ app.controller('unitInsertController', function (
     };
 
     $scope.clearSim = function () {
-        $scope.unit.Sim = 0;
+        $scope.unit.Sim = null;
     }
 
     $scope.init();

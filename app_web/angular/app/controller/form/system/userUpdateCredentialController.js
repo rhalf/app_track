@@ -17,6 +17,7 @@ app.controller('userUpdateCredentialController', function (
 
     User,
     user
+
     ) {
 
     $scope.update = function () {
@@ -32,16 +33,20 @@ app.controller('userUpdateCredentialController', function (
             return;
         }
 
+        $scope.ui.isLoading = true;
+
         User.setCredential(
             { id: $scope.user.Id, type: 'credential' },
             $scope.user,
             function (result) {
                 var alert = { type: 'success', message: 'This user has been updated.' };
                 $scope.ui.alert.addItem(alert);
+                $scope.ui.isLoading = false;
             },
             function (result) {
                 var alert = { type: 'danger', message: result.data.Message };
                 $scope.ui.alert.addItem(alert);
+                $scope.ui.isLoading = false;
             });
     };
 
@@ -51,11 +56,14 @@ app.controller('userUpdateCredentialController', function (
     };
 
     $scope.init = function () {
+        $scope.ui = uiFactory;
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
+        $scope.flag = flagFactory;
+
+
         $scope.form = {};
         $scope.form.isDisabled = true;
-        $scope.authUser = authFactory.getAccessToken();
-        $scope.ui = uiFactory;
-        $scope.flag = flagFactory;
 
         uiFactory.alert.items = [];
 

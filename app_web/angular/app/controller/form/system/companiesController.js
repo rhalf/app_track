@@ -6,20 +6,30 @@ app.controller('companiesController', function (
     $timeout,
     $location,
     $uibModal,
-    $uibModalInstance,
+    //$uibModalInstance,
 
 
     authFactory,
     flagFactory,
-    uiFactory
+    uiFactory,
+
+    Company
 
     ) {
 
     $scope.init = function () {
         $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
+
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
+
         $scope.ui = uiFactory;
-    }
+        $scope.load();
+    };
+
+    $scope.load = function () {
+        $scope.companies = Company.query();
+    };
 
     $scope.cancel = function () {
         $uibModalInstance.close();
@@ -33,7 +43,8 @@ app.controller('companiesController', function (
             keyboard: true,
             size: 'md',
             resolve: {
-                company: company
+                company: company,
+                parent : $scope
             }
         });
     }
@@ -44,7 +55,10 @@ app.controller('companiesController', function (
             templateUrl: 'app/view/form/system/company_insert.html',
             controller: 'companyInsertController',
             keyboard: true,
-            size: 'md'
+            size: 'md',
+            resolve: {
+                parent: $scope
+            }
         });
     }
 
@@ -56,7 +70,8 @@ app.controller('companiesController', function (
             keyboard: true,
             size: 'md',
             resolve: {
-                company: company
+                company: company,
+                parent: $scope
             }
         });
     };

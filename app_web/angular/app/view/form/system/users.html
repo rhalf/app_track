@@ -5,71 +5,71 @@
     <meta charset="utf-8" />
 </head>
 <body>
-
-
-    <div class="modal-header">
-        <div class="row">
-            <div class="col-md-4">
-                <h3 class="modal-title">Users</h3>
-            </div>
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <div class="input-group" ng-show="authUser.Privilege < 4">
-                    <select class="form-control" ng-model="selectedCompany" ng-init="user.Company = flag.Companies[0].Id" ng-options="company.Id as company.Name for company in flag.Companies" required />
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" ng-click="clearCompany()">Clear</button>
+    <div ng-controller="usersController">
+        <div class="modal-header">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 class="modal-title">Users</h3>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="input-group" ng-show="authUser.Privilege < 4">
+                        <select class="form-control" ng-model="selectedCompany" ng-options="company.Id as company.Name for company in companies" required />
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" ng-click="clearCompany()">Clear</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
-    <div class="modal-body">
-        <div class="container-fluid">
-            <table class="table table-responsive table-hover">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>DtCreated</th>
-                        <th>DtExpired</th>
-                        <th>Privilege</th>
-                        <th>Status</th>
-                        <th>Company</th>
-                        <th>Options</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="user in flag.Users | filter : {Company : selectedCompany} | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize | limitTo : ui.pagination.pageSize">
-                        <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize }}</td>
-                        <td>{{user.Name}}</td>
-                        <td>{{user.DtCreated | dateFilter : 'date'}}</td>
-                        <td>{{user.DtExpired | dateFilter : 'date'}}</td>
-                        <td>{{user.Privilege | privilegeFilter : 'name' }}</td>
-                        <td>{{user.Status | statusFilter  : 'name'}}</td>
-                        <td>{{user.Company | companyFilter  : 'name'}}</td>
-                        <td>
-                            <button ng-click="select(user)"><span class="glyphicon glyphicon-cog" /></button>
-                            <button ng-click="delete(user)"><span class="glyphicon glyphicon-trash" /></button>
-                            <button ng-click="credential(user)"><span class="glyphicon glyphicon-asterisk" /></button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <uib-pagination boundary-links="true"
-                            force-ellipses="true"
-                            total-items="flag.Users.length"
-                            ng-model="ui.pagination.currentPage"
-                            items-per-page="ui.pagination.pageSize"
-                            class="center-block">
-            </uib-pagination>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <table class="table table-responsive table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>DtCreated</th>
+                            <th>DtExpired</th>
+                            <th>Privilege</th>
+                            <th>Status</th>
+                            <th>Company</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="user in users | filter : {Company : selectedCompany} | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 | limitTo : ui.pagination.pageSize2">
+                            <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 }}</td>
+                            <td>{{user.Name}}</td>
+                            <td>{{user.DtCreated | dateFilter : 'date'}}</td>
+                            <td>{{user.DtExpired | dateFilter : 'date'}}</td>
+                            <td>{{user.Privilege | flagByValueFilter : flag.Privileges  : 'name' }}</td>
+                            <td>{{user.Status | flagByValueFilter : flag.Statuses  : 'name'}}</td>
+                            <td>{{user.Company | flagByIdFilter : companies  : 'name'}}</td>
+                            <td>
+                                <button ng-click="select(user)"><span class="glyphicon glyphicon-cog" /></button>
+                                <button ng-click="delete(user)"><span class="glyphicon glyphicon-trash" /></button>
+                                <button ng-click="credential(user)"><span class="glyphicon glyphicon-asterisk" /></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <uib-pagination boundary-links="true"
+                                force-ellipses="true"
+                                total-items="users.length"
+                                ng-model="ui.pagination.currentPage"
+                                items-per-page="ui.pagination.pageSize2"
+                                class="center-block">
+                </uib-pagination>
+            </div>
         </div>
-    </div>
 
-    <div class="modal-footer">
-        <button class="btn btn-default" type="button" ng-click="add()">Add</button>
-        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+        <div class="modal-footer">
+            <button class="btn btn-default" type="button" ng-click="add()">Add</button>
+            <!--<button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>-->
+        </div>
     </div>
 </body>
 </html>

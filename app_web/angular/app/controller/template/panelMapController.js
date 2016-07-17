@@ -22,7 +22,9 @@ app.controller('panelMapController', function (
             maxbounds: maxbounds,
             defaults: {
                 //tileLayer: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
+                //tileLayer: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',             
                 tileLayer: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
                 minZoom: 10,
                 zoomControlPosition: 'topright',
                 tileLayerOptions: {

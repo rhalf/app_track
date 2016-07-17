@@ -16,7 +16,9 @@ app.controller('companyInsertController', function (
 
 
     Company,
-    CompanyInfo
+    CompanyInfo,
+
+    parent
     ) {
 
   
@@ -34,7 +36,7 @@ app.controller('companyInsertController', function (
                     function (result) {
                         var alert = { type: 'success', message: '1 company has been added successfully.' };
                         $scope.ui.alert.addItem(alert);
-                        $scope.flag.load('companies');
+                        parent.load();
                     },
                     //Failed
                     function (result) {
@@ -58,7 +60,10 @@ app.controller('companyInsertController', function (
 
     $scope.init = function () {
         $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
+        
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
+
         $scope.ui = uiFactory;
 
         $scope.ui.dateTimePicker.isOpen = [

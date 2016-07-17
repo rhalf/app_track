@@ -15,10 +15,13 @@ app.controller('userUpdateController', function (
     uiFactory,
     validationFactory,
 
+    Company,
+    Sim,
     User,
     UserInfo,
 
-    user
+    user,
+    parent
     ) {
 
 
@@ -36,16 +39,20 @@ app.controller('userUpdateController', function (
             return;
         }
 
+        $scope.ui.isLoading = true;
+
         UserInfo.update({ id: $scope.userInfo.Id }, $scope.userInfo,
             function (result) {
                 //Success
                 var alert = { type: 'success', message: '1 userInfo has been updated.' };
                 $scope.ui.alert.addItem(alert);
+                $scope.ui.isLoading = false;
             },
             function (result) {
                 //Failed
                 var alert = { type: 'danger', message: result.Message };
                 $scope.ui.alert.addItem(alert);
+                $scope.ui.isLoading = false;
             });
 
         User.update({ id: $scope.user.Id }, $scope.user,
@@ -53,11 +60,14 @@ app.controller('userUpdateController', function (
                 //Success
                 var alert = { type: 'success', message: '1 user has been updated.' };
                 $scope.ui.alert.addItem(alert);
+                $scope.ui.isLoading = false;
+                panel.load();
             },
             function (result) {
                 //Failed
                 var alert = { type: 'danger', message: result.Message };
                 $scope.ui.alert.addItem(alert);
+                $scope.ui.isLoading = false;
             });
     };
 
@@ -75,7 +85,9 @@ app.controller('userUpdateController', function (
 
         $scope.flag = flagFactory;
         $scope.ui = uiFactory;
-        $scope.authUser = authFactory.getAccessToken();
+       
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui.dateTimePicker.isOpen = [
         false, //dateTimePicker1
@@ -91,12 +103,15 @@ app.controller('userUpdateController', function (
 
         $scope.user = user;
         $scope.userInfo = UserInfo.get({ user: user.Id });
+        $scope.companies = Company.query();
+        $scope.sims = Sim.query();
 
     };
 
     $scope.clearSim = function () {
-        $scope.user.Sim = 0;
+        $scope.user.Sim = null;
     };
+
 
     $scope.cancel = function () {
         $uibModalInstance.close();

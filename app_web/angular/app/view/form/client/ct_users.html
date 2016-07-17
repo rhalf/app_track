@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="modal-title">Users</h3>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input type="text"  class="form-control" ng-model="selected" required />
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" ng-click="clear()">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="container-fluid">
+            <table class="table table-responsive table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>DtCreated</th>
+                        <th>DtExpired</th>
+                        <th>Privilege</th>
+                        <th>Status</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="user in users | filter :  selected | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize1 | limitTo : ui.pagination.pageSize1">
+                        <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize1 }}</td>
+                        <td>{{user.Name}}</td>
+                        <td>{{user.DtCreated | dateFilter : 'date'}}</td>
+                        <td>{{user.DtExpired | dateFilter : 'date'}}</td>
+                        <td>{{user.Privilege | flagByValueFilter: flag.Privileges : 'name' }}</td>
+                        <td>{{user.Status | flagByValueFilter  : flag.Statuses : 'name'}}</td>
+                        <td>
+                            <button ng-click="select(user)" ng-show="authUser.Privilege <= user.Privilege && authUser.Privilege < 5"><span class="glyphicon glyphicon-cog" /></button>
+                            <button ng-click="delete(user)" ng-show="authUser.Privilege <= user.Privilege && authUser.Privilege < 5"><span class="glyphicon glyphicon-trash" /></button>
+                            <button ng-click="credential(user)" ng-show="authUser.Privilege <= user.Privilege && authUser.Privilege < 5"><span class="glyphicon glyphicon-asterisk" /></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <uib-pagination boundary-links="true"
+                            force-ellipses="true"
+                            total-items="users.length"
+                            ng-model="ui.pagination.currentPage"
+                            items-per-page="ui.pagination.pageSize1"
+                            class="center-block">
+            </uib-pagination>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="add()" ng-hide="authUser.Privilege > 4">Add</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+</body>
+</html>

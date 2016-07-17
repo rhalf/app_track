@@ -6,21 +6,31 @@ app.controller('driversController', function (
     $timeout,
     $location,
     $uibModal,
-    $uibModalInstance,
+    //$uibModalInstance,
 
 
     authFactory,
     flagFactory,
-    uiFactory
+    uiFactory,
 
+    Company,
+    Driver
 
     ) {
 
 
     $scope.init = function () {
         $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
         $scope.ui = uiFactory;
+
+        $scope.load();
+    };
+
+    $scope.load = function () {
+        $scope.companies = Company.query();
+        $scope.drivers = Driver.query();
     };
 
     $scope.select = function (driver) {
@@ -31,7 +41,8 @@ app.controller('driversController', function (
             keyboard: true,
             size: 'md',
             resolve: {
-                driver: driver
+                driver: driver,
+                parent: $scope
             }
         });
     };
@@ -42,7 +53,10 @@ app.controller('driversController', function (
             templateUrl: 'app/view/form/system/driver_insert.html',
             controller: 'driverInsertController',
             keyboard: true,
-            size: 'md'
+            size: 'md',
+            resolve: {
+                parent: $scope
+            }
         });
     };
 
@@ -54,7 +68,8 @@ app.controller('driversController', function (
             keyboard: true,
             size: 'md',
             resolve: {
-                driver: driver
+                driver: driver,
+                parent: $scope
             }
         });
     };

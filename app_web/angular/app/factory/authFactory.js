@@ -5,19 +5,49 @@ app.factory('authFactory', function ($cookies) {
 
     var authFactory = {};
 
-    authFactory.setAccessToken = function (token) {
-        authFactory.token = token;
+
+    //user
+    authFactory.setUser = function (user) {
+        authFactory.user = user;
+    };
+
+
+    authFactory.getUser = function () {
+        var authFactory = $cookies.getObject('authFactory');
+
+        if (authFactory) {
+            if (authFactory.user) {
+                return authFactory.user;
+            }
+        }
+        return null;
+    };
+
+    //company
+    authFactory.setCompany = function (company) {
+        authFactory.company = company;
+    };
+
+
+    authFactory.getCompany = function () {
+        var authFactory = $cookies.getObject('authFactory');
+
+        if (authFactory) {
+            if (authFactory.company) {
+                return authFactory.company;
+            }
+        }
+        return null;
+    };
+
+
+    //Additional functionallity
+    authFactory.save = function () {
         $cookies.putObject('authFactory', authFactory);
     };
 
-    authFactory.getAccessToken = function () {
-        var authFactory = $cookies.getObject('authFactory');
-
-        if (angular.isUndefined(authFactory) || authFactory == null) {
-            return null;
-        } else {
-            return authFactory.token;
-        }
+    authFactory.remove = function () {
+        $cookies.putObject('authFactory', null);
     };
 
     return authFactory;

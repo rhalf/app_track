@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <h3 class="modal-title">Driver (Add)</h3>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="noty">
+                <uib-alert ng-repeat="alert in ui.alert.items" type="{{alert.type}}" close="closeAlert($index)" dismiss-on-timeout="{{ui.alert.timeout}}">{{alert.message}} </uib-alert>
+            </div>
+            <form class="form-horizontal" role="form">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">DriverId</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="driver.DriverId" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">FirstName</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" ng-model="driver.NameFirst" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">MiddleName</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" ng-model="driver.NameMiddle" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">LastName</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" ng-model="driver.NameLast" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Rfid</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" ng-model="driver.Rfid" required />
+                        </div>
+                    </div>
+                    <!--<div class="form-group">
+                        <label class="control-label col-md-2">Status</label>
+                        <div class="col-md-10">
+                            <select class="form-control" ng-model="driver.Status" ng-init="driver.Status = flag.Statuses[0].Value" ng-options="status.Value as status.Name for status in flag.Statuses" required />
+                        </div>
+                    </div>-->
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Company</label>
+                        <div class="col-md-10">
+                            <select class="form-control" ng-model="driver.Company" ng-init="driver.Company = authCompany.Id" ng-options="company.Id as company.Name for company in companies" disabled required />
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="add()">Add</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+
+    <style type="text/css">
+        form {
+            margin: 20px;
+        }
+    </style>
+</body>
+</html>

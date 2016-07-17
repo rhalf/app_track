@@ -19,7 +19,7 @@ app.factory('CompanyInfo', function ($resource) {
         getByCompany: {
             method: 'GET',
             params: {
-                company : '@company'
+                company: '@company'
             }
         }
     });
@@ -73,6 +73,13 @@ app.factory('User', function ($resource) {
         },
         setCredential: {
             method: 'PUT'
+        },
+        getByCompany: {
+            method: 'GET',
+            params: {
+                company: '@company'
+            },
+            isArray: true
         }
     });
 });
@@ -94,6 +101,13 @@ app.factory('Sim', function ($resource) {
     return $resource('http://184.107.179.181/v1/main/sim/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
+        },
+        getByCompany: {
+            method: 'GET',
+            params: {
+                company: '@company'
+            },
+            isArray: true
         }
     });
 });
@@ -102,6 +116,13 @@ app.factory('Unit', function ($resource) {
     return $resource('http://184.107.179.181/v1/main/unit/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
+        },
+        getByCompany: {
+            method: 'GET',
+            params: {
+                company: '@company'
+            },
+            isArray: true
         }
     });
 });
@@ -135,14 +156,79 @@ app.factory('Driver', function ($resource) {
     return $resource('http://184.107.179.181/v1/main/driver/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
+        },
+        getByCompany: {
+            method: 'GET',
+            params: {
+                company: '@company'
+            },
+            isArray: true
         }
     });
 });
 
-app.factory('Driver', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/driver/:id', { id: '@id' }, {
+app.factory('Vehicle', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/vehicle/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
+        },
+        getByCompany: {
+            method: 'GET',
+            params: {
+                company: '@company'
+            },
+            isArray: true
+        }
+    });
+});
+
+app.factory('VehicleCollection', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/vehiclecollection/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
+        },
+        getByCollection: {
+            method: 'GET',
+            params: {
+                collection: '@collection'
+            },
+            isArray: true
+        }
+    });
+});
+
+
+app.factory('TrackeeType', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/trackeetype/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
+        }
+    });
+});
+
+app.factory('Session', function ($resource) {
+    return $resource('http://184.107.179.181/v1/session/login/',{}, {
+        'login': {
+            method: 'POST',
+            data: {
+                Name: '@Name',
+                Password: '@Password'
+            }
+        }
+    });
+});
+
+app.factory('Collection', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/collection/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
+        },
+        getByCompany: {
+            method: 'GET',
+            params: {
+                company: '@company'
+            },
+            isArray: true
         }
     });
 });

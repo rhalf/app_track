@@ -15,9 +15,12 @@ app.controller('unitUpdateController', function (
     uiFactory,
     validationFactory,
 
+    Company,
+    Sim,
     Unit,
 
-    unit
+    unit,
+    parent
 
     ) {
 
@@ -28,6 +31,8 @@ app.controller('unitUpdateController', function (
     $scope.update = function () {
         $scope.toggle();
 
+        $scope.ui.isLoading = true;
+
         Unit.update(
             { id: $scope.unit.Id },
             $scope.unit,
@@ -36,12 +41,16 @@ app.controller('unitUpdateController', function (
                 //Success
                 var alert = { type: 'success', message: '1 unit has been updated successfully.' };
                 $scope.ui.alert.addItem(alert);
-                $scope.flag.load('units');
+                parent.load();
+                $scope.ui.isLoading = false;
+
             },
             function (result) {
                 //Failed
                 var alert = { type: 'danger', message: result.Message };
                 $scope.ui.alert.addItem(alert);
+                $scope.ui.isLoading = false;
+
             }
         );
     };
@@ -56,7 +65,9 @@ app.controller('unitUpdateController', function (
         $scope.form.isDisabled = true;
 
         $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
+
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
         $scope.ui.dateTimePicker.isOpen = [
@@ -70,10 +81,12 @@ app.controller('unitUpdateController', function (
         $scope.ui.alert.items = [];
 
         $scope.unit = unit;
+        $scope.companies = Company.query();
+        $scope.sims = Sim.getByCompany({company : $scope.authCompany.Id});
     };
 
     $scope.clearSim = function () {
-        $scope.unit.Sim = 0;
+        $scope.unit.Sim = null;
     };
 
     $scope.cancel = function () {

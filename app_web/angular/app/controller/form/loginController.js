@@ -7,22 +7,28 @@ app.controller('loginController', function (
     $http,
     authFactory,
     uiFactory,
-    flagFactory
+    flagFactory,
+
+    Session,
+
+    Company
     ) {
 
     $scope.init = function () {
         $scope.ui = uiFactory;
+        $scope.ui.isLoading = false;
 
         $scope.authUser = { Name: "", Password: "" };
 
-        var object = authFactory.getAccessToken();
+        var user = authFactory.getUser();
+        var company = authFactory.getCompany();
 
-        if (!angular.isUndefined(object) && object != null) {
+        if (user && company) {
             $location.path('/form');
         }
     }
 
-    $scope.closeAlert = function(index) {
+    $scope.closeAlert = function (index) {
         $scope.ui.alert.closeItem(index);
     }
 
@@ -40,60 +46,93 @@ app.controller('loginController', function (
             return;
         }
 
+        $scope.ui.isLoading = true;
 
-        $http({
-            url: 'http://184.107.179.181/v1/session/login/',
-            method: 'POST',
-            data: {
-                Name: $scope.authUser.Name,
-                Password: $scope.authUser.Password
-            },
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
+        Session.login({
+            Name: $scope.authUser.Name,
+            Password: $scope.authUser.Password,
+        },
+        function (result) {
+
+            var user = result;
+
+            if (user.Privilege > 1) {
+
+                var dateExp = new Date(user.DtExpired);
+                var dateNow = new Date();
+
+                if (dateNow.getTime() > dateExp.getTime()) {
+                    var alert = { type: 'danger', message: 'Your account is EXPIRED.' };
+                    $scope.ui.alert.addItem(alert);
+                    $scope.ui.isLoading = false;
+                    return;
+                }
+
+                switch (user.Status) {
+                    case 0:
+                        var alert = { type: 'danger', message: 'Your account is DISABLED.' };
+                        $scope.ui.alert.addItem(alert);
+                        $scope.ui.isLoading = false;
+                        return;
+                    case 1:
+                        //Enabled
+                        break;
+                    case 2:
+                        var alert = { type: 'danger', message: 'Your account is SUSPENDED.' };
+                        $scope.ui.alert.addItem(alert);
+                        $scope.ui.isLoading = false;
+                        return;
+                }
+
             }
-        })
-       .success(function (data, status, headers, config) {
-           console.log(data);
-           if (data.Privilege > 1) {
 
-               var dateExp = new Date(data.DtExpired);
-               var dateNow = new Date();
+            //======
 
-               if (dateNow.getTime() > dateExp.getTime()) {
-                   var alert = { type: 'danger', message: 'Your account is EXPIRED.' };
-                   $scope.ui.alert.addItem(alert);
-                   return;
-               }
+            Company.get(
+	            { id: user.Company },
 
-               switch (data.Status) {
-                   case 0:
-                       var alert = { type: 'danger', message: 'Your account is DISABLED.' };
-                       $scope.ui.alert.addItem(alert);
-                       return;
-                   case 1:
-                       var alert = { type: 'danger', message: data.Message };
-                       $scope.ui.alert.addItem(alert);
-                       break;
-                   case 2:
-                       var alert = { type: 'danger', message: 'Your account is SUSPENDED.' };
-                       $scope.ui.alert.addItem(alert);
-                       return;
-               }
+	            function (result) {
 
-           }
-        
+	                var company = result;
 
-           authFactory.setAccessToken(data);
-           $location.path('/form');
-       })
-       .error(function (data, status, header, config) {
-           var alert = { type: 'danger', message: data.Message };
-           $scope.ui.alert.addItem(alert);
-           authFactory.setAccessToken(null);
+	                switch (company.Status) {
+	                    case 0:
+	                        var alert = { type: 'danger', message: 'Your company account is DISABLED.' };
+	                        $scope.ui.alert.addItem(alert);
+	                        $scope.ui.isLoading = false;
+	                        return;
+	                    case 1:
+	                        //Enabled
+	                        authFactory.setUser(user);
+	                        authFactory.setCompany(company);
+	                        authFactory.save();
 
-       });
-    }
+	                        $scope.ui.panelAdmin = false;
+	                        $scope.ui.isLoading = false;
 
+	                        $location.path('/form');
+	                        break;
+	                    case 2:
+	                        var alert = { type: 'danger', message: 'Your company account is SUSPENDED.' };
+	                        $scope.ui.alert.addItem(alert);
+	                        $scope.ui.isLoading = false;
+	                        return;
+	                }
+	            },
+                function (result) {
+                    var alert = { type: 'danger', message: result.Message };
+                    $scope.ui.alert.addItem(alert);
+                    $scope.ui.isLoading = false;
+                    return;
+                });
+        },
+        function (result) {
+            var alert = { type: 'danger', message: result.data.Message };
+            $scope.ui.alert.addItem(alert);
+            $scope.ui.isLoading = false;
+        });
+    };
+    
     $scope.init();
 });
 

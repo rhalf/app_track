@@ -13,9 +13,11 @@ app.controller('simUpdateController', function (
     flagFactory,
     uiFactory,
 
+    Company,
     Sim,
 
-    sim
+    sim,
+    parent
 
     ) {
 
@@ -26,6 +28,8 @@ app.controller('simUpdateController', function (
     $scope.update = function () {
         $scope.toggle();
 
+        $scope.ui.isLoading = true;
+
         Sim.update(
             { id: $scope.sim.Id },
             $scope.sim,
@@ -34,12 +38,16 @@ app.controller('simUpdateController', function (
                 //Success
                     var alert = { type: 'success', message: '1 sim has been updated successfully.' };
                     $scope.ui.alert.addItem(alert);
-                    $scope.flag.load('sims');
+                    parent.load();
+                    $scope.ui.isLoading = false;
+
             },
             function (result) {
                 //Failed
                 var alert = { type: 'danger', message: result.Message };
                 $scope.ui.alert.addItem(alert);
+                $scope.ui.isLoading = false;
+
             }
         );
     }
@@ -50,11 +58,12 @@ app.controller('simUpdateController', function (
     }
 
     $scope.init = function () {
+        $scope.flag = flagFactory;
+        $scope.authUser = authFactory.getUser();
+        $scope.authCompany = authFactory.getCompany();
+
         $scope.form = {};
         $scope.form.isDisabled = true;
-
-        $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
 
         $scope.ui = uiFactory;
         $scope.ui.dateTimePicker.isOpen = [
@@ -68,6 +77,8 @@ app.controller('simUpdateController', function (
         $scope.ui.alert.items = [];
 
         $scope.sim = sim;
+        $scope.companies = Company.query();
+
     }
     
     $scope.cancel = function () {
