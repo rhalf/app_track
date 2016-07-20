@@ -12,13 +12,8 @@ app.controller('ctDistributeController', function (
     flagFactory,
     uiFactory,
 
-    Company,
-    Vehicle,
-    Collection,
-    VehicleCollection,
-    Driver,
-    Unit,
-    Sim
+    fleetFactory
+
     ) {
 
 
@@ -27,42 +22,27 @@ app.controller('ctDistributeController', function (
         $scope.authUser = authFactory.getUser();
         $scope.authCompany = authFactory.getCompany();
         $scope.ui = uiFactory;
-        $scope.load();
+        $scope.fleet = fleetFactory;
     };
 
-    $scope.load = function () {
-        //$scope.vehicles = Vehicle.query();
-        $scope.companies = Company.query();
-        $scope.collections = Collection.getByCompany({ Id: $scope.authCompany.Id });
-    };
+    $scope.add = function (collection) {
 
-    $scope.getVehicles = function () {
-        $scope.vehicles = [];
-        VehicleCollection.getByCollection(
-            { collection: $scope.selectedCollection },
-            function (result) {
-                angular.forEach(result, function (object, index) {
-                    Vehicle.get(
-                        { id: object.Vehicle },
-                        function (vehicle) {
-                            vehicle.Driver = Driver.get({ id: vehicle.Driver });
-                            Unit.get(
-                                 { id: vehicle.Unit },
-                                 function (unit) {
-                                     vehicle.Unit = unit;
-                                     vehicle.Unit.Sim = Sim.get({ id: unit.Sim });
-                                 });
-                            $scope.vehicles.push(vehicle);
-                        });
-                });
+        if (!collection) {
+            return;
+        }
+
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'app/view/form/client/ct_distribute_insert.html',
+            controller: 'ctDistributeInsertController',
+            keyboard: true,
+            size: 'lg',
+            resolve: {
+                collection: collection,
+                parent : $scope
             }
-        );
+        });
     };
-
-    $scope.getVehiclesForSet2 = function () {
-
-    };
-
     $scope.cancel = function () {
         $uibModalInstance.close();
     };

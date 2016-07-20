@@ -24,18 +24,19 @@
 
 
         <div class="modal-body">
-            <table class="table table-responsive table-hover">
+            <table class="table table-responsive table-hover table-condensed">
+
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Name</th>
                         <th>Plate</th>
-                        <th>DtCreated</th>
+                        <!--<th>DtCreated</th>-->
                         <th>DtSubscribed</th>
                         <th>Status</th>
                         <th>Driver</th>
                         <th>Unit</th>
-                        <th>Company</th>
+                        <!--<th>Company</th>-->
                         <th>TrackeeType</th>
                         <th>Options</th>
                 </thead>
@@ -45,12 +46,12 @@
                         <td>{{vehicle.Name}}</td>
                         <td>{{vehicle.Plate}}</td>
 
-                        <td>{{vehicle.DtCreated | dateFilter : 'date'}}</td>
+                        <!--<td>{{vehicle.DtCreated | dateFilter : 'date'}}</td>-->
                         <td>{{vehicle.DtSubscribed | dateFilter : 'date'}}</td>
                         <td>{{vehicle.Status | flagByValueFilter : flag.Statuses: 'name'}}</td>
                         <td>{{vehicle.Driver | flagByIdFilter : drivers : 'fullname' }}</td>
                         <td>{{vehicle.Unit | flagByIdFilter : units : 'imei'}}</td>
-                        <td>{{vehicle.Company | flagByIdFilter: companies : 'name' }}</td>
+                        <!--<td>{{vehicle.Company | flagByIdFilter: companies : 'name' }}</td>-->
                         <td>{{vehicle.TrackeeType | flagByIdFilter : flag.TrackeeTypes : 'name' }}</td>
                         <td>
                             <button ng-click="select(vehicle)"><span class="glyphicon glyphicon-cog" /></button>

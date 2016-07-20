@@ -385,6 +385,14 @@ Flight::route('PUT /v1/main/vehiclecollection/@id', array('VehicleCollection', '
 
 Flight::route('DELETE /v1/main/vehiclecollection/@id', array('VehicleCollection', 'delete'));
 
+Flight::route('DELETE /v1/main/vehiclecollection', function() {
+	$collection = Flight::request()->query->collection;
+	if ($collection) {
+		VehicleCollection::deleteByCollection($collection);
+	}
+});
+
+
 
 //UserOnline
 Flight::route('GET /v1/main/useronline', array('UserOnline', 'selectAll'));

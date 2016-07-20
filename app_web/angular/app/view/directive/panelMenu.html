@@ -132,19 +132,56 @@
                     <span class="glyphicon glyphicon-user"></span> {{authUser.Name}}
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a>Privilege : {{authUser.Privilege | flagByValueFilter : flag.Privileges : 'name'}}</a></li>
-                    <li><a>Status : {{authUser.Status | flagByValueFilter : flag.Statuses : 'name'}}</a></li>
-                    <li><a>DtCreated : {{ authUser.DtCreated | dateFilter  : 'date'}}</a></li>
-                    <li><a>Company : {{ authCompany.Name }}</a></li>
+                    <li class="user">
+                        <table class="table table-hover table-responsive">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">User Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Privilege</td>
+                                    <td>{{authUser.Privilege | flagByValueFilter : flag.Privileges : 'name'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Status</td>
+                                    <td>{{authUser.Status | flagByValueFilter : flag.Statuses : 'name'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>DtCreated</td>
+                                    <td>{{ authUser.DtCreated | dateFilter  : 'date'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Company</td>
+                                    <td>{{ authCompany.Name }}</td>
+                                </tr>
 
-                    <li ng-show="session.isUserSuper()">
-                        <a class="btn" ng-show="!ui.panelAdmin" ng-click="switchToAdmin()">Switch to Admin Panel</a>
-                        <a class="btn" ng-show="ui.panelAdmin" ng-click="switchToUser()">Switch to User Panel</a>
+                            </tbody>
+                            <tfoot>
+                                <tr ng-show="session.isUserSuper()">
+                                    <td colspan="2">
+                                        <button class="btn btn-primary form-control" ng-show="!ui.panelAdmin" ng-click="switchToAdmin()">Switch to Admin Panel</button>
+                                        <button class="btn btn-primary form-control" ng-show="ui.panelAdmin" ng-click="switchToUser()">Switch to User Panel</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <button  class="btn btn-primary form-control" ng-click="logout()">Logout</button>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </li>
                 </ul>
-            </li>
-            <li><a ng-click="logout()" href=""><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
         </ul>
     </nav>
+
+    <style>
+        .user {
+            padding: 0px !important;
+            margin: 0px !important;
+        }
+    </style>
 </body>
 </html>

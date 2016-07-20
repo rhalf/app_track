@@ -4,7 +4,6 @@ class VehicleCollection implements IQuery {
 
 	public $Id;
 	public $Vehicle;
-	public $User;
 	public $Collection;
 
 
@@ -137,7 +136,7 @@ class VehicleCollection implements IQuery {
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':vehicle_id', $vehicleCollection->Vehicle, PDO::PARAM_STR);
-			$query->bindParam(':collection_id', $vehicleCollection->Collection, PDO::PARAM_STR);
+			$query->bindParam(':collection_id', $vehicleCollection->Collection, PDO::PARAM_INT);
 
 
 			$query->execute();
@@ -184,7 +183,7 @@ class VehicleCollection implements IQuery {
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':vehicle_id', $vehicleCollection->Vehicle, PDO::PARAM_STR);
-			$query->bindParam(':collection_id', $vehicleCollection->Collection, PDO::PARAM_STR);
+			$query->bindParam(':collection_id', $vehicleCollection->Collection, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
@@ -220,6 +219,40 @@ class VehicleCollection implements IQuery {
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
+
+			$query->execute();
+
+			$result = new Result();
+			$result->Status = Result::DELETED;
+			$result->Message = 'Done';
+			$result->Id = $id;
+
+			Flight::ok($result);
+
+		} catch (PDOException $pdoException) {
+			Flight::error($pdoException);
+		} catch (Exception $exception) {
+			Flight::error($exception);
+		} finally {
+			$connection = null;
+		}
+	}
+
+
+	public static function deleteByCollection($id) {
+
+		$connection = Flight::dbMain();
+
+		try {
+
+			$sql = "
+			DELETE FROM vehicle_collection 
+			WHERE
+			collection_id = :collection_id";
+
+			$query = $connection->prepare($sql);
+
+			$query->bindParam(':collection_id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 

@@ -190,9 +190,16 @@ app.factory('VehicleCollection', function ($resource) {
         getByCollection: {
             method: 'GET',
             params: {
-                collection: '@collection'
+                collection : '@collection'
             },
             isArray: true
+        },
+        deleteByCollection: {
+            method: 'DELETE',
+            params: {
+                collection : '@collection'
+            },
+            isArray: false
         }
     });
 });

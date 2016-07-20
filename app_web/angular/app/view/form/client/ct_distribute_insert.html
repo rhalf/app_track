@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="modal-title">{{collection.Name}} (Update)</h3>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <input type="text" class="form-control" ng-model="selectedVehicle" required placeholder="Search" />
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-body">
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Select</th>
+                    <th>Vehicle(Name)</th>
+                    <th>Vehicle(Plate)</th>
+                    <th>Unit(Imei)</th>
+                    <th>Sim(Number)</th>
+                    <th>Driver(Name)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="vehicle in fleet.vehicles | filter : selectedVehicle" ng-init="load()">
+                    <td>{{$index + 1}}</td>
+                    <td><input type="checkbox" ng-model="vehicle.Checked"></td>
+                    <td>{{vehicle.Name}}</td>
+                    <td>{{vehicle.Plate}}</td>
+                    <td>{{vehicle.Unit.Imei}}</td>
+                    <td>{{vehicle.Unit.Sim.Number}}</td>
+                    <td>{{vehicle.Driver.Name}}</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="save()">Save</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+
+    <style type="text/css">
+        form {
+            margin: 20px;
+        }
+    </style>
+</body>
+</html>
