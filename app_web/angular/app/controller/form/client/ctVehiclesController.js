@@ -23,7 +23,6 @@ app.controller('ctVehiclesController', function (
     $scope.init = function () {
         $scope.flag = flagFactory;
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
         $scope.ui = uiFactory;
         $scope.load();
     };

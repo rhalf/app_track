@@ -41,20 +41,20 @@ class Driver implements IQuery {
 				$driver->NameMiddle = $row['driver_name_m'];
 				$driver->NameLast = $row['driver_name_l'];
 				$driver->Rfid = $row['driver_rfid'];
-				
-				$driver->Status = (int) $row['e_status_value'];
-				$driver->Company = (int) $row['company_id'];
 				$driver->DtCreated = $row['driver_dt_created'];
+				
+				$driver->Status = Status::select($row['e_status_id']);
+				$driver->Company = Company::select($row['company_id']);
 
 				array_push($result, $driver);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -72,7 +72,7 @@ class Driver implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -85,18 +85,17 @@ class Driver implements IQuery {
 			$driver->NameMiddle = $row['driver_name_m'];
 			$driver->NameLast = $row['driver_name_l'];
 			$driver->Rfid = $row['driver_rfid'];
-			
-			$driver->Status = (int) $row['e_status_value'];
-			$driver->Company = (int) $row['company_id'];
 			$driver->DtCreated = $row['driver_dt_created'];
 
+			$driver->Status = Status::select($row['e_status_id']);
+			$driver->Company = Company::select($row['company_id']);
 
-			Flight::ok($driver);
+			return $driver;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -127,19 +126,18 @@ class Driver implements IQuery {
 				$driver->NameMiddle = $row['driver_name_m'];
 				$driver->NameLast = $row['driver_name_l'];
 				$driver->Rfid = $row['driver_rfid'];
-				$driver->Status = (int) $row['e_status_value'];
-				$driver->Company = (int) $row['company_id'];
 				$driver->DtCreated = $row['driver_dt_created'];
-
+				$driver->Status = Status::select($row['e_status_id']);
+				$driver->Company = Company::select($row['company_id']);
 				array_push($result, $driver);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -160,9 +158,9 @@ class Driver implements IQuery {
 
 			$sql = "
 			INSERT INTO driver 
-			(driver_id, driver_name, driver_name_f, driver_name_m, driver_name_l, driver_rfid, e_status_value, company_id, driver_dt_created)
+			(driver_id, driver_name, driver_name_f, driver_name_m, driver_name_l, driver_rfid, e_status_id, company_id, driver_dt_created)
 			VALUES
-			(:driver_id, :driver_name, :driver_name_f, :driver_name_m, :driver_name_l, :driver_rfid, :e_status_value, :company_id, :driver_dt_created);";
+			(:driver_id, :driver_name, :driver_name_f, :driver_name_m, :driver_name_l, :driver_rfid, :e_status_id, :company_id, :driver_dt_created);";
 
 
 			$query = $connection->prepare($sql);
@@ -173,8 +171,8 @@ class Driver implements IQuery {
 			$query->bindParam(':driver_name_m', $driver->NameMiddle, PDO::PARAM_STR);
 			$query->bindParam(':driver_name_l', $driver->NameLast, PDO::PARAM_STR);
 			$query->bindParam(':driver_rfid', $driver->Rfid, PDO::PARAM_STR);
-			$query->bindParam(':e_status_value', $driver->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $driver->Company, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $driver->Status->Id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $driver->Company->Id, PDO::PARAM_INT);
 			$query->bindParam(':driver_dt_created', $dateTime, PDO::PARAM_STR);
 
 			$query->execute();
@@ -184,12 +182,12 @@ class Driver implements IQuery {
 			$result->Id = $connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -216,7 +214,7 @@ class Driver implements IQuery {
 			driver_name_m = :driver_name_m,
 			driver_name_l = :driver_name_l,
 			driver_rfid = :driver_rfid,
-			e_status_value = :e_status_value,
+			e_status_id = :e_status_id,
 			company_id = :company_id
 
 			WHERE
@@ -231,8 +229,8 @@ class Driver implements IQuery {
 			$query->bindParam(':driver_name_m', $driver->NameMiddle, PDO::PARAM_STR);
 			$query->bindParam(':driver_name_l', $driver->NameLast, PDO::PARAM_STR);
 			$query->bindParam(':driver_rfid', $driver->Rfid, PDO::PARAM_STR);
-			$query->bindParam(':e_status_value', $driver->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $driver->Company, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $driver->Status->Id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $driver->Company->Id, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
@@ -243,12 +241,12 @@ class Driver implements IQuery {
 			$result->Id = $id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -276,12 +274,12 @@ class Driver implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

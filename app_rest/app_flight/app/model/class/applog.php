@@ -36,12 +36,12 @@ class AppLog implements IQuery {
 				array_push($result, $appLog);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -60,7 +60,7 @@ class AppLog implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -73,12 +73,12 @@ class AppLog implements IQuery {
 			$appLog->DtCreated = $row['log_dt_created'];
 
 
-			Flight::ok($appLog);
+			return $appLog;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -117,12 +117,12 @@ class AppLog implements IQuery {
 			$result->Id = $connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -168,12 +168,12 @@ class AppLog implements IQuery {
 			$result->Id = $id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -201,12 +201,12 @@ class AppLog implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

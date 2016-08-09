@@ -27,18 +27,18 @@ class VehicleCollection implements IQuery {
 			foreach ($rows as $row) {	
 				$vehicleCollection = new VehicleCollection();
 				$vehicleCollection->Id = (int) $row['id'];
-				$vehicleCollection->Vehicle =  (int) $row['vehicle_id'];
-				$vehicleCollection->Collection =  (int) $row['collection_id'];
+				$vehicleCollection->Vehicle =  Vehicle::select($row['vehicle_id']);
+				$vehicleCollection->Collection =  Collection::select($row['collection_id']);
 
 				array_push($result, $vehicleCollection);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -57,22 +57,22 @@ class VehicleCollection implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$vehicleCollection = new VehicleCollection();
 			$vehicleCollection->Id = (int) $row['id'];
-			$vehicleCollection->Vehicle =  (int) $row['vehicle_id'];
-			$vehicleCollection->Collection =  (int) $row['collection_id'];
+			$vehicleCollection->Vehicle =  Vehicle::select($row['vehicle_id']);
+			$vehicleCollection->Collection =  Collection::select($row['collection_id']);
 
-			Flight::ok($vehicleCollection);
+			return $vehicleCollection;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -98,18 +98,17 @@ class VehicleCollection implements IQuery {
 			foreach ($rows as $row) {	
 				$vehicleCollection = new VehicleCollection();
 				$vehicleCollection->Id = (int) $row['id'];
-				$vehicleCollection->Vehicle =  (int) $row['vehicle_id'];
-				$vehicleCollection->Collection =  (int) $row['collection_id'];
-
+				$vehicleCollection->Vehicle =  Vehicle::select($row['vehicle_id']);
+				$vehicleCollection->Collection =  Collection::select($row['collection_id']);
 				array_push($result, $vehicleCollection);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -135,8 +134,8 @@ class VehicleCollection implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':vehicle_id', $vehicleCollection->Vehicle, PDO::PARAM_STR);
-			$query->bindParam(':collection_id', $vehicleCollection->Collection, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_id', $vehicleCollection->Vehicle->Id, PDO::PARAM_STR);
+			$query->bindParam(':collection_id', $vehicleCollection->Collection->Id, PDO::PARAM_INT);
 
 
 			$query->execute();
@@ -146,12 +145,12 @@ class VehicleCollection implements IQuery {
 			$result->Id = $connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -182,8 +181,8 @@ class VehicleCollection implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':vehicle_id', $vehicleCollection->Vehicle, PDO::PARAM_STR);
-			$query->bindParam(':collection_id', $vehicleCollection->Collection, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_id', $vehicleCollection->Vehicle->Id, PDO::PARAM_STR);
+			$query->bindParam(':collection_id', $vehicleCollection->Collection->Id, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
@@ -194,12 +193,12 @@ class VehicleCollection implements IQuery {
 			$result->Id = $id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -227,17 +226,16 @@ class VehicleCollection implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
 	}
-
 
 	public static function deleteByCollection($id) {
 
@@ -261,12 +259,12 @@ class VehicleCollection implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

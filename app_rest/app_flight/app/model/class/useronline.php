@@ -28,18 +28,18 @@ class UserOnline implements IQuery {
 			foreach ($rows as $row) {	
 				$userOnline = new UserOnline();
 				$userOnline->Id = (int) $row['id'];
-				$userOnline->User = (int) $row['user_id'];
+				$userOnline->User = User::select($row['user_id']);
 				$userOnline->Dt = $row['online_dt'];
 
 				array_push($result, $userOnline);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -57,22 +57,22 @@ class UserOnline implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$userOnline = new UserOnline();
 			$userOnline->Id = (int) $row['id'];
-			$userOnline->User = (int) $row['user_id'];
+			$userOnline->User = User::select($row['user_id']);
 			$userOnline->Dt = $row['online_dt'];
 
-			Flight::ok($userOnline);
+			return $userOnline;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -98,15 +98,15 @@ class UserOnline implements IQuery {
 
 			$userOnline = new UserOnline();
 			$userOnline->Id = (int) $row['id'];
-			$userOnline->User = (int) $row['user_id'];
+			$userOnline->User = User::select($row['user_id']);
 			$userOnline->Dt = $row['online_dt'];
 
-			Flight::ok($userOnline);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -134,7 +134,7 @@ class UserOnline implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':user_id', $userOnline->User, PDO::PARAM_INT);
+			$query->bindParam(':user_id', $userOnline->User->Id, PDO::PARAM_INT);
 			$query->bindParam(':online_dt', $userOnline->Dt, PDO::PARAM_STR);
 
 			$query->execute();
@@ -144,12 +144,12 @@ class UserOnline implements IQuery {
 			$result->Id = $connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -181,7 +181,7 @@ class UserOnline implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':user_id', $userOnline->User, PDO::PARAM_INT);
+			$query->bindParam(':user_id', $userOnline->User->Id, PDO::PARAM_INT);
 			$query->bindParam(':online_dt', $userOnline->Dt, PDO::PARAM_STR);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
@@ -193,12 +193,12 @@ class UserOnline implements IQuery {
 			$result->Id = $id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -228,12 +228,12 @@ class UserOnline implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

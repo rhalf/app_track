@@ -66,7 +66,6 @@ app.controller('ctUnitUpdateController', function (
 
         $scope.flag = flagFactory;
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.companies = Company.query();
         $scope.sims = Sim.query();

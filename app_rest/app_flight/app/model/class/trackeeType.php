@@ -36,12 +36,12 @@ class TrackeeType implements IQuery {
 				array_push($result, $trackeeType);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -60,7 +60,7 @@ class TrackeeType implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -71,12 +71,12 @@ class TrackeeType implements IQuery {
 			$trackeeType->Desc = $row['type_desc'];
 			$trackeeType->Value = (int) $row['type_value'];
 
-			Flight::ok($trackeeType);
+			return $trackeeType;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -115,12 +115,12 @@ class TrackeeType implements IQuery {
 			$result->Id = $connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -163,12 +163,12 @@ class TrackeeType implements IQuery {
 			$result->Id = $id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -196,12 +196,12 @@ class TrackeeType implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

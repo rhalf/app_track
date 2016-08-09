@@ -3,6 +3,6 @@
     'ngRoute',
     'ngCookies',
     'ngResource',
-    'ui.bootstrap',
-    'leaflet-directive'
+    'ui.bootstrap'
+    //'leaflet-directive'
 ]);

@@ -93,7 +93,6 @@ app.controller('ctUserUpdateController', function (
         $scope.ui = uiFactory;
 
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui.dateTimePicker.isOpen = [
         false, //dateTimePicker1
@@ -108,17 +107,12 @@ app.controller('ctUserUpdateController', function (
 
 
         $scope.user = user;
-        $scope.userInfo = UserInfo.get({ user: user.Id });
+        $scope.userInfo = UserInfo.getByUser({ user: user.Id });
 
         $scope.companies = Company.query();
-        $scope.sims = Sim.getByCompany({ company: $scope.authCompany.Id });
+        $scope.sims = Sim.getByCompany({ company: $scope.authUser.Company.Id });
 
     };
-
-    $scope.clearSim = function () {
-        $scope.user.Sim = null;
-    };
-
 
     $scope.cancel = function () {
         $uibModalInstance.close();

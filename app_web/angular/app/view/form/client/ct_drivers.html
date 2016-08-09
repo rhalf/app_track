@@ -13,59 +13,71 @@
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4">
-                <div class="input-group">
-                    <input type="text" class="form-control" ng-model="selected" required />
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" ng-model="selected" placeholder="Search" />
                     <div class="input-group-btn">
-                        <button class="btn btn-default" ng-click="clear()">Clear</button>
+                        <button class="btn btn-default" ng-click="selected = ''">
+                            <span class="glyphicon glyphicon-ban-circle" />
+                        </button>
+                        <button class="btn btn-default" type="button" ng-click="add()" ng-hide="authUser.Privilege.Value > 4">
+                            <span class="glyphicon glyphicon-plus" />
+                        </button>
+                        <button class="btn btn-default" type="button" ng-click="cancel()">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="modal-body">
+        <table class="table table-responsive table-hover table-condensed small">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th class="hidden-xs">DtCreated</th>
+                    <th>DriverId</th>
+                    <th class="visible-xs">Name</th>
+                    <th class="hidden-xs">FirstName</th>
+                    <th class="hidden-xs">MiddleName</th>
+                    <th class="hidden-xs">LastName</th>
+                    <th class="hidden-xs">RFID</th>
+                    <th>Status</th>
+                    <th class="hidden-xs">Company</th>
+                    <th>Options</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="driver in drivers | filter : selected | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 | limitTo : ui.pagination.pageSize2">
+                    <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 }}</td>
+                    <td class="hidden-xs">{{driver.DtCreated | dateFilter : 'date'}}</td>
+                    <td>{{driver.DriverId}}</td>
+                    <td class="visible-xs">{{driver.Name}}</td>
+                    <td class="hidden-xs">{{driver.NameFirst}}</td>
+                    <td class="hidden-xs">{{driver.NameMiddle}}</td>
+                    <td class="hidden-xs">{{driver.NameLast}}</td>
+                    <td class="hidden-xs">{{driver.Rfid}}</td>
+                    <td>{{driver.Status.Name}}</td>
+                    <td class="hidden-xs">{{driver.Company.Name}}</td>
+                    <td>
+                        <button ng-click="select(driver)" ng-hide="authUser.Privilege.Value > 4"><span class="glyphicon glyphicon-cog" /></button>
+                        <button ng-click="delete(driver)" ng-hide="authUser.Privilege.Value > 4"><span class="glyphicon glyphicon-trash" /></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-        <div class="modal-body">
-            <table class="table table-responsive table-hover table-condensed">
-
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>DtCreated</th>
-                        <th>DriverId</th>
-                        <th>Name</th>
-                        <th>RFID</th>
-                        <!--<th>Status</th>-->
-                        <th>Company</th>
-                        <th>Options</th>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="driver in drivers | filter : selected | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 | limitTo : ui.pagination.pageSize2">
-                        <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 }}</td>
-                        <td>{{driver.DtCreated | dateFilter : 'date'}}</td>
-                        <td>{{driver.DriverId}}</td>
-                        <td>{{driver.Name}}</td>
-                        <td>{{driver.Rfid}}</td>
-                        <!--<td>{{driver.Status | flagByValueFilter : flag.Statuses : 'name' }}</td>-->
-                        <td>{{driver.Company | flagByIdFilter : companies : 'name' }}</td>
-                        <td>
-                            <button ng-click="select(driver)" ng-hide="authUser.Privilege > 4"><span class="glyphicon glyphicon-cog" /></button>
-                            <button ng-click="delete(driver)" ng-hide="authUser.Privilege > 4"><span class="glyphicon glyphicon-trash" /></button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="modal-footer">
+        <center>
             <uib-pagination boundary-links="true"
                             force-ellipses="true"
                             total-items="drivers.length"
                             ng-model="ui.pagination.currentPage"
-                            items-per-page="ui.pagination.pageSize2"
-                            class="center-block">
+                            items-per-page="ui.pagination.pageSize1"
+                            style="padding:0;margin:0;">
             </uib-pagination>
-        </div>
-
-        <div class="modal-footer">
-            <button class="btn btn-default" type="button" ng-click="add()" ng-hide="authUser.Privilege > 4">Add</button>
-            <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
-        </div>
+        </center>
+    </div>
 </body>
 </html>

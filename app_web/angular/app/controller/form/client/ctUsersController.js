@@ -20,11 +20,14 @@ app.controller('ctUsersController', function (
         $scope.flag = flagFactory;
 
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
 
-        $scope.users = User.getByCompany({ company: $scope.authCompany.Id });
+        $scope.load();
+    };
+
+    $scope.load = function () {
+        $scope.users = User.getByCompany({ company: $scope.authUser.Company.Id });
     };
 
     $scope.select = function (user) {
@@ -35,7 +38,8 @@ app.controller('ctUsersController', function (
             keyboard: true,
             size: 'md',
             resolve: {
-                user: user
+                user: user,
+                parent: $scope
             }
         });
     };
@@ -47,7 +51,8 @@ app.controller('ctUsersController', function (
             keyboard: true,
             size: 'md',
             resolve: {
-                user: user
+                user: user,
+                parent : $scope
             }
         });
     };
@@ -58,7 +63,10 @@ app.controller('ctUsersController', function (
             templateUrl: 'app/view/form/client/ct_user_insert.html',
             controller: 'ctUserInsertController',
             keyboard: true,
-            size: 'md'
+            size: 'md',
+            resolve: {
+                parent: $scope
+            }
         });
     };
 
@@ -73,10 +81,6 @@ app.controller('ctUsersController', function (
                 user: user
             }
         });
-    };
-
-    $scope.clear = function () {
-        $scope.selected = "";
     };
 
     $scope.cancel = function () {

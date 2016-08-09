@@ -35,11 +35,10 @@ class Poi implements IQuery {
 			foreach ($rows as $row) {	
 				$poi = new Poi();
 				$poi->Id = (int) $row['id'];
-				$poi->Company = (int) $row['company_id'];
+				$poi->Company = Company::select($row['company_id']);
 				$poi->Name = $row['poi_name'];
 				$poi->Desc = $row['poi_desc'];
-				$poi->Latitude = (double) $row['poi_latitude'];
-				$poi->Logitude = (double) $row['poi_longitude'];
+				$poi->Coordinate = new Coordinate($row['poi_latitude'],$row['poi_longitude']);
 				$poi->IsVisible = (bool) $row['poi_is_visible'];
 				$poi->IsGlobal = (bool) $row['poi_is_global'];
 				$poi->Image = $row['poi_image'];
@@ -47,12 +46,12 @@ class Poi implements IQuery {
 				array_push($result, $poi);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -70,28 +69,70 @@ class Poi implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$poi = new Poi();
 			$poi->Id = (int) $row['id'];
-			$poi->Company = (int) $row['company_id'];
+			$poi->Company = Company::select($row['company_id']);
 			$poi->Name = $row['poi_name'];
 			$poi->Desc = $row['poi_desc'];
-			$poi->Latitude = (double) $row['poi_latitude'];
-			$poi->Logitude = (double) $row['poi_longitude'];
+			$poi->Coordinate = new Coordinate($row['poi_latitude'],$row['poi_longitude']);
 			$poi->IsVisible = (bool) $row['poi_is_visible'];
 			$poi->IsGlobal = (bool) $row['poi_is_global'];
 			$poi->Image = $row['poi_image'];
 
-			Flight::ok($poi);
+			return $poi;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
+		} finally {
+			$connection = null;
+		}
+	}
+
+	public static function selectByCompany($id) {
+
+		$connection = Flight::dbMain();
+
+		try {
+
+			$sql = "SELECT * FROM poi WHERE company_id = :company_id;";
+			$query->bindParam(':company_id',$id, PDO::PARAM_INT);
+
+			$query = $connection->prepare($sql);
+
+			$query->execute();
+
+			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
+
+			$result = array();
+
+
+			foreach ($rows as $row) {	
+				$poi = new Poi();
+				$poi->Id = (int) $row['id'];
+				$poi->Company = Company::select($row['company_id']);
+				$poi->Name = $row['poi_name'];
+				$poi->Desc = $row['poi_desc'];
+				$poi->Coordinate = new Coordinate($row['poi_latitude'],$row['poi_longitude']);
+				$poi->IsVisible = (bool) $row['poi_is_visible'];
+				$poi->IsGlobal = (bool) $row['poi_is_global'];
+				$poi->Image = $row['poi_image'];
+				
+				array_push($result, $poi);
+			}
+
+			return $result;
+
+		} catch (PDOException $pdoException) {
+			throw $pdoException;
+		} catch (Exception $exception) {
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -118,11 +159,11 @@ class Poi implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':company_id', $poi->Company, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $poi->Company->Id, PDO::PARAM_INT);
 			$query->bindParam(':poi_name', $poi->Name, PDO::PARAM_STR);
 			$query->bindParam(':poi_desc', $poi->Desc, PDO::PARAM_STR);
-			$query->bindParam(':poi_latitude', $poi->Latitude, PDO::PARAM_INT);
-			$query->bindParam(':poi_longitude', $poi->Logitude, PDO::PARAM_INT);
+			$query->bindParam(':poi_latitude', $poi->Coordinate->Latitude, PDO::PARAM_INT);
+			$query->bindParam(':poi_longitude', $poi->Coordinate->Logitude, PDO::PARAM_INT);
 			$query->bindParam(':poi_is_visible', $poi->IsVisible, PDO::PARAM_BOOL);
 			$query->bindParam(':poi_is_global', $poi->IsGlobal, PDO::PARAM_BOOL);
 			$query->bindParam(':poi_image', $poi->Image, PDO::PARAM_STR);
@@ -135,12 +176,12 @@ class Poi implements IQuery {
 			$result->Id = $connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -175,11 +216,11 @@ class Poi implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':company_id', $poi->Company, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $poi->Company->Id, PDO::PARAM_INT);
 			$query->bindParam(':poi_name', $poi->Name, PDO::PARAM_STR);
 			$query->bindParam(':poi_desc', $poi->Desc, PDO::PARAM_STR);
-			$query->bindParam(':poi_latitude', $poi->Latitude, PDO::PARAM_INT);
-			$query->bindParam(':poi_longitude', $poi->Logitude, PDO::PARAM_INT);
+			$query->bindParam(':poi_latitude', $poi->Coordinate->Latitude, PDO::PARAM_INT);
+			$query->bindParam(':poi_longitude', $poi->Coordinate->Logitude, PDO::PARAM_INT);
 			$query->bindParam(':poi_is_visible', $poi->IsVisible, PDO::PARAM_BOOL);
 			$query->bindParam(':poi_is_global', $poi->IsGlobal, PDO::PARAM_BOOL);
 			$query->bindParam(':poi_image', $poi->Image, PDO::PARAM_STR);
@@ -194,12 +235,12 @@ class Poi implements IQuery {
 			$result->Id = $id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -227,12 +268,12 @@ class Poi implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

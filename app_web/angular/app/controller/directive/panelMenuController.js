@@ -9,6 +9,7 @@ app.controller('panelMenuController', function (
     uiFactory,
     authFactory,
     flagFactory,
+    systemFactory,
 
     sessionService,
 
@@ -16,7 +17,6 @@ app.controller('panelMenuController', function (
     ) {
 
     $scope.setToggle = function () {
-        console.log(uiFactory.panelLeft);
         uiFactory.panelLeft = !uiFactory.panelLeft;
     };
 
@@ -28,28 +28,28 @@ app.controller('panelMenuController', function (
 
     //System
     $scope.showCompanies = function () {
-        $scope.ui.panelAdminTemplate = 'app/view/form/system/companies.html';
+        $scope.ui.panelSystemTemplate = 'app/view/form/system/companies.html';
     };
 
     $scope.showUsers = function () {
-        $scope.ui.panelAdminTemplate = 'app/view/form/system/users.html';
+        $scope.ui.panelSystemTemplate = 'app/view/form/system/users.html';
     };
 
 
     $scope.showSims = function () {
-        $scope.ui.panelAdminTemplate = 'app/view/form/system/sims.html';
+        $scope.ui.panelSystemTemplate = 'app/view/form/system/sims.html';
     };
 
     $scope.showUnits = function () {
-        $scope.ui.panelAdminTemplate = 'app/view/form/system/units.html';
+        $scope.ui.panelSystemTemplate = 'app/view/form/system/units.html';
     };
 
     $scope.showDrivers = function () {
-        $scope.ui.panelAdminTemplate = 'app/view/form/system/drivers.html';
+        $scope.ui.panelSystemTemplate = 'app/view/form/system/drivers.html';
     };
 
     $scope.showVehicles = function () {
-        $scope.ui.panelAdminTemplate = 'app/view/form/system/vehicles.html';
+        $scope.ui.panelSystemTemplate = 'app/view/form/system/vehicles.html';
     };
 
 
@@ -138,23 +138,43 @@ app.controller('panelMenuController', function (
             size: 'lg'
         });
     };
+    
+    //Map
+    $scope.showClientPois = function () {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'app/view/form/map/ct_pois.html',
+            controller: 'ctPoisController',
+            keyboard: true,
+            size: 'lg'
+        });
+    };
+
+    //About
+    $scope.showAbout = function () {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'app/view/form/about.html',
+            controller: 'aboutController',
+            keyboard: true,
+            size: 'md'
+        });
+    };
 
     $scope.init = function () {
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
         $scope.session = sessionService;
         $scope.flag = flagFactory;
         $scope.ui = uiFactory;
+        $scope.system = systemFactory;
     };
 
 
 
-    $scope.switchToAdmin = function () {
-        $scope.ui.panelAdmin = true;
+    $scope.switchToSystem = function () {
+        $scope.ui.panelSystem = !$scope.ui.panelSystem;
     };
-    $scope.switchToUser = function () {
-        $scope.ui.panelAdmin = false;
-    };
+   
     $scope.init();
 });
 

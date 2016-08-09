@@ -19,14 +19,13 @@ app.controller('ctSimsController', function (
 
 
     $scope.load = function () {
-        $scope.sims = Sim.getByCompany({ company: $scope.authCompany.Id });
+        $scope.sims = Sim.getByCompany({ company: $scope.authUser.Company.Id });
     };
 
     $scope.init = function () {
         $scope.flag = flagFactory;
 
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
 
@@ -47,12 +46,6 @@ app.controller('ctSimsController', function (
             }
         });
     };
-
-    $scope.clear = function () {
-        $scope.selected = "";
-    };
-
-
 
     $scope.cancel = function () {
         $uibModalInstance.close();

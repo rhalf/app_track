@@ -85,7 +85,9 @@ app.factory('flagFactory', function (
             flagFactory.TrackeeTypes = result[7];
 
             console.log("<-=======Loading data finished======->");
-            callback();
+            if (callback) {
+                callback();
+            }
         });
     };
 

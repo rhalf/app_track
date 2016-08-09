@@ -24,21 +24,21 @@ app.factory('authFactory', function ($cookies) {
     };
 
     //company
-    authFactory.setCompany = function (company) {
-        authFactory.company = company;
-    };
+    //authFactory.setCompany = function (company) {
+    //    authFactory.company = company;
+    //};
 
 
-    authFactory.getCompany = function () {
-        var authFactory = $cookies.getObject('authFactory');
+    //authFactory.getCompany = function () {
+    //    var authFactory = $cookies.getObject('authFactory');
 
-        if (authFactory) {
-            if (authFactory.company) {
-                return authFactory.company;
-            }
-        }
-        return null;
-    };
+    //    if (authFactory) {
+    //        if (authFactory.company) {
+    //            return authFactory.company;
+    //        }
+    //    }
+    //    return null;
+    //};
 
 
     //Additional functionallity

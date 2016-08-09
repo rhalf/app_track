@@ -7,7 +7,8 @@ Flight::register('dbMain', 'PDO', array('mysql:host=184.107.179.178;dbname=app_m
 	$dbMain->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$dbMain->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 });
-Flight::register('dbData', 'PDO', array('mysql:host=184.107.179.178;dbname=app_data','admin','admin'), function($dbData){
+
+Flight::register('dbData', 'PDO', array('mysql:host=184.107.179.178;dbname=app_data_2016','admin','admin'), function($dbData){
 	$dbData->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$dbData->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 });

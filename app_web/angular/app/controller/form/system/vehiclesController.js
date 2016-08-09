@@ -23,7 +23,6 @@ app.controller('vehiclesController', function (
     $scope.init = function () {
         $scope.flag = flagFactory;
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
         $scope.ui = uiFactory;
         $scope.load();
     };
@@ -75,12 +74,6 @@ app.controller('vehiclesController', function (
             }
         });
     };
-
-
-    $scope.clearCompany = function () {
-        $scope.selectedCompany = "";
-    };
-
 
     $scope.cancel = function () {
         $uibModalInstance.close();

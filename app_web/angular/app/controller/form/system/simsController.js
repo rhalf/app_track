@@ -22,7 +22,6 @@ app.controller('simsController', function (
     $scope.init = function () {
         $scope.flag = flagFactory;
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
         $scope.ui = uiFactory;
 
         $scope.load();
@@ -72,11 +71,6 @@ app.controller('simsController', function (
                 parent: $scope
             }
         });
-    };
-
-
-    $scope.clearCompany = function () {
-        $scope.selectedCompany = "";
     };
 
 

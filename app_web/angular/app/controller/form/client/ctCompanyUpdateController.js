@@ -68,16 +68,17 @@ app.controller('ctCompanyUpdateController', function (
         $scope.flag = flagFactory;
 
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
 
         $scope.ui.alert.items = [];
 
-        $scope.company = $scope.authCompany;
-        $scope.companyInfo = CompanyInfo.getByCompany({company : $scope.authCompany.Id});
+        $scope.company = $scope.authUser.Company;
+        $scope.companyInfo = CompanyInfo.getByCompany({ company: $scope.authUser.Company.Id });
         $scope.companies = Company.query();
-    }
+
+
+    };
 
     $scope.cancel = function () {
         $uibModalInstance.close();

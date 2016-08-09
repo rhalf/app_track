@@ -7,6 +7,7 @@ class Collection implements IQuery {
 	public $Desc;
 	public $User;
 	public $Company;
+	public $Vehicles;
 
 	public function __construct() {
 	}
@@ -31,20 +32,25 @@ class Collection implements IQuery {
 				$collection->Id = (int) $row['id'];
 				$collection->Name = $row['collection_name'];
 				$collection->Desc = $row['collection_desc'];
-				$collection->User = $row['user_id'] == null ? null : (int)$row['user_id'];
-
-				$collection->Company = (int)$row['company_id'];
-
+				// $collection->User = $row['user_id'] == null ? null : (int)$row['user_id'];
+				// $collection->Company = (int)$row['company_id'];
+				$collection->User = User::select($row['user_id']);
+				$collection->Company = Company::select($row['company_id']);
+				// $collection->Vehicles = array();
+				// $vehicleCollections = VehicleCollection::selectByCollection($collection->Id);
+				// foreach ($vehicleCollections as $vehicleCollection) {
+				// 	array_push($collection->Vehicles, $vehicleCollection->Vehicle);
+				// }
 
 				array_push($result, $collection);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -63,7 +69,7 @@ class Collection implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -72,17 +78,22 @@ class Collection implements IQuery {
 			$collection->Id = (int) $row['id'];
 			$collection->Name = $row['collection_name'];
 			$collection->Desc = $row['collection_desc'];
-			$collection->User = $row['user_id'] == null ? null : (int)$row['user_id'];
-			
+			// $collection->User = $row['user_id'] == null ? null : (int)$row['user_id'];
+			// $collection->Company = (int)$row['company_id'];
+			$collection->User = User::select($row['user_id']);
+			$collection->Company = Company::select($row['company_id']);
+			// $collection->Vehicles = array();
+			// $vehicleCollections = VehicleCollection::selectByCollection($collection->Id);
+			// foreach ($vehicleCollections as $vehicleCollection) {
+			// 	array_push($collection->Vehicles, $vehicleCollection->Vehicle);
+			// }
 
-			$collection->Company = (int)$row['company_id'];
-
-			Flight::ok($collection);
+			return $collection;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -110,20 +121,24 @@ class Collection implements IQuery {
 				$collection->Id = (int) $row['id'];
 				$collection->Name = $row['collection_name'];
 				$collection->Desc = $row['collection_desc'];
-				$collection->User = $row['user_id'] == null ? null : (int)$row['user_id'];
-				
-				$collection->Company = (int)$row['company_id'];
-
+				// $collection->User = $row['user_id'] == null ? null : (int)$row['user_id'];
+				// $collection->Company = (int)$row['company_id'];
+				$collection->User = User::select($row['user_id']);
+				$collection->Company = Company::select($row['company_id']);
+				// $vehicleCollections = VehicleCollection::selectByCollection($collection->Id);
+				// foreach ($vehicleCollections as $vehicleCollection) {
+				// 	array_push($collection->Vehicles, $vehicleCollection->Vehicle);
+				// }
 
 				array_push($result, $collection);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -141,6 +156,7 @@ class Collection implements IQuery {
 				throw new Exception(json_get_error());
 			}
 
+			//Query 1
 			$sql = "
 			INSERT INTO collection 
 			(collection_name, collection_desc, user_id, company_id)
@@ -151,24 +167,24 @@ class Collection implements IQuery {
 
 			$query->bindParam(':collection_name', $collection->Name, PDO::PARAM_STR);
 			$query->bindParam(':collection_desc', $collection->Desc, PDO::PARAM_STR);
-			$query->bindParam(':user_id', $collection->User, PDO::PARAM_INT);
+			// $query->bindParam(':user_id', $collection->User, PDO::PARAM_INT);
+			// $query->bindParam(':company_id', $collection->Company, PDO::PARAM_INT);
+			$query->bindParam(':user_id', $collection->User->Id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $collection->Company->Id, PDO::PARAM_INT);
 
-			$query->bindParam(':company_id', $collection->Company, PDO::PARAM_INT);
+			$query->execute();  
 
-
-			$query->execute();
-			
 			$result = new Result();
 			$result->Status = Result::INSERTED;
 			$result->Id = $connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -200,8 +216,10 @@ class Collection implements IQuery {
 
 			$query->bindParam(':collection_name', $collection->Name, PDO::PARAM_STR);
 			$query->bindParam(':collection_desc', $collection->Desc, PDO::PARAM_STR);
-			$query->bindParam(':user_id', $collection->User, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $collection->Company, PDO::PARAM_INT);
+			// $query->bindParam(':user_id', $collection->User, PDO::PARAM_INT);
+			// $query->bindParam(':company_id', $collection->Company, PDO::PARAM_INT);
+			$query->bindParam(':user_id', $collection->User->Id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $collection->Company->Id, PDO::PARAM_INT);
 
 
 
@@ -214,12 +232,12 @@ class Collection implements IQuery {
 			$result->Id = $id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -246,12 +264,12 @@ class Collection implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

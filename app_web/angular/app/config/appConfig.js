@@ -8,12 +8,7 @@ app.config(function ($routeProvider, $locationProvider, $httpProvider, $logProvi
             authenticated: true,
             resolve: {
                 flags: function ($timeout, flagFactory, uiFactory) {
-                    flagFactory.init(function () {
-                        //$timeout(function () {
-                            uiFactory.isLoading = false;
-                            return true;
-                        //}, 3000);
-                    });
+                    flagFactory.init();
                 }
             }
 

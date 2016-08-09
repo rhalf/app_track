@@ -5,183 +5,194 @@
     <meta charset="utf-8" />
 </head>
 <body>
-    <nav class="navbar navbar-default">
-        <div class="navbar-header">
-            <a class="navbar-brand" ng-click="setToggle()" href="">
-                <span class="glyphicon glyphicon-menu-hamburger"></span>
-            </a>
+    <nav class="navbar navbar-default navbar-inverse navbar-static-top" style="margin-bottom: 0;">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" ng-click="ui.panelLeft = !ui.panelLeft; ui.panelMenuMobile = false" href="">
+                    <span class="glyphicon glyphicon-send"></span>
+                    {{system.app.Name}}
+                </a>
+                <button type="button"
+                        class="navbar-toggle collapsed"
+                        data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1"
+                        aria-expanded="false"
+                        ng-click="ui.panelLeft = false; ui.panelMenuMobile = !ui.panelMenuMobile">
+
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item dropdown" ng-show="ui.panelSystem">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                            System
+                            <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a ng-click="showCompanies()">
+                                    <span class="glyphicon glyphicon-tree-deciduous"></span>
+                                    Companies
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="showUnits()" href="">
+                                    <span class="glyphicon glyphicon-send"></span>
+                                    Units
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="showUsers()" href="">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    Users
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="showSims()" href="">
+                                    <span class="glyphicon glyphicon-signal"></span>
+                                    Sims
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="showDrivers()" href="">
+                                    <span class="glyphicon glyphicon-sunglasses"></span>
+                                    Drivers
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="showVehicles()" href="">
+                                    <span class="glyphicon glyphicon-off"></span>
+                                    Vehicles
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" ng-show="!ui.panelSystem">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                            Options
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a ng-click="showClientCompany()">
+                                    <span class="glyphicon glyphicon-tree-deciduous"></span>
+                                    Company
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="showClientUsers()" href="">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    Users
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="showClientUnits()" href="">
+                                    <span class="glyphicon glyphicon-send"></span>
+                                    Units
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="showClientSims()" href="">
+                                    <span class="glyphicon glyphicon-signal"></span>
+                                    Sims
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="showClientDrivers()" href="">
+                                    <span class="glyphicon glyphicon-sunglasses"></span>
+                                    Drivers
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="showClientVehicles()" href="">
+                                    <span class="glyphicon glyphicon-off"></span>
+                                    Vehicles
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="showClientCollections()" href="">
+                                    <span class="glyphicon glyphicon-list"></span>
+                                    Collections
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="showClientDistribute()" href="">
+                                    <span class="glyphicon glyphicon glyphicon-link"></span>
+                                    Distribute
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown" ng-show="!ui.panelSystem">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                            Map
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a ng-click="showClientPois()">Poi</a></li>
+                            <li><a ng-click="showClientGeofence()">Geofence</a></li>
+                            <li><a ng-click="showClientRoute()">Route</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a ng-click="showAbout()" href="">
+                            About
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                            <span class="glyphicon glyphicon-user"></span> {{authUser.Name}}
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <!--<li>
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-6">Privilege</div>
+                                        <div class="col-md-6">{{authUser.Privilege.Name}}</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-6">Status</div>
+                                        <div class="col-md-6">{{authUser.Status.Name}}</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-6">DtCreated</div>
+                                        <div class="col-md-6">{{ authUser.DtCreated | dateFilter  : 'date'}}</div>
+                                    </div>
+                                </div>
+                            </li>-->
+                            <li>
+                                <a ng-click="switchToSystem()">
+                                    <span class="glyphicon glyphicon glyphicon-retweet"></span> Switch
+                                </a>
+                            </li>
+                            <li>
+
+                                <a ng-click="logout()">
+                                    <span class="glyphicon glyphicon-log-in"></span> Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <ul class="nav navbar-nav">
-            <li class="dropdown" ng-show="ui.panelAdmin">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="">
-                    System
-                    <span class="caret"></span>
-                </a>
-
-                <ul class="dropdown-menu">
-                    <li>
-                        <a ng-click="showCompanies()">
-                            <span class="glyphicon glyphicon-tree-deciduous"></span>
-                            Companies
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="showUnits()" href="">
-                            <span class="glyphicon glyphicon-send"></span>
-                            Units
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="showUsers()" href="">
-                            <span class="glyphicon glyphicon-user"></span>
-                            Users
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="showSims()" href="">
-                            <span class="glyphicon glyphicon-signal"></span>
-                            Sims
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="showDrivers()" href="">
-                            <span class="glyphicon glyphicon-sunglasses"></span>
-                            Drivers
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="showVehicles()" href="">
-                            <span class="glyphicon glyphicon-off"></span>
-                            Vehicles
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="dropdown" ng-show="!ui.panelAdmin">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="">
-                    Administrate
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a ng-click="showClientCompany()">
-                            <span class="glyphicon glyphicon-tree-deciduous"></span>
-                            Company
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="showClientUsers()" href="">
-                            <span class="glyphicon glyphicon-user"></span>
-                            Users
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="showClientUnits()" href="">
-                            <span class="glyphicon glyphicon-send"></span>
-                            Units
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="showClientSims()" href="">
-                            <span class="glyphicon glyphicon-signal"></span>
-                            Sims
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="showClientDrivers()" href="">
-                            <span class="glyphicon glyphicon-sunglasses"></span>
-                            Drivers
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="showClientVehicles()" href="">
-                            <span class="glyphicon glyphicon-off"></span>
-                            Vehicles
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="showClientCollections()" href="">
-                            <span class="glyphicon glyphicon-list"></span>
-                            Collections
-                        </a>
-                    </li>
-                    <li>
-                        <a ng-click="showClientDistribute()" href="">
-                            <span class="glyphicon glyphicon glyphicon-link"></span>
-                            Distribute
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="">
-                    Map
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Geofence</a></li>
-                    <li><a href="#">Poi</a></li>
-                    <li><a href="#">Route</a></li>
-                </ul>
-            </li>
-        </ul>
-
-        <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" ng-click="refresh()">
-                    <span class="glyphicon glyphicon-user"></span> {{authUser.Name}}
-                </a>
-                <ul class="dropdown-menu">
-                    <li class="user">
-                        <table class="table table-hover table-responsive">
-                            <thead>
-                                <tr>
-                                    <th colspan="2">User Details</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Privilege</td>
-                                    <td>{{authUser.Privilege | flagByValueFilter : flag.Privileges : 'name'}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Status</td>
-                                    <td>{{authUser.Status | flagByValueFilter : flag.Statuses : 'name'}}</td>
-                                </tr>
-                                <tr>
-                                    <td>DtCreated</td>
-                                    <td>{{ authUser.DtCreated | dateFilter  : 'date'}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Company</td>
-                                    <td>{{ authCompany.Name }}</td>
-                                </tr>
-
-                            </tbody>
-                            <tfoot>
-                                <tr ng-show="session.isUserSuper()">
-                                    <td colspan="2">
-                                        <button class="btn btn-primary form-control" ng-show="!ui.panelAdmin" ng-click="switchToAdmin()">Switch to Admin Panel</button>
-                                        <button class="btn btn-primary form-control" ng-show="ui.panelAdmin" ng-click="switchToUser()">Switch to User Panel</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <button  class="btn btn-primary form-control" ng-click="logout()">Logout</button>
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </li>
-                </ul>
-        </ul>
     </nav>
-
-    <style>
-        .user {
-            padding: 0px !important;
-            margin: 0px !important;
-        }
-    </style>
 </body>
 </html>

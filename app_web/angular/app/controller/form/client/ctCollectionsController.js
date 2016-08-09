@@ -22,16 +22,15 @@ app.controller('ctCollectionsController', function (
     $scope.init = function () {
         $scope.flag = flagFactory;
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
         $scope.ui = uiFactory;
 
         $scope.load();
     };
 
     $scope.load = function () {
-        $scope.collections = Collection.getByCompany({ company: $scope.authCompany.Id });
+        $scope.collections = Collection.getByCompany({ company: $scope.authUser.Company.Id });
         $scope.companies = Company.query();
-        $scope.users = User.getByCompany({ company: $scope.authCompany.Id });
+        $scope.users = User.getByCompany({ company: $scope.authUser.Company.Id });
 
     };
 
@@ -75,12 +74,6 @@ app.controller('ctCollectionsController', function (
             }
         });
     };
-
-
-    $scope.clear = function () {
-        $scope.selected = "";
-    };
-
 
     $scope.cancel = function () {
         $uibModalInstance.close();

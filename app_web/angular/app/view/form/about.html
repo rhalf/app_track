@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="modal-header">
+                <div class="col-md-12">
+                    <h4 class="modal-title">{{system.app.Name}} (Version {{system.app.Version}})</h4>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <br />
+                            <center>
+                                <img src="../../../img/ats.png"
+                                     width="120"
+                                     height="110" />
+                            </center>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="h4">
+                                {{
+system.app.Company.Name
+                                }}
+                            </div>
+                            <div class="h6">{{system.app.Company.Address}}</div>
+                            <div class="h6">Mobile      : {{system.app.Company.Mobile}}</div>
+                            <div class="h6">Telephone   : {{system.app.Company.Telephone}}</div>
+                            <div class="h6">Email       : {{system.app.Company.Email}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

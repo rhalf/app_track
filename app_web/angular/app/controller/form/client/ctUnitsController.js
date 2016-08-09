@@ -21,14 +21,13 @@ app.controller('ctUnitsController', function (
         $scope.flag = flagFactory;
 
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
 
         $scope.units = [];
 
         Unit.getByCompany(
-        { company: $scope.authCompany.Id },
+        { company: $scope.authUser.Company.Id },
         function (result) {
             $scope.units = result;
         },
@@ -51,11 +50,6 @@ app.controller('ctUnitsController', function (
             }
         });
     };
-
-    $scope.clear = function () {
-        $scope.selected = "";
-    };
-
 
     $scope.cancel = function () {
         $uibModalInstance.close();

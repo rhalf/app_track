@@ -1,6 +1,6 @@
 <?php 
 
-class Session {
+class Session implements IQuery {
 
 
 	public function __construct() {
@@ -41,10 +41,14 @@ class Session {
 			$user->Name = $row['user_name'];
 			$user->DtCreated = $row['user_dt_created'];
 			$user->DtExpired = $row['user_dt_expired'];
-			$user->Privilege = (int) $row['e_privilege_value'];
-			$user->Status = (int) $row['e_status_value'];
-			$user->Company = (int) $row['company_id'];
-			$user->Sim = (int) $row['sim_id'];
+			// $user->Privilege = (int) $row['e_privilege_id'];
+			// $user->Status = (int) $row['e_status_id'];
+			// $user->Company = (int) $row['company_id'];
+			// $user->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
+			$user->Privilege = Privilege::select($row['e_privilege_id']);
+			$user->Status = Status::select($row['e_status_id']);
+			$user->Company = Company::select($row['company_id']);
+			$user->Sim = Sim::select($row['sim_id']);
 
 
 			Flight::ok($user);

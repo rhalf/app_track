@@ -12,13 +12,20 @@
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4">
-                <div class="input-group">
+                <div class="input-group input-group-sm">
                     <select class="form-control"
-                            ng-model="selectedCollection"
-                            ng-options="collection.Name for collection in fleet.collections"/>
-                            <!--ng-change="getVehicles(selectedCollection)"--> 
+                            ng-model="selected"
+                            ng-options="collection.Name for collection in fleet.collections" />
                     <div class="input-group-btn">
-                        <button class="btn btn-default" ng-click="clear()">Clear</button>
+                        <button class="btn btn-default" ng-click="selected = ''">
+                            <span class="glyphicon glyphicon-ban-circle" />
+                        </button>
+                        <button class="btn btn-default" type="button" ng-click="addRemove()" ng-hide="authUser.Privilege.Value > 4">
+                            <span class="glyphicon glyphicon-pencil" />
+                        </button>
+                        <button class="btn btn-default" type="button" ng-click="cancel()">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -26,37 +33,44 @@
     </div>
 
 
-    <div class="modal-body" >
-
-        <table class="table table-responsive table-hover table-condensed">
-
+    <div class="modal-body">
+        <div class="noty">
+            <uib-alert ng-repeat="alert in ui.alert.items" type="{{alert.type}}" close="closeAlert($index)" dismiss-on-timeout="{{ui.alert.timeout}}">{{alert.message}} </uib-alert>
+        </div>
+        <table class="table table-responsive table-hover table-condensed small" >
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Vehicle(Name)</th>
-                    <th>Vehicle(Plate)</th>
-                    <th>Unit(Imei)</th>
-                    <th>Sim(Number)</th>
-                    <th>Driver(Name)</th>
+                    <th>Name</th>
+                    <th>Plate</th>
+                    <th>Unit</th>
+                    <th>Sim</th>
+                    <th>Driver</th>
                 </tr>
             </thead>
-            <tr ng-repeat="vehicle in selectedCollection.vehicles" ng-cloak>
-                <td>{{$index + 1}}</td>
-                <td>{{vehicle.Name}}</td>
-                <td>{{vehicle.Plate}}</td>
-                <td>{{vehicle.Unit.Imei}}</td>
-                <td>{{vehicle.Unit.Sim.Number}}</td>
-                <td>{{vehicle.Driver.Name}}</td>
-
-
-            </tr>
+            <tbody>
+                <tr ng-repeat="vehicle in selected.Vehicles | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize1 | limitTo : ui.pagination.pageSize1">
+                    <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize1 }}</td>
+                    <td>{{vehicle.Name}}</td>
+                    <td>{{vehicle.Plate}}</td>
+                    <td>{{vehicle.Unit.Imei}}</td>
+                    <td>{{vehicle.Unit.Sim.Number}}</td>
+                    <td>{{vehicle.Driver.Name}}</td>
+                </tr>
+            </tbody>
         </table>
-
     </div>
 
     <div class="modal-footer">
-        <button class="btn btn-default" type="button" ng-click="add(selectedCollection)" ng-hide="authUser.Privilege > 4">Update</button>
-        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+        <center>
+            <uib-pagination boundary-links="true"
+                            force-ellipses="true"
+                            total-items="selected.Vehicles.length"
+                            ng-model="ui.pagination.currentPage"
+                            items-per-page="ui.pagination.pageSize1"
+                            style="padding:0;margin:0;">
+            </uib-pagination>
+        </center>
     </div>
 
     <style type="text/css">

@@ -24,7 +24,6 @@ app.controller('vehicleDeleteController', function (
         $scope.flag = flagFactory;
 
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.vehicle = vehicle;
     }

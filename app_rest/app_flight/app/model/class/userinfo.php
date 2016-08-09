@@ -4,7 +4,6 @@ class UserInfo implements IQuery {
 
 	public $Id;
 	public $Email;
-	public $Website;
 	public $Telephone;
 	public $User;
 
@@ -33,17 +32,17 @@ class UserInfo implements IQuery {
 				$userInfo->Id = (int) $row['id'];
 				$userInfo->Email = $row['info_email'];
 				$userInfo->Telephone = $row['info_telephone'];
-				$userInfo->User = (int)$row['user_id'];
+				$userInfo->User = User::select($row['user_id']);
 
 				array_push($result, $userInfo);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -62,7 +61,7 @@ class UserInfo implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -72,14 +71,15 @@ class UserInfo implements IQuery {
 			$userInfo->Id = (int) $row['id'];
 			$userInfo->Email = $row['info_email'];
 			$userInfo->Telephone = $row['info_telephone'];
-			$userInfo->User = (int)$row['user_id'];
+			$userInfo->User = User::select($row['user_id']);
 			
-			Flight::ok($userInfo);
+			
+			return $userInfo;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -98,7 +98,7 @@ class UserInfo implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("user_id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -108,14 +108,15 @@ class UserInfo implements IQuery {
 			$userInfo->Id = (int) $row['id'];
 			$userInfo->Email = $row['info_email'];
 			$userInfo->Telephone = $row['info_telephone'];
-			$userInfo->User = (int)$row['user_id'];
+			$userInfo->User = User::select($row['user_id']);
 			
-			Flight::ok($userInfo);
+			
+			return $userInfo;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -145,7 +146,7 @@ class UserInfo implements IQuery {
 
 			$query->bindParam(':info_email', $userInfo->Email, PDO::PARAM_STR);
 			$query->bindParam(':info_telephone', $userInfo->Telephone, PDO::PARAM_STR);
-			$query->bindParam(':user_id', $userInfo->User, PDO::PARAM_INT);
+			$query->bindParam(':user_id', $userInfo->User->Id, PDO::PARAM_INT);
 
 			$query->execute();
 
@@ -154,12 +155,12 @@ class UserInfo implements IQuery {
 			$result->Id = (int)$connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -191,7 +192,7 @@ class UserInfo implements IQuery {
 
 			$query->bindParam(':info_email', $userInfo->Email, PDO::PARAM_STR);
 			$query->bindParam(':info_telephone', $userInfo->Telephone, PDO::PARAM_STR);
-			$query->bindParam(':user_id', $userInfo->User, PDO::PARAM_INT);
+			$query->bindParam(':user_id', $userInfo->User->Id, PDO::PARAM_INT);
 
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
@@ -203,12 +204,12 @@ class UserInfo implements IQuery {
 			$result->Id = (int)$id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -236,12 +237,12 @@ class UserInfo implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = (int)$id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

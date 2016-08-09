@@ -58,7 +58,6 @@ app.controller('userUpdateCredentialController', function (
     $scope.init = function () {
         $scope.ui = uiFactory;
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
         $scope.flag = flagFactory;
 
 

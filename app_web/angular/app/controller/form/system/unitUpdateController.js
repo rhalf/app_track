@@ -67,7 +67,6 @@ app.controller('unitUpdateController', function (
         $scope.flag = flagFactory;
 
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
         $scope.ui.dateTimePicker.isOpen = [
@@ -82,11 +81,7 @@ app.controller('unitUpdateController', function (
 
         $scope.unit = unit;
         $scope.companies = Company.query();
-        $scope.sims = Sim.getByCompany({company : $scope.authCompany.Id});
-    };
-
-    $scope.clearSim = function () {
-        $scope.unit.Sim = null;
+        $scope.sims = Sim.getByCompany({ company: $scope.authUser.Company.Id });
     };
 
     $scope.cancel = function () {

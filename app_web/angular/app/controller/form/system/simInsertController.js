@@ -54,7 +54,6 @@ app.controller('simInsertController', function (
     $scope.init = function () {
         $scope.flag = flagFactory;
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
         $scope.ui = uiFactory;
 
         $scope.ui.dateTimePicker.isOpen = [

@@ -34,27 +34,28 @@ class Sim implements IQuery {
 			foreach ($rows as $row) {	
 				$sim = new Sim();
 				$sim->Id = (int) $row['id'];
-				$sim->Imei = (int) $row['sim_imei'];
-				$sim->Number = (int) $row['sim_number'];
+				$sim->Imei = $row['sim_imei'];
+				$sim->Number = $row['sim_number'];
 				$sim->Roaming = (bool) $row['sim_roaming'];
-				$sim->SimVendor = (int) $row['e_sim_vendor_id'];
-				$sim->Status = (int) $row['e_status_value'];
 				$sim->DtCreated = $row['sim_dt_created'];
-				$sim->Company = (int) $row['company_id'];
+
+				$sim->SimVendor = SimVendor::select($row['e_sim_vendor_id']);
+				$sim->Status = Status::select($row['e_status_id']);
+				$sim->Company = Company::select($row['company_id']);
 
 				array_push($result, $sim);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
-	}
+	}                            
 
 	public static function select($id) {
 
@@ -69,28 +70,28 @@ class Sim implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$sim = new Sim();
-			$sim->Id = (int) $row['id'];
-			$sim->Imei = (int) $row['sim_imei'];
-			$sim->Number = (int) $row['sim_number'];
+			$sim->Id =  (int) $row['id'];
+			$sim->Imei = $row['sim_imei'];
+			$sim->Number =  $row['sim_number'];
 			$sim->Roaming = (bool) $row['sim_roaming'];
-			$sim->SimVendor = (int) $row['e_sim_vendor_id'];
-			$sim->Status = (int) $row['e_status_value'];
+			$sim->SimVendor = SimVendor::select($row['e_sim_vendor_id']);
 			$sim->DtCreated = $row['sim_dt_created'];
-			$sim->Company = (int) $row['company_id'];
 			
+			$sim->Status = Status::select($row['e_status_id']);
+			$sim->Company = Company::select($row['company_id']);
 
-			Flight::ok($sim);
+			return $sim;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -116,24 +117,25 @@ class Sim implements IQuery {
 
 				$sim = new Sim();
 				$sim->Id = (int) $row['id'];
-				$sim->Imei = (int) $row['sim_imei'];
-				$sim->Number = (int) $row['sim_number'];
+				$sim->Imei =  $row['sim_imei'];
+				$sim->Number = $row['sim_number'];
 				$sim->Roaming = (bool) $row['sim_roaming'];
-				$sim->SimVendor = (int) $row['e_sim_vendor_id'];
-				$sim->Status = (int) $row['e_status_value'];
+				$sim->SimVendor = SimVendor::select($row['e_sim_vendor_id']);
 				$sim->DtCreated = $row['sim_dt_created'];
-				$sim->Company = (int) $row['company_id'];
+
+				$sim->Status = Status::select($row['e_status_id']);
+				$sim->Company = Company::select($row['company_id']);
 
 
 				array_push($result, $sim);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -154,20 +156,20 @@ class Sim implements IQuery {
 
 			$sql = "
 			INSERT INTO sim 
-			(sim_imei, sim_number, sim_roaming,  e_sim_vendor_id, e_status_value, sim_dt_created, company_id)
+			(sim_imei, sim_number, sim_roaming,  e_sim_vendor_id, e_status_id, sim_dt_created, company_id)
 			VALUES
-			(:sim_imei, :sim_number, :sim_roaming, :e_sim_vendor_id, :e_status_value, :sim_dt_created, :company_id);";
+			(:sim_imei, :sim_number, :sim_roaming, :e_sim_vendor_id, :e_status_id, :sim_dt_created, :company_id);";
 
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':sim_imei', $sim->Imei, PDO::PARAM_INT);
-			$query->bindParam(':sim_number', $sim->Number, PDO::PARAM_INT);
+			$query->bindParam(':sim_imei', $sim->Imei, PDO::PARAM_STR);
+			$query->bindParam(':sim_number', $sim->Number, PDO::PARAM_STR);
 			$query->bindParam(':sim_roaming', $sim->Roaming, PDO::PARAM_BOOL);
-			$query->bindParam(':e_sim_vendor_id', $sim->SimVendor, PDO::PARAM_INT);
-			$query->bindParam(':e_status_value', $sim->Status, PDO::PARAM_INT);
+			$query->bindParam(':e_sim_vendor_id', $sim->SimVendor->Id, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $sim->Status->Id, PDO::PARAM_INT);
 			$query->bindParam(':sim_dt_created', $dateTime, PDO::PARAM_STR);
-			$query->bindParam(':company_id', $sim->Company, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $sim->Company->Id, PDO::PARAM_INT);
 
 
 
@@ -178,12 +180,12 @@ class Sim implements IQuery {
 			$result->Id = (int)$connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -208,7 +210,7 @@ class Sim implements IQuery {
 			sim_number = :sim_number,
 			sim_roaming = :sim_roaming,
 			e_sim_vendor_id = :e_sim_vendor_id,
-			e_status_value = :e_status_value,
+			e_status_id = :e_status_id,
 			company_id = :company_id
 
 			WHERE
@@ -217,12 +219,12 @@ class Sim implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':sim_imei', $sim->Imei, PDO::PARAM_INT);
-			$query->bindParam(':sim_number', $sim->Number, PDO::PARAM_INT);
+			$query->bindParam(':sim_imei', $sim->Imei, PDO::PARAM_STR);
+			$query->bindParam(':sim_number', $sim->Number, PDO::PARAM_STR);
 			$query->bindParam(':sim_roaming', $sim->Roaming, PDO::PARAM_BOOL);
-			$query->bindParam(':e_sim_vendor_id', $sim->SimVendor, PDO::PARAM_INT);
-			$query->bindParam(':e_status_value', $sim->Status, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $sim->Company, PDO::PARAM_INT);
+			$query->bindParam(':e_sim_vendor_id', $sim->SimVendor->Id, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $sim->Status->Id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $sim->Company->Id, PDO::PARAM_INT);
 
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
@@ -234,12 +236,12 @@ class Sim implements IQuery {
 			$result->Id = (int)$id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -267,12 +269,12 @@ class Sim implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = (int)$id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

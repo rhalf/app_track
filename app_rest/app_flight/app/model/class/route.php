@@ -36,17 +36,17 @@ class Route implements IQuery {
 				$route->Coordinates = $row['route_coordinates'];
 				$route->IsVisible = (bool) $row['route_is_visible'];
 				$route->IsGlobal = (bool) $row['route_is_global'];
-				$route->ComapnyId = (int) $row['company_id'];
+				$route->Company = Company::select($row['company_id']);
 
 				array_push($result, $route);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -65,7 +65,7 @@ class Route implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -77,15 +77,15 @@ class Route implements IQuery {
 			$route->Coordinates = $row['route_coordinates'];
 			$route->IsVisible = (bool) $row['route_is_visible'];
 			$route->IsGlobal = (bool) $row['route_is_global'];
-			$route->ComapnyId = (int) $row['company_id'];
+			$route->Company = Company::select($row['company_id']);
 
 
-			Flight::ok($route);
+			return $route;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -117,7 +117,7 @@ class Route implements IQuery {
 			$query->bindParam(':route_coordinates', $route->Coordinates, PDO::PARAM_STR);
 			$query->bindParam(':route_is_visible', $route->IsVisible, PDO::PARAM_BOOL);
 			$query->bindParam(':route_is_global', $route->IsGlobal, PDO::PARAM_BOOL);
-			$query->bindParam(':company_id', $route->ComapnyId, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $route->Company->Id, PDO::PARAM_INT);
 
 
 			$query->execute();
@@ -127,12 +127,12 @@ class Route implements IQuery {
 			$result->Id = $connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -171,7 +171,7 @@ class Route implements IQuery {
 			$query->bindParam(':route_coordinates', $route->Coordinates, PDO::PARAM_STR);
 			$query->bindParam(':route_is_visible', $route->IsVisible, PDO::PARAM_BOOL);
 			$query->bindParam(':route_is_global', $route->IsGlobal, PDO::PARAM_BOOL);
-			$query->bindParam(':company_id', $route->ComapnyId, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $route->Company->Id, PDO::PARAM_INT);
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
@@ -182,12 +182,12 @@ class Route implements IQuery {
 			$result->Id = $id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -198,7 +198,6 @@ class Route implements IQuery {
 		$connection = Flight::dbMain();
 		
 		try {
-
 
 			$sql = "
 			DELETE FROM route 
@@ -216,12 +215,12 @@ class Route implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

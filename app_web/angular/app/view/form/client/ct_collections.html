@@ -12,10 +12,18 @@
                 </div>
                 <div class="col-md-4"></div>
                 <div class="col-md-4">
-                    <div class="input-group">
-                        <input type="text" class="form-control" ng-model="selected" required />
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" ng-model="selected" placeholder="Search" />
                         <div class="input-group-btn">
-                            <button class="btn btn-default" ng-click="clear()">Clear</button>
+                            <button class="btn btn-default" ng-click="selected = ''">
+                                <span class="glyphicon glyphicon-ban-circle" />
+                            </button>
+                            <button class="btn btn-default" type="button" ng-click="add()" ng-hide="authUser.Privilege.Value > 4">
+                                <span class="glyphicon glyphicon-plus" />
+                            </button>
+                            <button class="btn btn-default" type="button" ng-click="cancel()">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -24,14 +32,14 @@
 
 
         <div class="modal-body">
-            <table class="table table-responsive table-hover table-condensed">
+            <table class="table  table-responsive table-hover table-condensed small" >
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Name</th>
                         <th>Desc</th>
-                        <th>Company</th>
-                        <th>User (Assigned)</th>
+                        <th class="hidden-xs">Company</th>
+                        <th>User</th>
                         <th>Options</th>
                 </thead>
                 <tbody>
@@ -39,27 +47,27 @@
                         <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 }}</td>
                         <td>{{collection.Name}}</td>
                         <td>{{collection.Desc}}</td>
-                        <td>{{collection.Company | flagByIdFilter: companies : 'name' }}</td>
-                        <td>{{collection.User | flagByIdFilter: users : 'name' }}</td>
+                        <td class="hidden-xs">{{collection.Company.Name}}</td>
+                        <td>{{collection.User.Name}}</td>
                         <td>
-                            <button ng-click="select(collection)" ng-hide="authUser.Privilege > 4"><span class="glyphicon glyphicon-cog" /></button>
-                            <button ng-click="delete(collection)" ng-hide="authUser.Privilege > 4"><span class="glyphicon glyphicon-trash" /></button>
+                            <button ng-click="select(collection)" ng-hide="authUser.Privilege.Value > 4"><span class="glyphicon glyphicon-cog" /></button>
+                            <button ng-click="delete(collection)" ng-hide="authUser.Privilege.Value > 4"><span class="glyphicon glyphicon-trash" /></button>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <uib-pagination boundary-links="true"
-                            force-ellipses="true"
-                            total-items="collections.length"
-                            ng-model="ui.pagination.currentPage"
-                            items-per-page="ui.pagination.pageSize2"
-                            class="center-block">
-            </uib-pagination>
         </div>
 
         <div class="modal-footer">
-            <button class="btn btn-default" type="button" ng-click="add()" ng-hide="authUser.Privilege > 4">Add</button>
-            <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+            <center>
+                <uib-pagination boundary-links="true"
+                                force-ellipses="true"
+                                total-items="collections.length"
+                                ng-model="ui.pagination.currentPage"
+                                items-per-page="ui.pagination.pageSize1"
+                                style="padding:0;margin:0;">
+                </uib-pagination>
+            </center>
         </div>
 </body>
 </html>

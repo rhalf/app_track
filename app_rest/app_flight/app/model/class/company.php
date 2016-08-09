@@ -32,17 +32,17 @@ class Company implements IQuery {
 				$company->Name = $row['company_name'];
 				$company->Desc = $row['company_desc'];
 				$company->DtCreated = $row['company_dt_created'];
-				$company->Status = (int) $row['e_status_value'];
+				$company->Status = Status::select($row['e_status_id']);
 
 				array_push($result, $company);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -62,7 +62,7 @@ class Company implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -72,14 +72,14 @@ class Company implements IQuery {
 			$company->Name = $row['company_name'];
 			$company->Desc = $row['company_desc'];
 			$company->DtCreated = $row['company_dt_created'];
-			$company->Status = (int) $row['e_status_value'];
+			$company->Status = Status::select($row['e_status_id']);
 
-			Flight::ok($company);
+			return $company;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -101,9 +101,9 @@ class Company implements IQuery {
 
 			$sql = "
 			INSERT INTO company 
-			(company_name, company_desc, company_dt_created, e_status_value)
+			(company_name, company_desc, company_dt_created, e_status_id)
 			VALUES
-			(:company_name, :company_desc, :company_dt_created, :e_status_value);";
+			(:company_name, :company_desc, :company_dt_created, :e_status_id);";
 
 
 			$query = $connection->prepare($sql);
@@ -111,7 +111,7 @@ class Company implements IQuery {
 			$query->bindParam(':company_name', $company->Name, PDO::PARAM_STR);
 			$query->bindParam(':company_desc', $company->Desc, PDO::PARAM_STR);
 			$query->bindParam(':company_dt_created', $dateTime, PDO::PARAM_STR);
-			$query->bindParam(':e_status_value', $company->Status, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $company->Status->Id, PDO::PARAM_INT);
 
 			$query->execute();
 			
@@ -120,12 +120,12 @@ class Company implements IQuery {
 			$result->Id = $connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -147,7 +147,7 @@ class Company implements IQuery {
 			SET 
 			company_name = :company_name,
 			company_desc = :company_desc, 
-			e_status_value = :e_status_value
+			e_status_id = :e_status_id
 
 			WHERE
 			id = :id;";
@@ -158,7 +158,7 @@ class Company implements IQuery {
 
 			$query->bindParam(':company_name', $company->Name, PDO::PARAM_STR);
 			$query->bindParam(':company_desc', $company->Desc, PDO::PARAM_STR);
-			$query->bindParam(':e_status_value', $company->Status, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $company->Status->Id, PDO::PARAM_INT);
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
@@ -169,16 +169,17 @@ class Company implements IQuery {
 			$result->Id = $id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
 	}
+
 	public static function delete($id) {
 
 		$connection = Flight::dbMain();
@@ -201,12 +202,12 @@ class Company implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

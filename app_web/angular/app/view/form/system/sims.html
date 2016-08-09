@@ -7,66 +7,72 @@
 <body>
 
     <div ng-controller="simsController">
-
-        <div class="modal-header">
-            <div class="col-md-4">
-                <h3 class="modal-title">Sims</h3>
-            </div>
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <div class="input-group" ng-show="authUser.Privilege < 4">
-                    <select class="form-control" ng-model="selectedCompany" ng-options="company.Id as company.Name for company in companies" required />
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" ng-click="clearCompany()">Clear</button>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="modal-header">
+                    <div class="col-md-4">
+                        <h3 class="modal-title">Sims</h3>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" ng-model="selected" placeholder="Search" />
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" ng-click="selected = ''">
+                                    <span class="glyphicon glyphicon-remove" />
+                                </button>
+                                <button class="btn btn-default" type="button" ng-click="add()">
+                                    <span class="glyphicon glyphicon-plus" />
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+
+                <div class="modal-body">
+                    <table class="table table-responsive table-condensed table-hover small">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Imei</th>
+                                <th>Number</th>
+                                <th class="hidden-xs">Roaming</th>
+                                <th>DtCreated</th>
+                                <th class="hidden-xs">Vendor</th>
+                                <th>Status</th>
+                                <th class="hidden-xs">Company</th>
+                                <th>Options</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="sim in sims | filter : { Company : selected } | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 | limitTo : ui.pagination.pageSize2">
+                                <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 }}</td>
+                                <td>{{sim.Imei}}</td>
+                                <td>{{sim.Number}}</td>
+                                <td class="hidden-xs">{{sim.Roaming}}</td>
+                                <td>{{sim.DtCreated | dateFilter : 'date'}}</td>
+                                <td class="hidden-xs">{{sim.SimVendor.Name}}</td>
+                                <td>{{sim.Status.Name}}</td>
+                                <td class="hidden-xs">{{sim.Company.Name}}</td>
+                                <td>
+                                    <button ng-click="select(sim)"><span class="glyphicon glyphicon-cog" /></button>
+                                    <button ng-click="delete(sim)"><span class="glyphicon glyphicon-trash" /></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="modal-footer">
+                    <uib-pagination boundary-links="true"
+                                    force-ellipses="true"
+                                    total-items="companies.length"
+                                    ng-model="ui.pagination.currentPage"
+                                    items-per-page="ui.pagination.pageSize2"
+                                    class="center-block">
+                    </uib-pagination>
+                </div>
             </div>
-        </div>
-
-
-        <div class="modal-body">
-            <table class="table table-responsive table-hover">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Imei</th>
-                        <th>Number</th>
-                        <th>Roaming</th>
-                        <th>DtCreated</th>
-                        <th>Vendor</th>
-                        <th>Status</th>
-                        <th>Company</th>
-                        <th>Options</th>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="sim in sims | filter : { Company : selectedCompany } | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 | limitTo : ui.pagination.pageSize2">
-                        <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 }}</td>
-                        <td>{{sim.Imei}}</td>
-                        <td>{{sim.Number}}</td>
-                        <td>{{sim.Roaming}}</td>
-                        <td>{{sim.DtCreated | dateFilter : 'date'}}</td>
-                        <td>{{sim.SimVendor| flagByIdFilter: flag.SimVendors : 'name'}}</td>
-                        <td>{{sim.Status | flagByValueFilter : flag.Statuses : 'name' }}</td>
-                        <td>{{sim.Company | flagByIdFilter : companies : 'name' }}</td>
-                        <td>
-                            <button ng-click="select(sim)"><span class="glyphicon glyphicon-cog" /></button>
-                            <button ng-click="delete(sim)"><span class="glyphicon glyphicon-trash" /></button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <uib-pagination boundary-links="true"
-                            force-ellipses="true"
-                            total-items="sims.length"
-                            ng-model="ui.pagination.currentPage"
-                            items-per-page="ui.pagination.pageSize2"
-                            class="center-block">
-            </uib-pagination>
-        </div>
-
-        <div class="modal-footer">
-            <button class="btn btn-default" type="button" ng-click="add()">Add</button>
-            <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
         </div>
     </div>
 </body>

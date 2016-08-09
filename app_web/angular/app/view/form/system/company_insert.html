@@ -37,7 +37,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-2">Status</label>
                                 <div class="col-md-10">
-                                    <select class="form-control" ng-model="company.Status" ng-init="company.Status = flag.Statuses[0].Value" ng-options="status.Value as status.Name for status in flag.Statuses" required />
+                                    <select class="form-control" ng-model="company.Status" ng-init="company.Status = flag.Statuses[0]" ng-options="status as status.Name for status in flag.Statuses track by status.Id" required />
                                 </div>
                             </div>
                         </fieldset>
@@ -73,7 +73,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-2">Field</label>
                                 <div class="col-md-10">
-                                    <select class="form-control" ng-model="companyInfo.Field" ng-init="companyInfo.Field = flag.Fields[0].Id" ng-options="field.Id as field.Name for field in flag.Fields" required />
+                                    <select class="form-control" ng-model="companyInfo.Field" ng-init="companyInfo.Field = flag.Fields[0]" ng-options="field as field.Name for field in flag.Fields track by field.Id" required />
                                 </div>
                             </div>
                         </fieldset>

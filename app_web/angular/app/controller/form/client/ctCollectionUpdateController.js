@@ -68,7 +68,6 @@ app.controller('ctCollectionUpdateController', function (
         $scope.flag = flagFactory;
 
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
 
@@ -76,7 +75,7 @@ app.controller('ctCollectionUpdateController', function (
 
         $scope.collection = collection;
         $scope.companies = Company.query();
-        $scope.users = User.getByCompany({ company: $scope.authCompany.Id });
+        $scope.users = User.getByCompany({ company: $scope.authUser.Company.Id });
 
     };
 

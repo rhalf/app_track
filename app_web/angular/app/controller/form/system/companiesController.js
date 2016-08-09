@@ -21,7 +21,6 @@ app.controller('companiesController', function (
         $scope.flag = flagFactory;
 
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
         $scope.load();
@@ -74,10 +73,6 @@ app.controller('companiesController', function (
                 parent: $scope
             }
         });
-    };
-
-    $scope.clearCompany = function () {
-        $scope.selectedCompany = "";
     };
 
     $scope.init();

@@ -15,7 +15,6 @@ app.controller('ctDistributeInsertController', function (
     fleetFactory,
 
     collection
-
     ) {
 
     //Form
@@ -23,11 +22,13 @@ app.controller('ctDistributeInsertController', function (
         //console.log(collection);
         $scope.ui.isLoading = true;
         $scope.fleet.update(collection, function (result) {
-            var alert = { type: 'success', message: '1 collection has been updated successfully.' };
-            $scope.ui.alert.addItem(alert);
             $scope.fleet.load(function () {
+                $scope.load();
                 $scope.ui.isLoading = false;
             });
+        }, function (result) {
+            var alert = { type: 'danger', message: result.Message };
+            $scope.ui.alert.addItem(alert);
         });
     };
 
@@ -36,15 +37,10 @@ app.controller('ctDistributeInsertController', function (
         $scope.ui.alert.closeItem(index);
     };
 
-    $scope.clearUser = function () {
-        $scope.collection.User = null;
-    };
-
     $scope.init = function () {
         $scope.flag = flagFactory;
 
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
 
@@ -53,16 +49,20 @@ app.controller('ctDistributeInsertController', function (
         $scope.fleet = fleetFactory;
 
         $scope.collection = collection;
+
+        $scope.load();
     };
 
     $scope.load = function () {
-        angular.forEach($scope.fleet.vehicles, function (vehicle, index1) {
-            $scope.fleet.getVehicleCollections(collection, function (vehicleCollection) {
-                angular.forEach(vehicleCollection, function (object, index2) {
-                    if (vehicle.Id == object.Vehicle) {
-                        vehicle.Checked = true;
-                    }
-                });
+        angular.forEach($scope.fleet.vehicles, function (vehicle1, index1) {
+            vehicle1.Checked = false;
+        });
+
+        angular.forEach($scope.fleet.vehicles, function (vehicle1, index1) {
+            angular.forEach($scope.collection.Vehicles, function (vehicle2, index2) {
+                if (vehicle1.Id == vehicle2.Id) {
+                    vehicle1.Checked = true;
+                }
             });
         });
     };

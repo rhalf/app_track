@@ -9,6 +9,7 @@ class Unit implements IQuery {
 	public $Sim;
 	public $UnitType;
 	public $Company;
+	public $UnitData;
 	
 	public function __construct() {
 	}
@@ -35,21 +36,21 @@ class Unit implements IQuery {
 				$unit->DtCreated = $row['unit_dt_created'];
 				$unit->SerialNumber = $row['unit_serial_number'];
 
-				$unit->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
+				$unit->Sim = Sim::select($row['sim_id']);
+				$unit->UnitStatus = UnitStatus::select($row['e_status_unit_id']);
+				$unit->UnitType = UnitType::select($row['unit_type_id']);
+				$unit->Company = Company::select($row['company_id']);
+				$unit->UnitData = UnitData::select($row['unit_imei']);
 
-				$unit->UnitType = (int) $row['unit_type_id'];
-				$unit->Company = (int) $row['company_id'];
-				$unit->UnitStatus = (int) $row['e_status_unit_id'];
-				
 				array_push($result, $unit);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -78,21 +79,21 @@ class Unit implements IQuery {
 				$unit->DtCreated = $row['unit_dt_created'];
 				$unit->SerialNumber = $row['unit_serial_number'];
 
-				$unit->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
-
-				$unit->UnitType = (int) $row['unit_type_id'];
-				$unit->Company = (int) $row['company_id'];
-				$unit->UnitStatus = (int) $row['e_status_unit_id'];
+				$unit->Sim = Sim::select($row['sim_id']);
+				$unit->UnitStatus = UnitStatus::select($row['e_status_unit_id']);
+				$unit->UnitType = UnitType::select($row['unit_type_id']);
+				$unit->Company = Company::select($row['company_id']);
+				$unit->UnitData = UnitData::select($row['unit_imei']);
 				
 				array_push($result, $unit);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -111,7 +112,7 @@ class Unit implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -122,18 +123,18 @@ class Unit implements IQuery {
 			$unit->DtCreated = $row['unit_dt_created'];
 			$unit->SerialNumber = $row['unit_serial_number'];
 
-			$unit->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
+			$unit->Sim = Sim::select($row['sim_id']);
+			$unit->UnitStatus = UnitStatus::select($row['e_status_unit_id']);
+			$unit->UnitType = UnitType::select($row['unit_type_id']);
+			$unit->Company = Company::select($row['company_id']);
+			$unit->UnitData = UnitData::select($row['unit_imei']);
 
-			$unit->UnitType = (int) $row['unit_type_id'];
-			$unit->Company = (int) $row['company_id'];
-			$unit->UnitStatus = (int) $row['e_status_unit_id'];
-
-			Flight::ok($unit);
+			return $unit;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -169,10 +170,10 @@ class Unit implements IQuery {
 
 			$query->bindParam(':unit_imei', $unit->Imei, PDO::PARAM_INT);
 			$query->bindParam(':unit_serial_number', $unit->SerialNumber, PDO::PARAM_STR);
-			$query->bindParam(':sim_id', $unit->Sim, PDO::PARAM_INT);
-			$query->bindParam(':unit_type_id', $unit->UnitType, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $unit->Company, PDO::PARAM_INT);
-			$query->bindParam(':e_status_unit_id', $unit->UnitStatus, PDO::PARAM_INT);
+			$query->bindParam(':sim_id', $unit->Sim->Id, PDO::PARAM_INT);
+			$query->bindParam(':unit_type_id', $unit->UnitType->Id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $unit->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':e_status_unit_id', $unit->UnitStatus->Id, PDO::PARAM_INT);
 			$query->bindParam(':unit_dt_created',$dateTime, PDO::PARAM_STR);
 
 			$query->execute();
@@ -195,60 +196,63 @@ class Unit implements IQuery {
 
 			$sql = "
 			CREATE TABLE IF NOT EXISTS `" . $schema ."`.`" . $tableName . "` (
-			`id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
-			`dt_server` TIMESTAMP NULL COMMENT '',
-			`dt_device` TIMESTAMP NULL COMMENT '',
-			`command` SMALLINT NULL COMMENT '',
-			`event` SMALLINT NULL COMMENT '',
-			`byte` BIGINT NULL COMMENT '',
-			`latitude` DOUBLE NULL COMMENT '',
-			`longitude` DOUBLE NULL COMMENT '',
-			`altitude` DOUBLE NULL COMMENT '',
-			`rfid` BIGINT NULL COMMENT '',
-			`mode` TINYINT NULL COMMENT '',
-			`speed` SMALLINT NULL COMMENT '',
-			`time` BIGINT NULL COMMENT '',
-			`odometer` BIGINT NULL COMMENT '',
-			`heading` SMALLINT NULL COMMENT '',
-			`picture` BIGINT NULL COMMENT '',
-			`gps_satellite` SMALLINT NULL COMMENT '',
-			`gps_status` SMALLINT NULL COMMENT '',
-			`gps_accuracy` SMALLINT NULL COMMENT '',
-			`gprs_signal` SMALLINT NULL COMMENT '',
-			`gprs_status` VARCHAR(25) NULL COMMENT '',
-			`di_0` TINYINT(1) NULL COMMENT '',
-			`di_1` TINYINT(1) NULL COMMENT '',
-			`di_2` TINYINT(1) NULL COMMENT '',
-			`di_3` TINYINT(1) NULL COMMENT '',
-			`di_4` TINYINT(1) NULL COMMENT '',
-			`di_5` TINYINT(1) NULL COMMENT '',
-			`di_6` SMALLINT NULL COMMENT '',
-			`di_7` SMALLINT NULL COMMENT '',
-			`di_8` SMALLINT NULL COMMENT '',
-			`di_9` TINYINT(1) NULL COMMENT '',
-			`di_10` TINYINT(1) NULL COMMENT '',
-			`do_0` TINYINT(1) NULL COMMENT '',
-			`do_1` TINYINT(1) NULL COMMENT '',
-			`do_2` TINYINT(1) NULL COMMENT '',
-			`do_3` TINYINT(1) NULL COMMENT '',
-			`ai_0` SMALLINT NULL COMMENT '',
-			`ai_1` SMALLINT NULL COMMENT '',
-			`ai_2` SMALLINT NULL COMMENT '',
-			`ai_3` SMALLINT NULL COMMENT '',
-			`ai_4` SMALLINT NULL COMMENT '',
-			`ai_5` SMALLINT NULL COMMENT '',
-			`ai_6` SMALLINT NULL COMMENT '',
-			`ai_7` SMALLINT NULL COMMENT '',
-			`ai_8` SMALLINT NULL COMMENT '',
-			`ai_9` SMALLINT NULL COMMENT '',
-			`ao_0` SMALLINT NULL COMMENT '',
-			`ao_1` SMALLINT NULL COMMENT '',
-			`ao_2` SMALLINT NULL COMMENT '',
-			`ao_3` SMALLINT NULL COMMENT '',
-			PRIMARY KEY (`id`)  COMMENT '')
-			ENGINE = InnoDB
-			PACK_KEYS = DEFAULT
-			KEY_BLOCK_SIZE = 8;";
+		`id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+		`dt_server` DATETIME NULL COMMENT '',
+		`dt_device` DATETIME NULL COMMENT '',
+		`command` SMALLINT NULL COMMENT '',
+		`event` SMALLINT NULL COMMENT '',
+		`byte` BIGINT NULL COMMENT '',
+		`latitude` DOUBLE NULL COMMENT '',
+		`longitude` DOUBLE NULL COMMENT '',
+		`altitude` DOUBLE NULL COMMENT '',
+		`rfid` BIGINT NULL COMMENT '',
+		`mode` TINYINT NULL COMMENT '',
+		`speed` SMALLINT NULL COMMENT '',
+		`time` BIGINT NULL COMMENT '',
+		`odometer` BIGINT NULL COMMENT '',
+		`heading` SMALLINT NULL COMMENT '',
+		`picture` BIGINT NULL COMMENT '',
+		`gps_satellite` SMALLINT NULL COMMENT '',
+		`gps_status` SMALLINT NULL COMMENT '',
+		`gps_accuracy` SMALLINT NULL COMMENT '',
+		`gprs_signal` SMALLINT NULL COMMENT '',
+		`gprs_status` VARCHAR(25) NULL COMMENT '',
+		`reserve` INT NULL COMMENT '',
+		`di_0` SMALLINT NULL COMMENT '',
+		`di_1` SMALLINT NULL COMMENT '',
+		`di_2` SMALLINT NULL COMMENT '',
+		`di_3` SMALLINT NULL COMMENT '',
+		`di_4` SMALLINT NULL COMMENT '',
+		`di_5` SMALLINT NULL COMMENT '',
+		`di_6` SMALLINT NULL COMMENT '',
+		`di_7` SMALLINT NULL COMMENT '',
+		`di_8` SMALLINT NULL COMMENT '',
+		`di_9` SMALLINT NULL COMMENT '',
+		`di_10` SMALLINT NULL COMMENT '',
+		`do_0` SMALLINT NULL COMMENT '',
+		`do_1` SMALLINT NULL COMMENT '',
+		`do_2` SMALLINT NULL COMMENT '',
+		`do_3` SMALLINT NULL COMMENT '',
+		`ai_0` SMALLINT NULL COMMENT '',
+		`ai_1` SMALLINT NULL COMMENT '',
+		`ai_2` SMALLINT NULL COMMENT '',
+		`ai_3` SMALLINT NULL COMMENT '',
+		`ai_4` SMALLINT NULL COMMENT '',
+		`ai_5` SMALLINT NULL COMMENT '',
+		`ai_6` SMALLINT NULL COMMENT '',
+		`ai_7` SMALLINT NULL COMMENT '',
+		`ai_8` SMALLINT NULL COMMENT '',
+		`ai_9` SMALLINT NULL COMMENT '',
+		`ai_10` SMALLINT NULL COMMENT '',
+		`ao_0` SMALLINT NULL COMMENT '',
+		`ao_1` SMALLINT NULL COMMENT '',
+		`ao_2` SMALLINT NULL COMMENT '',
+		`ao_3` SMALLINT NULL COMMENT '',
+		PRIMARY KEY (`id`)  COMMENT '')
+		ENGINE = InnoDB
+		PACK_KEYS = DEFAULT
+		KEY_BLOCK_SIZE = 8
+		";
 
 			$query = $connection->prepare($sql);	
 
@@ -256,14 +260,19 @@ class Unit implements IQuery {
 
 			$connection->commit();
 
-			Flight::ok($result);
+			$result = new Result();
+			$result->Status = Result::INSERTED;
+			$result->Message = 'Done';
+			$result->Id = $connection->lastInsertId();
+
+			return $result;
 
 		} catch (PDOException $pdoException) {
 			$connection->rollBack();
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
 			$connection->rollBack();
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -299,10 +308,11 @@ class Unit implements IQuery {
 			$unitOld->Imei = $row['unit_imei'];
 			$unitOld->DtCreated = $row['unit_dt_created'];
 			$unitOld->SerialNumber = $row['unit_serial_number'];
-			$unitOld->Sim = (int) $row['sim_id'];
-			$unitOld->UnitType = (int) $row['unit_type_id'];
-			$unitOld->Company = (int) $row['company_id'];
-			$unitOld->UnitStatus = (int) $row['e_status_unit_id'];
+			
+			$unitOld->Sim = Sim::select($row['sim_id']);
+			$unitOld->UnitStatus = UnitStatus::select($row['e_status_unit_id']);
+			$unitOld->UnitType = UnitType::select($row['unit_type_id']);
+			$unitOld->Company = Company::select($row['company_id']);
 
 			/*Query 2 Update unit*/
 			$sql = "
@@ -322,10 +332,10 @@ class Unit implements IQuery {
 			$query->bindParam(':unit_imei', $unitNew->Imei, PDO::PARAM_INT);
 			$query->bindParam(':unit_dt_created', $unitNew->DtCreated, PDO::PARAM_STR);
 			$query->bindParam(':unit_serial_number', $unitNew->SerialNumber, PDO::PARAM_STR);
-			$query->bindParam(':sim_id', $unitNew->Sim, PDO::PARAM_INT);
-			$query->bindParam(':unit_type_id', $unitNew->UnitType, PDO::PARAM_BOOL);
-			$query->bindParam(':company_id', $unitNew->Company, PDO::PARAM_INT);
-			$query->bindParam(':e_status_unit_id', $unitNew->UnitStatus, PDO::PARAM_INT);
+			$query->bindParam(':sim_id', $unitNew->Sim->Id, PDO::PARAM_INT);
+			$query->bindParam(':unit_type_id', $unitNew->UnitType->Id, PDO::PARAM_BOOL);
+			$query->bindParam(':company_id', $unitNew->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':e_status_unit_id', $unitNew->UnitStatus->Id, PDO::PARAM_INT);
 
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
@@ -360,14 +370,14 @@ class Unit implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
 			$connection->rollBack();
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
 			$connection->rollBack();
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -397,10 +407,11 @@ class Unit implements IQuery {
 			$unit->Imei = $row['unit_imei'];
 			$unit->DtCreated = $row['unit_dt_created'];
 			$unit->SerialNumber = $row['unit_serial_number'];
-			$unit->Sim = (int) $row['sim_id'];
-			$unit->UnitType = (int) $row['unit_type_id'];
-			$unit->Company = (int) $row['company_id'];
-			$unit->UnitStatus = (int) $row['e_status_unit_id'];
+			
+			$unit->Sim = Sim::select($row['sim_id']);
+			$unit->UnitStatus = UnitStatus::select($row['e_status_unit_id']);
+			$unit->UnitType = UnitType::select($row['unit_type_id']);
+			$unit->Company = Company::select($row['company_id']);
 
 
 
@@ -439,14 +450,14 @@ class Unit implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
 			$connection->rollBack();
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
 			$connection->rollBack();
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

@@ -8,7 +8,6 @@
 
 
     <div class="modal-header">
-        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="cancel()"><span aria-hidden="true">&times;</span></button>-->
         <h3 class="modal-title">Company</h3>
     </div>
 
@@ -37,7 +36,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-2">Status</label>
                                 <div class="col-md-10">
-                                    <select class="form-control" ng-model="company.Status" ng-options="status.Value as status.Name for status in flag.Statuses" required disabled />
+                                    <select class="form-control"ng-model="company.Status" ng-options="status as status.Name for status in flag.Statuses track by status.Id" required disabled/>
                                 </div>
                             </div>
                         </fieldset>
@@ -49,31 +48,31 @@
                             <div class="form-group">
                                 <label class="control-label col-md-2">Logo</label>
                                 <div class="col-md-10">
-                                    <input type="text" class="form-control" ng-model="companyInfo.Logo" required disabled />
+                                    <input type="text" class="form-control" ng-model="companyInfo.Logo"  disabled />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-2">Alert</label>
                                 <div class="col-md-10">
-                                    <input type="number" class="form-control" ng-model="companyInfo.Alert" required disabled />
+                                    <input type="number" class="form-control" ng-model="companyInfo.Alert"  disabled />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-2">Notify</label>
                                 <div class="col-md-10">
-                                    <input type="number" class="form-control" ng-model="companyInfo.Notify" required disabled />
+                                    <input type="number" class="form-control" ng-model="companyInfo.Notify"  disabled />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-2">Theme</label>
                                 <div class="col-md-10">
-                                    <input type="number" class="form-control" ng-model="companyInfo.Theme" required disabled />
+                                    <input type="number" class="form-control" ng-model="companyInfo.Theme"  disabled />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-2">Field</label>
                                 <div class="col-md-10">
-                                    <select class="form-control" ng-model="companyInfo.Field" ng-options="field.Id as field.Name for field in flag.Fields" required />
+                                    <select class="form-control" ng-model="companyInfo.Field" ng-options="field as field.Name for field in flag.Fields track by field.Id"  />
                                 </div>
                             </div>
                         </fieldset>
@@ -84,8 +83,8 @@
     </div>
 
     <div class="modal-footer">
-        <button ng-show="form.isDisabled && authUser.Privilege < 5" class="btn btn-default" type="button" ng-click="toggle()">Edit</button>
-        <button ng-show="!form.isDisabled && authUser.Privilege < 5" class="btn btn-default" type="button" ng-click="update()">Update</button>
+        <button ng-show="form.isDisabled && authUser.Privilege.Value < 5" class="btn btn-default" type="button" ng-click="toggle()">Edit</button>
+        <button ng-show="!form.isDisabled && authUser.Privilege.Value < 5" class="btn btn-default" type="button" ng-click="update()">Update</button>
         <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
     </div>
 

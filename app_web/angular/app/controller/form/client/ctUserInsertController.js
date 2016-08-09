@@ -20,7 +20,9 @@ app.controller('ctUserInsertController', function (
     User,
     UserInfo,
     Company,
-    Sim
+    Sim,
+
+    parent
 
     ) {
 
@@ -45,7 +47,7 @@ app.controller('ctUserInsertController', function (
             return;
         }
 
-        if ($scope.authUser.Privilege > 3 && $scope.user.Privilege < 4) {
+        if ($scope.authUser.Privilege.Value > 3 && $scope.user.Privilege.Value < 4) {
             var alert = { type: 'danger', message: 'You dont have privilege to or set this account to SUPER, POWER or TECH account...' };
             $scope.ui.alert.addItem(alert);
             return;
@@ -56,18 +58,18 @@ app.controller('ctUserInsertController', function (
 
         User.save(
             $scope.user,
-            function (result) {
+            function (user) {
                 //Success
                 var alert = { type: 'success', message: '1 user has been added successfully.' };
                 $scope.ui.alert.addItem(alert);
-                $scope.userInfo.User = result.Id;
+                $scope.userInfo.User = user;
                 UserInfo.save(
                     $scope.userInfo,
                     function (result) {
                         //Success
                         var alert = { type: 'success', message: '1 userinfo has been added successfully.' };
                         $scope.ui.alert.addItem(alert);
-                        $scope.flag.load('users');
+                        parent.load();
                         $scope.ui.isLoading = false;
                     },
                     function (result) {
@@ -97,7 +99,6 @@ app.controller('ctUserInsertController', function (
     $scope.init = function () {
         $scope.flag = flagFactory;
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
         $scope.ui = uiFactory;
 
         $scope.ui.dateTimePicker.isOpen = [
@@ -118,11 +119,7 @@ app.controller('ctUserInsertController', function (
         $scope.user.DtExpired = $filter('date')(new Date(), 'yyyy-MM-dd');
 
         $scope.companies = Company.query();
-        $scope.sims = Sim.getByCompany({company : $scope.authCompany.Id });
-    };
-
-    $scope.clearSim = function () {
-        $scope.user.Sim = null;
+        $scope.sims = Sim.getByCompany({company : $scope.authUser.Company.Id });
     };
 
     $scope.cancel = function () {

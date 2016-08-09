@@ -6,518 +6,1483 @@ Flight::route('OPTIONS /*', function() {
 	Flight::preFlight();
 }, true);
 
-
+//=============================================================================
 //AppClient
-Flight::route('GET /v1/main/appclient', array('AppClient', 'selectAll'));
+//=============================================================================
+Flight::route('GET /v1/main/appclient', function() {
+	try {
+		$array = AppClient::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('GET /v1/main/appclient/@id', array('AppClient', 'select'));
+Flight::route('GET /v1/main/appclient/@id', function($id) {
+	try {
+		$object = AppClient::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/appclient', array('AppClient', 'insert'));
+Flight::route('POST /v1/main/appclient', function() {
+	try {
+		$object = AppClient::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/appclient/@id', array('AppClient', 'update'));
+Flight::route('PUT /v1/main/appclient/@id', function($id) {
+	try {
+		$object = AppClient::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/appclient/@id', array('AppClient', 'delete'));
-
+Flight::route('DELETE /v1/main/appclient/@id', function($id) {
+	try {
+		$object = AppClient::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //AppDatabase
-Flight::route('GET /v1/main/appdatabase', array('AppDatabase', 'selectAll'));
+//=============================================================================
+Flight::route('GET /v1/main/appdatabase', function() {
+	try {
+		$array = AppDatabase::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('GET /v1/main/appdatabase/@id', array('AppDatabase', 'select'));
+Flight::route('GET /v1/main/appdatabase/@id', function($id) {
+	try {
+		$object = AppDatabase::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/appdatabase', array('AppDatabase', 'insert'));
+Flight::route('POST /v1/main/appdatabase', function() {
+	try {
+		$object = AppDatabase::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/appdatabase/@id', array('AppDatabase', 'update'));
+Flight::route('PUT /v1/main/appdatabase/@id', function($id) {
+	try {
+		$object = AppDatabase::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/appdatabase/@id', array('AppDatabase', 'delete'));
-
+Flight::route('DELETE /v1/main/appdatabase/@id', function($id) {
+	try {
+		$object = AppDatabase::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //AppInfo
-Flight::route('GET /v1/main/appinfo', array('AppInfo', 'selectAll'));
+//=============================================================================
+Flight::route('GET /v1/main/appinfo', function() {
+	try {
+		$array = AppInfo::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('GET /v1/main/appinfo/@id', array('AppInfo', 'select'));
+Flight::route('GET /v1/main/appinfo/@id', function($id) {
+	try {
+		$object = AppInfo::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/appinfo', array('AppInfo', 'insert'));
+Flight::route('POST /v1/main/appinfo', function() {
+	try {
+		$object = AppInfo::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/appinfo/@id', array('AppInfo', 'update'));
+Flight::route('PUT /v1/main/appinfo/@id', function($id) {
+	try {
+		$object = AppInfo::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/appinfo/@id', array('AppInfo', 'delete'));
-
-
+Flight::route('DELETE /v1/main/appinfo/@id', function($id) {
+	try {
+		$object = AppInfo::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //AppLog
-Flight::route('GET /v1/main/applog', array('AppLog', 'selectAll'));
+//=============================================================================
+Flight::route('GET /v1/main/applog', function() {
+	try {
+		$array = AppLog::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('GET /v1/main/applog/@id', array('AppLog', 'select'));
+Flight::route('GET /v1/main/applog/@id', function($id) {
+	try {
+		$object = AppLog::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/applog', array('AppLog', 'insert'));
+Flight::route('POST /v1/main/applog', function() {
+	try {
+		$object = AppLog::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/applog/@id', array('AppLog', 'update'));
+Flight::route('PUT /v1/main/applog/@id', function($id) {
+	try {
+		$object = AppLog::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/applog/@id', array('AppLog', 'delete'));
-
-
+Flight::route('DELETE /v1/main/applog/@id', function($id) {
+	try {
+		$object = AppLog::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //AppNote
-Flight::route('GET /v1/main/appnote', array('AppNote', 'selectAll'));
+//=============================================================================
+Flight::route('GET /v1/main/appnote', function() {
+	try {
+		$array = AppNote::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('GET /v1/main/appnote/@id', array('AppNote', 'select'));
+Flight::route('GET /v1/main/appnote/@id', function($id) {
+	try {
+		$object = AppNote::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/appnote', array('AppNote', 'insert'));
+Flight::route('POST /v1/main/appnote', function() {
+	try {
+		$object = AppNote::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/appnote/@id', array('AppNote', 'update'));
+Flight::route('PUT /v1/main/appnote/@id', function($id) {
+	try {
+		$object = AppNote::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/appnote/@id', array('AppNote', 'delete'));
-
-
-//=========================================================================
-
-
+Flight::route('DELETE /v1/main/appnote/@id', function($id) {
+	try {
+		$object = AppNote::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //Address
-Flight::route('GET /v1/main/address', array('Address', 'selectAll'));
+//=============================================================================
+Flight::route('GET /v1/main/address', function() {
+	try {
+		$array = Address::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('GET /v1/main/address/@id', array('Address', 'select'));
+Flight::route('GET /v1/main/address/@id', function($id) {
+	try {
+		$object = Address::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/address', array('Address', 'insert'));
+Flight::route('POST /v1/main/address', function() {
+	try {
+		$object = Address::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/address/@id', array('Address', 'update'));
+Flight::route('PUT /v1/main/address/@id', function($id) {
+	try {
+		$object = Address::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/address/@id', array('Address', 'delete'));
-
+Flight::route('DELETE /v1/main/address/@id', function($id) {
+	try {
+		$object = Address::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //Collection
+//=============================================================================
 Flight::route('GET /v1/main/collection', function() {
 	$company = Flight::request()->query->company;
-	if ($company) {
-		Collection::selectByCompany($company);
-	} else {
-		Collection::selectAll();
+
+	try {
+		if ($company) {
+			$array = Collection::selectByCompany($company);
+		} else {
+			$array = Collection::selectAll();
+		}
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
 	}
 });
 
+Flight::route('GET /v1/main/collection/@id', function($id) {
+	try {
+		$object = Collection::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('GET /v1/main/collection/@id', array('Collection', 'select'));
+Flight::route('POST /v1/main/collection', function() {
+	try {
+		$object = Collection::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/collection', array('Collection', 'insert'));
+Flight::route('PUT /v1/main/collection/@id', function($id) {
+	try {
+		$object = Collection::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/collection/@id', array('Collection', 'update'));
-
-Flight::route('DELETE /v1/main/collection/@id', array('Collection', 'delete'));
-
+Flight::route('DELETE /v1/main/collection/@id', function($id) {
+	try {
+		$object = Collection::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //Company
-Flight::route('GET /v1/main/company', array('Company', 'selectAll'));
+//=============================================================================
+Flight::route('GET /v1/main/company', function() {
+	try {
+		$array = Company::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('GET /v1/main/company/@id', array('Company', 'select'));
+Flight::route('GET /v1/main/company/@id', function($id) {
+	try {
+		$object = Company::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/company', array('Company', 'insert'));
+Flight::route('POST /v1/main/company', function() {
+	try {
+		$object = Company::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/company/@id', array('Company', 'update'));
+Flight::route('PUT /v1/main/company/@id', function($id) {
+	try {
+		$object = Company::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/company/@id', array('Company', 'delete'));
+Flight::route('DELETE /v1/main/company/@id', function($id) {
+	try {
+		$object = Company::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
+//=============================================================================
 //CompanyInfo
+//=============================================================================
 Flight::route('GET /v1/main/companyinfo', function() {
 	$company = Flight::request()->query->company;
-
-	if ($company) {
-		CompanyInfo::selectByCompany($company);
-	} else {
-		CompanyInfo::selectAll();
+	try {
+		if ($company) {
+			$object = CompanyInfo::selectByCompany($company);
+		} else {
+			$object = CompanyInfo::selectAll();
+		}
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
 	}
 });
 
-Flight::route('GET /v1/main/companyinfo/@id', array('CompanyInfo', 'select'));
+Flight::route('GET /v1/main/companyinfo/@id', function($id) {
+	try {
+		$object = CompanyInfo::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/companyinfo', array('CompanyInfo', 'insert'));
+Flight::route('POST /v1/main/companyinfo', function() {
+	try {
+		$object = CompanyInfo::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/companyinfo/@id', array('CompanyInfo', 'update'));
+Flight::route('PUT /v1/main/companyinfo/@id', function($id) {
+	try {
+		$object = CompanyInfo::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/companyinfo/@id', array('CompanyInfo', 'delete'));
-
-
+Flight::route('DELETE /v1/main/companyinfo/@id', function($id) {
+	try {
+		$object = CompanyInfo::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //Driver
+//=============================================================================
 Flight::route('GET /v1/main/driver', function() {
 	$company = Flight::request()->query->company;
-	if ($company) {
-		Driver::selectByCompany($company);
-	} else {
-		Driver::selectAll();
+	try {
+		if ($company) {
+			$array = Driver::selectByCompany($company);
+		} else {
+			$array = Driver::selectAll();
+		}
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
 	}
 });
 
-Flight::route('GET /v1/main/driver/@id', array('Driver', 'select'));
+Flight::route('GET /v1/main/driver/@id', function($id) {
+	try {
+		$object = Driver::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/driver', array('Driver', 'insert'));
+Flight::route('POST /v1/main/driver', function() {
+	try {
+		$object = Driver::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/driver/@id', array('Driver', 'update'));
+Flight::route('PUT /v1/main/driver/@id', function($id) {
+	try {
+		$object = Driver::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/driver/@id', array('Driver', 'delete'));
-
+Flight::route('DELETE /v1/main/driver/@id', function($id) {
+	try {
+		$object = Driver::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //Field
-Flight::route('GET /v1/main/field', array('Field', 'selectAll'));
+//=============================================================================
+Flight::route('GET /v1/main/field', function() {
+	try {
+		$array = Field::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('GET /v1/main/field/@id', array('Field', 'select'));
+Flight::route('GET /v1/main/field/@id', function($id) {
+	try {
+		$object = Field::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/field', array('Field', 'insert'));
+Flight::route('POST /v1/main/field', function() {
+	try {
+		$object = Field::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/field/@id', array('Field', 'update'));
+Flight::route('PUT /v1/main/field/@id', function($id) {
+	try {
+		$object = Field::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/field/@id', array('Field', 'delete'));
-
+Flight::route('DELETE /v1/main/field/@id', function($id) {
+	try {
+		$object = Field::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //Geofence
-Flight::route('GET /v1/main/geofence', array('Geofence', 'selectAll'));
+//=============================================================================
+Flight::route('GET /v1/main/geofence', function() {
+	try {
+		$array = Geofence::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('GET /v1/main/geofence/@id', array('Geofence', 'select'));
+Flight::route('GET /v1/main/geofence/@id', function($id) {
+	try {
+		$object = Geofence::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/geofence', array('Geofence', 'insert'));
+Flight::route('POST /v1/main/geofence', function() {
+	try {
+		$object = Geofence::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/geofence/@id', array('Geofence', 'update'));
+Flight::route('PUT /v1/main/geofence/@id', function($id) {
+	try {
+		$object = Geofence::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/geofence/@id', array('Geofence', 'delete'));
-
+Flight::route('DELETE /v1/main/geofence/@id', function($id) {
+	try {
+		$object = Geofence::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //Nation
-Flight::route('GET /v1/main/nation', array('Nation', 'selectAll'));
+//=============================================================================
+Flight::route('GET /v1/main/nation', function() {
+	try {
+		$array = Nation::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('GET /v1/main/nation/@id', array('Nation', 'select'));
+Flight::route('GET /v1/main/nation/@id', function($id) {
+	try {
+		$object = Nation::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/nation', array('Nation', 'insert'));
+Flight::route('POST /v1/main/nation', function() {
+	try {
+		$object = Nation::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/nation/@id', array('Nation', 'update'));
+Flight::route('PUT /v1/main/nation/@id', function($id) {
+	try {
+		$object = Nation::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/nation/@id', array('Nation', 'delete'));
-
+Flight::route('DELETE /v1/main/nation/@id', function($id) {
+	try {
+		$object = Nation::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //Poi
-Flight::route('GET /v1/main/poi', array('Poi', 'selectAll'));
+//=============================================================================
+Flight::route('GET /v1/main/poi', function() {
+	try {
+		$array = Poi::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('GET /v1/main/poi/@id', array('Poi', 'select'));
+Flight::route('GET /v1/main/poi/@id', function($id) {
+	try {
+		$object = Poi::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/poi', array('Poi', 'insert'));
+Flight::route('POST /v1/main/poi', function() {
+	try {
+		$object = Poi::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/poi/@id', array('Poi', 'update'));
-
-Flight::route('DELETE /v1/main/poi/@id', array('Poi', 'delete'));
-
-
+Flight::route('PUT /v1/main/poi/@id', function($id) {
+	try {
+		$object = Poi::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+Flight::route('DELETE /v1/main/poi/@id', function($id) {
+	try {
+		$object = Poi::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //Privilege
-Flight::route('GET /v1/main/privilege', array('Privilege', 'selectAll'));
+//=============================================================================
+Flight::route('GET /v1/main/privilege', function() {
+	try {
+		$array = Privilege::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('GET /v1/main/privilege/@id', array('Privilege', 'select'));
+Flight::route('GET /v1/main/privilege/@id', function($id) {
+	try {
+		$object = Privilege::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/privilege', array('Privilege', 'insert'));
+Flight::route('POST /v1/main/privilege', function() {
+	try {
+		$object = Privilege::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/privilege/@id', array('Privilege', 'update'));
+Flight::route('PUT /v1/main/privilege/@id', function($id) {
+	try {
+		$object = Privilege::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/privilege/@id', array('Privilege', 'delete'));
-
+Flight::route('DELETE /v1/main/privilege/@id', function($id) {
+	try {
+		$object = Privilege::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //Route
-Flight::route('GET /v1/main/route', array('Route', 'selectAll'));
-
-Flight::route('GET /v1/main/route/@id', array('Route', 'select'));
-
-Flight::route('POST /v1/main/route', array('Route', 'insert'));
-
-Flight::route('PUT /v1/main/route/@id', array('Route', 'update'));
-
-Flight::route('DELETE /v1/main/route/@id', array('Route', 'delete'));
-
-//SimVendor
-Flight::route('GET /v1/main/simvendor', array('SimVendor', 'selectAll'));
-
-Flight::route('GET /v1/main/simvendor/@id', array('SimVendor', 'select'));
-
-Flight::route('POST /v1/main/simvendor', array('SimVendor', 'insert'));
-
-Flight::route('PUT /v1/main/simvendor/@id', array('SimVendor', 'update'));
-
-Flight::route('DELETE /v1/main/simvendor/@id', array('SimVendor', 'delete'));
-
-
-//Status
-Flight::route('GET /v1/main/status', array('Status', 'selectAll'));
-
-Flight::route('GET /v1/main/status/@id', array('Status', 'select'));
-
-Flight::route('POST /v1/main/status', array('Status', 'insert'));
-
-Flight::route('PUT /v1/main/status/@id', array('Status', 'update'));
-
-Flight::route('DELETE /v1/main/status/@id', array('Status', 'delete'));
-
-//UnitStatus
-Flight::route('GET /v1/main/unitstatus', array('UnitStatus', 'selectAll'));
-
-Flight::route('GET /v1/main/unitstatus/@id', array('UnitStatus', 'select'));
-
-Flight::route('POST /v1/main/unitstatus', array('UnitStatus', 'insert'));
-
-Flight::route('PUT /v1/main/unitstatus/@id', array('UnitStatus', 'update'));
-
-Flight::route('DELETE /v1/main/unitstatus/@id', array('UnitStatus', 'delete'));
-
-//Unit
-Flight::route('GET /v1/main/unit', function() {
-	$company = Flight::request()->query->company;
-	if ($company) {
-		Unit::selectByCompany($company);
-	} else {
-		Unit::selectAll();
+//=============================================================================
+Flight::route('GET /v1/main/route', function() {
+	try {
+		$array = Route::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
 	}
 });
 
-Flight::route('GET /v1/main/unit/@id', array('Unit', 'select'));
-
-Flight::route('POST /v1/main/unit', array('Unit', 'insert'));
-
-Flight::route('PUT /v1/main/unit/@id', array('Unit', 'update'));
-
-Flight::route('DELETE /v1/main/unit/@id', array('Unit', 'delete'));
-
-
-
-//UnitType
-Flight::route('GET /v1/main/unittype', array('UnitType', 'selectAll'));
-
-Flight::route('GET /v1/main/unittype/@id', array('UnitType', 'select'));
-
-Flight::route('POST /v1/main/unittype', array('UnitType', 'insert'));
-
-Flight::route('PUT /v1/main/unittype/@id', array('UnitType', 'update'));
-
-Flight::route('DELETE /v1/main/unittype/@id', array('UnitType', 'delete'));
-
-
-//TrackeeType
-Flight::route('GET /v1/main/trackeetype', array('TrackeeType', 'selectAll'));
-
-Flight::route('GET /v1/main/trackeetype/@id', array('TrackeeType', 'select'));
-
-Flight::route('POST /v1/main/trackeetype', array('TrackeeType', 'insert'));
-
-Flight::route('PUT /v1/main/trackeetype/@id', array('TrackeeType', 'update'));
-
-Flight::route('DELETE /v1/main/trackeetype/@id', array('TrackeeType', 'delete'));
-
-//User
-Flight::route('GET /v1/main/user',function() {
-	$company = Flight::request()->query->company;
-	if ($company) {
-		User::selectByCompany($company);
-	} else {
-		User::selectAll();
+Flight::route('GET /v1/main/route/@id', function($id) {
+	try {
+		$object = Route::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
 	}
 });
 
-Flight::route('GET /v1/main/user/@id', array('User', 'select'));
-
-Flight::route('POST /v1/main/user', array('User', 'insert'));
-
-Flight::route('PUT /v1/main/user/@id', array('User', 'update'));
-
-Flight::route('PUT /v1/main/user/@id/credential', array('User', 'updateCredential'));
-
-Flight::route('DELETE /v1/main/user/@id', array('User', 'delete'));
-
-//UserInfo
-Flight::route('GET /v1/main/userinfo', function() {
-	$user = Flight::request()->query->user;
-	if ($user) {
-		UserInfo::selectByUser($user);
-	} else {
-		UserInfo::selectAll();
+Flight::route('POST /v1/main/route', function() {
+	try {
+		$object = Route::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
 	}
 });
 
-Flight::route('GET /v1/main/userinfo/@id', array('UserInfo', 'select'));
+Flight::route('PUT /v1/main/route/@id', function($id) {
+	try {
+		$object = Route::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/userinfo', array('UserInfo', 'insert'));
-
-Flight::route('PUT /v1/main/userinfo/@id', array('UserInfo', 'update'));
-
-Flight::route('DELETE /v1/main/userinfo/@id', array('UserInfo', 'delete'));
-
-
+Flight::route('DELETE /v1/main/route/@id', function($id) {
+	try {
+		$object = Route::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //Sim
+//=============================================================================
 Flight::route('GET /v1/main/sim', function() {
 	$company = Flight::request()->query->company;
-	if ($company) {
-		Flight::ok(Sim::selectByCompany($company));
-	} else {
-		Flight::ok(Sim::selectAll());
+	try {
+		if ($company) {
+			$array = Sim::selectByCompany($company);
+		} else {
+			$array = Sim::selectAll();
+		}
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
 	}
 });
 
-Flight::route('GET /v1/main/sim/@id', array('Sim', 'select'));
+Flight::route('GET /v1/main/sim/@id', function($id) {
+	try {
+		$object = Sim::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/sim', array('Sim', 'insert'));
+Flight::route('POST /v1/main/sim', function() {
+	try {
+		$object = Sim::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/sim/@id', array('Sim', 'update'));
+Flight::route('PUT /v1/main/sim/@id', function($id) {
+	try {
+		$object = Sim::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/sim/@id', array('Sim', 'delete'));
+
+Flight::route('DELETE /v1/main/sim/@id', function($id) {
+	try {
+		$object = Sim::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
+//SimVendor
+//=============================================================================
+Flight::route('GET /v1/main/simvendor', function() {
+	try {
+		$array = SimVendor::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('GET /v1/main/simvendor/@id', function($id) {
+	try {
+		$object = SimVendor::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('POST /v1/main/simvendor', function() {
+	try {
+		$object = SimVendor::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('PUT /v1/main/simvendor/@id', function($id) {
+	try {
+		$object = SimVendor::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
 
+Flight::route('DELETE /v1/main/simvendor/@id', function($id) {
+	try {
+		$object = SimVendor::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
+//Status
+//=============================================================================
+Flight::route('GET /v1/main/status', function() {
+	try {
+		$array = Status::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('GET /v1/main/status/@id', function($id) {
+	try {
+		$object = Status::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('POST /v1/main/status', function() {
+	try {
+		$object = Status::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('PUT /v1/main/status/@id', function($id) {
+	try {
+		$object = Status::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('DELETE /v1/main/status/@id', function($id) {
+	try {
+		$object = Status::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
+//Unit
+//=============================================================================
+Flight::route('GET /v1/main/unit', function() {
+	$company = Flight::request()->query->company;
+	try {
+		if ($company) {
+			$array = Unit::selectByCompany($company);
+		} else {
+			$array = Unit::selectAll();
+		}
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('GET /v1/main/unit/@id', function($id) {
+	try {
+		$object = Unit::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('POST /v1/main/unit', function() {
+	try {
+		$object = Unit::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('PUT /v1/main/unit/@id', function($id) {
+	try {
+		$object = Unit::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('DELETE /v1/main/unit/@id', function($id) {
+	try {
+		$object = Unit::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
+//UnitType
+//=============================================================================
+Flight::route('GET /v1/main/unittype', function() {
+	try {
+		$array = UnitType::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('GET /v1/main/unittype/@id', function($id) {
+	try {
+		$object = UnitType::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('POST /v1/main/unittype', function() {
+	try {
+		$object = UnitType::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('PUT /v1/main/unittype/@id', function($id) {
+	try {
+		$object = UnitType::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('DELETE /v1/main/unittype/@id', function($id) {
+	try {
+		$object = UnitType::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
+//UnitStatus
+//=============================================================================
+Flight::route('GET /v1/main/unitstatus', function() {
+	try {
+		$array = UnitStatus::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('GET /v1/main/unitstatus/@id', function($id) {
+	try {
+		$object = UnitStatus::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+
+Flight::route('POST /v1/main/unitstatus', function() {
+	try {
+		$object = UnitStatus::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+
+Flight::route('PUT /v1/main/unitstatus/@id', function($id) {
+	try {
+		$object = UnitStatus::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('DELETE /v1/main/unitstatus/@id', function($id) {
+	try {
+		$object = UnitStatus::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
+//TrackeeType
+//=============================================================================
+Flight::route('GET /v1/main/trackeetype', function() {
+	try {
+		$array = TrackeeType::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('GET /v1/main/trackeetype/@id', function($id) {
+	try {
+		$object = TrackeeType::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('POST /v1/main/trackeetype',function() {
+	try {
+		$object = TrackeeType::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('PUT /v1/main/trackeetype/@id', function($id) {
+	try {
+		$object = TrackeeType::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('DELETE /v1/main/trackeetype/@id', function($id) {
+	try {
+		$object = TrackeeType::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
+//User
+//=============================================================================
+Flight::route('GET /v1/main/user',function() {
+	$company = Flight::request()->query->company;
+	try {
+		if ($company) {
+			$array = User::selectByCompany($company);
+		} else {
+			$array = User::selectAll();
+		}
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('GET /v1/main/user/@id', function($id) {
+	try {
+		$object = User::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('POST /v1/main/user', function() {
+	try {
+		$object = User::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('PUT /v1/main/user/@id', function($id) {
+	try {
+		$object = User::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('PUT /v1/main/user/@id/credential', function($id) {
+	try {
+		$object = User::updateCredential($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('DELETE /v1/main/user/@id', function($id) {
+	try {
+		$object = User::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
+//UserInfo
+//=============================================================================
+Flight::route('GET /v1/main/userinfo', function() {
+	$user = Flight::request()->query->user;
+	try {
+		if ($user) {
+			$object = UserInfo::selectByUser($user);
+		} else {
+			$object = UserInfo::selectAll();
+		}
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+Flight::route('GET /v1/main/userinfo/@id', function($id) {
+	try {
+		$object = UserInfo::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('POST /v1/main/userinfo', function() {
+	try {
+		$object = UserInfo::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('PUT /v1/main/userinfo/@id', function($id) {
+	try {
+		$object = UserInfo::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('DELETE /v1/main/userinfo/@id', function($id) {
+	try {
+		$object = UserInfo::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+//=============================================================================
+//UserOnline
+//=============================================================================
+Flight::route('GET /v1/main/useronline', function() {
+	try {
+		$array = UserOnline::selectAll();
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('GET /v1/main/useronline/@id', function($id) {
+	try {
+		$object = UserOnline::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+
+Flight::route('POST /v1/main/useronline', function() {
+	try {
+		$object = UserOnline::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('PUT /v1/main/useronline/@id', function($id) {
+	try {
+		$object = UserOnline::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('DELETE /v1/main/useronline/@id', function($id) {
+	try {
+		$object = UserOnline::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //Vehicle
+//=============================================================================
 Flight::route('GET /v1/main/vehicle', function() {
 	$company = Flight::request()->query->company;
-	if ($company) {
-		Vehicle::selectByCompany($company);
-	} else {
-		Vehicle::selectAll();
+	try {
+		if ($company) {
+			$array = Vehicle::selectByCompany($company);
+		} else {
+			$array = Vehicle::selectAll();
+		}
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
 	}
 });
 
-Flight::route('GET /v1/main/vehicle/@id', array('Vehicle', 'select'));
+Flight::route('GET /v1/main/vehicle/@id', function($id) {
+	try {
+		$object = Vehicle::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/vehicle', array('Vehicle', 'insert'));
+Flight::route('POST /v1/main/vehicle', function() {
+	try {
+		$object = Vehicle::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/vehicle/@id', array('Vehicle', 'update'));
+Flight::route('PUT /v1/main/vehicle/@id', function($id) {
+	try {
+		$object = Vehicle::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('DELETE /v1/main/vehicle/@id', array('Vehicle', 'delete'));
-
+Flight::route('DELETE /v1/main/vehicle/@id', function($id) {
+	try {
+		$object = Vehicle::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
 //VehicleCollection
+//=============================================================================
 Flight::route('GET /v1/main/vehiclecollection', function() {
 	$collection = Flight::request()->query->collection;
-	if ($collection) {
-		VehicleCollection::selectByCollection($collection);
-	} else {
-		VehicleCollection::selectAll();
+	try {
+		if ($collection) {
+			$array = VehicleCollection::selectByCollection($collection);
+		} else {
+			$array = VehicleCollection::selectAll();
+		}
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
 	}
 });
 
-Flight::route('GET /v1/main/vehiclecollection/@id', array('VehicleCollection', 'select'));
+Flight::route('GET /v1/main/vehiclecollection/@id', function($id) {
+	try {
+		$object = VehicleCollection::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/vehiclecollection', array('VehicleCollection', 'insert'));
+Flight::route('POST /v1/main/vehiclecollection', function() {
+	try {
+		$object = VehicleCollection::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/vehiclecollection/@id', array('VehicleCollection', 'update'));
 
-Flight::route('DELETE /v1/main/vehiclecollection/@id', array('VehicleCollection', 'delete'));
+Flight::route('PUT /v1/main/vehiclecollection/@id', function($id) {
+	try {
+		$object = VehicleCollection::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('DELETE /v1/main/vehiclecollection/@id', function($id) {
+	try {
+		$object = VehicleCollection::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
 Flight::route('DELETE /v1/main/vehiclecollection', function() {
 	$collection = Flight::request()->query->collection;
-	if ($collection) {
-		VehicleCollection::deleteByCollection($collection);
+	try {
+		if ($collection) {
+			$object = VehicleCollection::deleteByCollection($collection);
+		}else {
+			Flight::error(new Exception("Collection is not set."));
+		}
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
+//Session
+//=============================================================================
+Flight::route('POST /v1/session/login', function() {
+	try {
+		$object = Session::login();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+Flight::route('POST /v1/session/logout',function() {
+	try {
+		$object = Session::logout();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
 	}
 });
 
 
+//=============================================================================
+//UnitData
+//=============================================================================
+Flight::route('GET /v1/data/unitdata/@id', function($id) {
+	try {
+		$object = UnitData::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=============================================================================
+//Poi
+//=============================================================================
+Flight::route('GET /v1/main/poi', function() {
+	$company = Flight::request()->query->company;
+	try {
+		if ($company) {
+			$array = Poi::selectByCompany($company);
+		} else {
+			$array = Poi::selectAll();
+		}
+		Flight::ok($array);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-//UserOnline
-Flight::route('GET /v1/main/useronline', array('UserOnline', 'selectAll'));
+Flight::route('GET /v1/main/poi/@id', function($id) {
+	try {
+		$object = Poi::select($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('GET /v1/main/useronline/@id', array('UserOnline', 'select'));
+Flight::route('POST /v1/main/poi', function() {
+	try {
+		$object = Poi::insert();
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('POST /v1/main/useronline', array('UserOnline', 'insert'));
+Flight::route('PUT /v1/main/poi/@id', function($id) {
+	try {
+		$object = Poi::update($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 
-Flight::route('PUT /v1/main/useronline/@id', array('UserOnline', 'update'));
-
-Flight::route('DELETE /v1/main/useronline/@id', array('UserOnline', 'delete'));
-
-
-
+Flight::route('DELETE /v1/main/poi/@id', function($id) {
+	try {
+		$object = Poi::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
 //=========================================================================
-
-Flight::route('POST /v1/session/login', array('Session', 'login'));
-
-Flight::route('POST /v1/session/logout', array('Session', 'logout'));
-
-
-//=========================================================================
-
-// 	try {
-// 		$url = new Url();
-// 		$url->Version = $version;
-// 		$url->Category = $category;
-// 		$url->Class = $class;
-// 		$url->Id = $id;
-
-// 		$request = Flight::request();
-
-// 		//Checking content-type 
-// 		// if ($request->type != 'application/json'){
-// 		// 	Flight::notFound("The content-type not found.");
-// 		// 	return;
-// 		// }
-
-// 		//Checking if api_key is valid
-// 		// $key = $request->query->api_key;
-// 		// $keys = Flight::get('api_key');
-// 		// if (!isset($keys[$key])){
-// 		// 	Flight::notAuthorized("Unauthorized api key.");
-// 		// 	return;
-// 		// } 
-
-// 		//Checking version, category, class, format if empty
-// 		if (empty($url->Version)) {
-// 			Flight::notFound("Parameter api version not found.");
-// 			return;
-// 		}
-// 		if (empty($url->Category)) {
-// 			Flight::notFound("Parameter api category not found.");
-// 			return;
-// 		}
-// 		if (empty($url->Class)) {
-// 			Flight::notFound("Parameter api class not found.");
-// 			return;
-// 		}
-
-// 		//Checking version if correct
-// 		if ($url->Version != Flight::get('api_version')){
-// 			Flight::notFound("Api version not found.");
-// 			return;
-// 		}
-
-// 		//Checking category if exist
-// 		switch ($url->Category) {
-// 			//=======================================Main
-// 			case 'main':
-// 			Flight::process($url);
-// 			break;
-
-// 			//=======================================Data
-// 			case 'data':
-// 			Flight::process($url);
-// 			break;
-
-// 			//=======================================Session
-// 			case 'session':
-// 			$result = Flight::process($url);
-// 			break;
-
-// 			default:
-// 			Flight::notFound("Category not found.");
-// 		}
-
-// 	} catch (Exception $exception) {
-// 		Flight::badRequest($exception->getMessage());
-// 	}
-// });
-
-
-// Flight::map('process', function($url) {
-// 	$request = Flight::request();
-// 	switch ($request->method) {
-
-// 		case 'GET':
-// 		method_get($url, $_GET);
-
-// 		case 'POST':
-// 		$post = json_decode(file_get_contents("php://input"), true);
-// 		method_post($url, $post);
-
-// 		case 'PUT':
-// 		$put = json_decode(file_get_contents("php://input"), true);
-// 		method_put($url, $put);
-
-// 		case 'DELETE':
-// 		$delete = json_decode(file_get_contents("php://input"), true);
-// 		method_delete($url, $delete);
-
-// 		case 'OPTIONS':
-// 		$options = json_decode(file_get_contents("php://input"), true);
-// 		method_options($url, $options);
-
-// 		case 'PATCH':
-// 		$patch = json_decode(file_get_contents("php://input"), true);
-// 		method_patch($url, $patch);
-
-// 		default: 
-// 		Flight::notFound("Http verbs not recognized.");
-// 	}
-// });
-
 Flight::set('flight.log_errors', true);
 Flight::set('flight.handle_errors', true);
 

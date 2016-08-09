@@ -19,7 +19,6 @@ app.controller('ctDriversController', function (
     $scope.init = function () {
         $scope.flag = flagFactory;
         $scope.authUser = authFactory.getUser(); 
-        $scope.authCompany = authFactory.getCompany();
         $scope.ui = uiFactory;
 
         $scope.load();
@@ -27,8 +26,8 @@ app.controller('ctDriversController', function (
 
     $scope.load = function () {
         $scope.companies = Company.query();
-        $scope.drivers = Driver.getByCompany({ company: $scope.authCompany.Id });
-        console.log($scope.drivers);
+        $scope.drivers = Driver.getByCompany({ company: $scope.authUser.Company.Id });
+        //console.log($scope.drivers);
     };
 
     $scope.select = function (driver) {
@@ -71,12 +70,6 @@ app.controller('ctDriversController', function (
             }
         });
     };
-
-    $scope.clear = function () {
-        $scope.selected = "";
-    };
-
-
 
     $scope.cancel = function () {
         $uibModalInstance.close();

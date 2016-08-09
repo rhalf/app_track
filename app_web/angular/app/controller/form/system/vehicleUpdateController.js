@@ -64,7 +64,6 @@ app.controller('vehicleUpdateController', function (
 
         $scope.flag = flagFactory;
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
         $scope.ui.dateTimePicker.isOpen = [
@@ -79,8 +78,8 @@ app.controller('vehicleUpdateController', function (
 
         $scope.vehicle = vehicle;
         $scope.companies = Company.query();
-        $scope.units = Unit.getByCompany({ company: $scope.authCompany.Id });
-        $scope.drivers = Driver.getByCompany({ company: $scope.authCompany.Id });
+        $scope.units = Unit.getByCompany({ company: $scope.authUser.Company.Id });
+        $scope.drivers = Driver.getByCompany({ company: $scope.authUser.Company.Id });
 
     };
 

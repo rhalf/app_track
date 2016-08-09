@@ -58,7 +58,6 @@ app.controller('unitInsertController', function (
         $scope.flag = flagFactory;
        
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
 
@@ -66,7 +65,7 @@ app.controller('unitInsertController', function (
 
         $scope.unit = new Unit();
         $scope.companies = Company.query();
-        $scope.sims = Sim.getByCompany({ company: $scope.authCompany.Id });
+        $scope.sims = Sim.getByCompany({ company: $scope.authUser.Company.Id });
     }
 
 

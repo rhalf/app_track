@@ -31,24 +31,24 @@ class CompanyInfo implements IQuery {
 
 
 			foreach ($rows as $row) {	
-				$CompanyInfo = new CompanyInfo();
-				$CompanyInfo->Id = (int) $row['id'];
-				$CompanyInfo->Logo = $row['info_logo'];
-				$CompanyInfo->Alert = (int)$row['info_alert'];
-				$CompanyInfo->Notify = (int) $row['info_noti'];
-				$CompanyInfo->Theme = (int)$row['info_theme'];
-				$CompanyInfo->Field = (int)$row['e_field_id'];
-				$CompanyInfo->Company = (int)$row['company_id'];
+				$companyInfo = new CompanyInfo();
+				$companyInfo->Id = (int) $row['id'];
+				$companyInfo->Logo = $row['info_logo'];
+				$companyInfo->Alert = (int)$row['info_alert'];
+				$companyInfo->Notify = (int) $row['info_noti'];
+				$companyInfo->Theme = (int)$row['info_theme'];
+				$companyInfo->Field = Field::select($row['e_field_id']);
+				$companyInfo->Company = Company::select($row['company_id']);
 
-				array_push($result, $CompanyInfo);
+				array_push($result, $companyInfo);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -67,7 +67,7 @@ class CompanyInfo implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -79,16 +79,16 @@ class CompanyInfo implements IQuery {
 			$companyInfo->Alert = (int)$row['info_alert'];
 			$companyInfo->Notify = (int) $row['info_noti'];
 			$companyInfo->Theme = (int)$row['info_theme'];
-			$companyInfo->Field = (int)$row['e_field_id'];
-			$companyInfo->Company = (int)$row['company_id'];
+			$companyInfo->Field = Field::select($row['e_field_id']);
+			$companyInfo->Company = Company::select($row['company_id']);
 
 
-			Flight::ok($companyInfo);
+			return $companyInfo;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -105,7 +105,7 @@ class CompanyInfo implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("company_id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -117,19 +117,19 @@ class CompanyInfo implements IQuery {
 			$companyInfo->Alert = (int)$row['info_alert'];
 			$companyInfo->Notify = (int) $row['info_noti'];
 			$companyInfo->Theme = (int)$row['info_theme'];
-			$companyInfo->Field = (int)$row['e_field_id'];
-			$companyInfo->Company = (int)$row['company_id'];
+			$companyInfo->Field = Field::select($row['e_field_id']);
+			$companyInfo->Company = Company::select($row['company_id']);
 
 
-			Flight::ok($companyInfo);
+			return $companyInfo;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
-		}	
+		}
 	}
 
 	public static function insert() {
@@ -158,8 +158,8 @@ class CompanyInfo implements IQuery {
 			$query->bindParam(':info_alert', $companyInfo->Alert, PDO::PARAM_INT);
 			$query->bindParam(':info_noti', $companyInfo->Notify, PDO::PARAM_INT);
 			$query->bindParam(':info_theme', $companyInfo->Theme, PDO::PARAM_INT);
-			$query->bindParam(':e_field_id', $companyInfo->Field, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $companyInfo->Company, PDO::PARAM_INT);
+			$query->bindParam(':e_field_id', $companyInfo->Field->Id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $companyInfo->Company->Id, PDO::PARAM_INT);
 
 
 			$query->execute();
@@ -169,12 +169,12 @@ class CompanyInfo implements IQuery {
 			$result->Id = $connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -212,8 +212,8 @@ class CompanyInfo implements IQuery {
 			$query->bindParam(':info_alert', $companyInfo->Alert, PDO::PARAM_INT);
 			$query->bindParam(':info_noti', $companyInfo->Notify, PDO::PARAM_INT);
 			$query->bindParam(':info_theme', $companyInfo->Theme, PDO::PARAM_INT);
-			$query->bindParam(':e_field_id', $companyInfo->Field, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $companyInfo->Company, PDO::PARAM_INT);
+			$query->bindParam(':e_field_id', $companyInfo->Field->Id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $companyInfo->Company->Id, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
@@ -224,12 +224,12 @@ class CompanyInfo implements IQuery {
 			$result->Id = $id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -257,12 +257,12 @@ class CompanyInfo implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

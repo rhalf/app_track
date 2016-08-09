@@ -14,19 +14,20 @@ app.controller('ctUserDeleteController', function (
     uiFactory,
 
     User,
-    user
+    user,
+    parent
 
     ) {
 
     $scope.init = function () {
         $scope.flag = flagFactory;
-        $scope.authUser = authFactory.getAccessToken();
+        $scope.authUser = authFactory.getUser();
         $scope.user = user;
     }
 
     $scope.delete = function () {
         User.delete({ id: $scope.user.Id }, function (result) {
-            $scope.flag.load('users');
+            parent.load();
             $scope.cancel();
         });
     };

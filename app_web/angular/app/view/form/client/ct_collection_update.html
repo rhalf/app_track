@@ -36,7 +36,7 @@
                         <label class="control-label col-md-2">User</label>
                         <div class="col-md-10">
                             <div class="input-group">
-                                <select class="form-control" allow-clear="true" ng-model="collection.User" ng-init="collection.User = authUser.Id" ng-options="user.Id as user.Name for user in users" required />
+                                <select class="form-control" allow-clear="true" ng-model="collection.User" ng-options="user as user.Name for user in users track by user.Id" />
                                 <div class="input-group-btn">
                                     <button class="btn btn-default" ng-click="clearUser()">Clear</button>
                                 </div>
@@ -47,7 +47,7 @@
                     <div class="form-group">
                         <label class="control-label col-md-2">Company</label>
                         <div class="col-md-10">
-                            <select class="form-control" ng-model="collection.Company" ng-options="company.Id as company.Name for company in companies" disabled required />
+                            <select class="form-control" ng-model="collection.Company" ng-options="company as company.Name for company in companies track by company.Id" disabled required />
                         </div>
                     </div>
                 </fieldset>
@@ -56,8 +56,8 @@
     </div>
 
     <div class="modal-footer">
-        <button ng-show="form.isDisabled && authUser.Privilege < 5" class="btn btn-default" type="button" ng-click="toggle()">Edit</button>
-        <button ng-show="!form.isDisabled && authUser.Privilege < 5" class="btn btn-default" type="button" ng-click="update()">Update</button>
+        <button ng-show="form.isDisabled && authUser.Privilege.Value < 5" class="btn btn-default" type="button" ng-click="toggle()">Edit</button>
+        <button ng-show="!form.isDisabled && authUser.Privilege.Value < 5" class="btn btn-default" type="button" ng-click="update()">Update</button>
         <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
     </div>
 

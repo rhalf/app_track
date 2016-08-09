@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <h3 class="modal-title">Poi (Add)</h3>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+
+                <div class="noty">
+                    <uib-alert ng-repeat="alert in ui.alert.items" type="{{alert.type}}" close="closeAlert($index)" dismiss-on-timeout="{{ui.alert.timeout}}">{{alert.message}} </uib-alert>
+                </div>
+                <form class="form-horizontal" role="form">
+                    <fieldset ng-disabled="form.isDisabled">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" ng-model="poi.Name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Desc</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" ng-model="poi.Desc" required />
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Company</label>
+                            <div class="col-md-10">
+                                <select class="form-control" ng-model="poi.Company" ng-init="poi.Company = authUser.Company" ng-options="company as company.Name for company in companies track by company.Id" disabled />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Coordinate</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" ng-model="poi.Coordinate" disabled  />
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default" ng-click="alert('ji');">Select</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">IsVisible</label>
+                            <div class="col-md-10">
+                                <input type="checkbox" class="form-control" ng-model="poi.IsVisible" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">IsGlobal</label>
+                            <div class="col-md-10">
+                                <input type="checkbox" class="form-control" ng-model="poi.IsGlobal" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="add()">Add</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+
+    <style type="text/css">
+        form {
+            margin: 20px;
+        }
+    </style>
+</body>
+</html>

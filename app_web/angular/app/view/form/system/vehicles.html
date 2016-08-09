@@ -7,71 +7,79 @@
 <body>
 
     <div ng-controller="vehiclesController">
-
-        <div class="modal-header">
-            <div class="col-md-4">
-                <h3 class="modal-title">Vehicles</h3>
-            </div>
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <div class="input-group" ng-show="authUser.Privilege < 4">
-                    <select class="form-control" ng-model="selectedCompany" ng-options="company.Id as company.Name for company in companies" required />
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" ng-click="clearCompany()">Clear</button>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="modal-header">
+                    <div class="col-md-4">
+                        <h3 class="modal-title">Vehicles</h3>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" ng-model="selected" placeholder="Search" />
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" ng-click="selected = ''">
+                                    <span class="glyphicon glyphicon-remove" />
+                                </button>
+                                <button class="btn btn-default" type="button" ng-click="add()">
+                                    <span class="glyphicon glyphicon-plus" />
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+
+                <div class="modal-body">
+                    <table class="table table-responsive table-condensed table-hover small">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Plate</th>
+                                <th class="hidden-xs">DtCreated</th>
+                                <th class="hidden-xs">DtSubscribed</th>
+                                <th>Status</th>
+                                <th>Driver</th>
+                                <th class="hidden-xs">Unit</th>
+                                <th class="hidden-xs">Company</th>
+                                <th class="hidden-xs">TrackeeType</th>
+                                <th>Options</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="vehicle in vehicles | filter : selected | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 | limitTo : ui.pagination.pageSize2">
+                                <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 }}</td>
+                                <td>{{vehicle.Name}}</td>
+                                <td>{{vehicle.Plate}}</td>
+
+                                <td class="hidden-xs">{{vehicle.DtCreated | dateFilter : 'date'}}</td>
+                                <td class="hidden-xs">{{vehicle.DtSubscribed | dateFilter : 'date'}}</td>
+                                <td>{{vehicle.Status.Name}}</td>
+                                <td>{{vehicle.Driver.Name}}</td>
+                                <td class="hidden-xs">{{vehicle.Unit.Imei}}</td>
+                                <td class="hidden-xs">{{vehicle.Company.Name}}</td>
+                                <td class="hidden-xs">{{vehicle.TrackeeType.Name}}</td>
+                                <td>
+                                    <button ng-click="select(vehicle)"><span class="glyphicon glyphicon-cog" /></button>
+                                    <button ng-click="delete(vehicle)"><span class="glyphicon glyphicon-trash" /></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="modal-footer">
+                    <center>
+                        <uib-pagination boundary-links="true"
+                                        force-ellipses="true"
+                                        total-items="companies.length"
+                                        ng-model="ui.pagination.currentPage"
+                                        items-per-page="ui.pagination.pageSize2"
+                                        class="center-block">
+                        </uib-pagination>
+                    </center>
+                </div>
             </div>
-        </div>
-
-
-        <div class="modal-body">
-            <table class="table table-responsive table-hover">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Plate</th>
-                        <th>DtCreated</th>
-                        <th>DtSubscribed</th>
-                        <th>Status</th>
-                        <th>Driver</th>
-                        <th>Unit</th>
-                        <th>Company</th>
-                        <th>TrackeeType</th>
-                        <th>Options</th>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="vehicle in vehicles | filter : { Company : selectedCompany } | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 | limitTo : ui.pagination.pageSize2">
-                        <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 }}</td>
-                        <td>{{vehicle.Name}}</td>
-                        <td>{{vehicle.Plate}}</td>
-
-                        <td>{{vehicle.DtCreated | dateFilter : 'date'}}</td>
-                        <td>{{vehicle.DtSubscribed | dateFilter : 'date'}}</td>
-                        <td>{{vehicle.Status | flagByValueFilter : flag.Statuses: 'name'}}</td>
-                        <td>{{vehicle.Driver | flagByIdFilter : drivers : 'fullname' }}</td>
-                        <td>{{vehicle.Unit | flagByIdFilter : units : 'imei'}}</td>
-                        <td>{{vehicle.Company | flagByIdFilter: companies : 'name' }}</td>
-                        <td>{{vehicle.TrackeeType | flagByIdFilter : flag.TrackeeTypes : 'name' }}</td>
-                        <td>
-                            <button ng-click="select(vehicle)"><span class="glyphicon glyphicon-cog" /></button>
-                            <button ng-click="delete(vehicle)"><span class="glyphicon glyphicon-trash" /></button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <uib-pagination boundary-links="true"
-                            force-ellipses="true"
-                            total-items="vehicles.length"
-                            ng-model="ui.pagination.currentPage"
-                            items-per-page="ui.pagination.pageSize2"
-                            class="center-block">
-            </uib-pagination>
-        </div>
-
-        <div class="modal-footer">
-            <button class="btn btn-default" type="button" ng-click="add()">Add</button>
-            <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
         </div>
     </div>
 </body>

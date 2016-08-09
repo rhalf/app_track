@@ -61,7 +61,7 @@ app.controller('userUpdateController', function (
                 var alert = { type: 'success', message: '1 user has been updated.' };
                 $scope.ui.alert.addItem(alert);
                 $scope.ui.isLoading = false;
-                panel.load();
+                parent.load();
             },
             function (result) {
                 //Failed
@@ -87,7 +87,6 @@ app.controller('userUpdateController', function (
         $scope.ui = uiFactory;
        
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui.dateTimePicker.isOpen = [
         false, //dateTimePicker1

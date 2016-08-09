@@ -38,17 +38,17 @@ class CompanyAddress implements IQuery {
 				$address->Country = $row['address_country'];
 				$address->City = $row['address_city'];
 				$address->Area = $row['address_area'];
-				$address->Nation = (int)$row['e_nation_id'];
+				$address->Nation = Nation::select($row['e_nation_id']);
 
 				array_push($result, $address);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException->getMessage());
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception->getMessage());
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -65,7 +65,7 @@ class CompanyAddress implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -78,14 +78,15 @@ class CompanyAddress implements IQuery {
 			$address->Country = $row['address_country'];
 			$address->City = $row['address_city'];
 			$address->Area = $row['address_area'];
-			$address->Nation = (int)$row['e_nation_id'];
+			$address->Nation = Nation::select($row['e_nation_id']);
+			
 
-			Flight::ok($address);
+			return $address;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException->getMessage());
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception->getMessage());
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -119,7 +120,7 @@ class CompanyAddress implements IQuery {
 			$query->bindParam(':address_country', $address->Country, PDO::PARAM_STR);
 			$query->bindParam(':address_city', $address->City, PDO::PARAM_STR);
 			$query->bindParam(':address_area', $address->Area, PDO::PARAM_STR);
-			$query->bindParam(':e_nation_id', $address->Nation, PDO::PARAM_INT);
+			$query->bindParam(':e_nation_id', $address->Nation->Id, PDO::PARAM_INT);
 
 
 			$query->execute();
@@ -129,12 +130,12 @@ class CompanyAddress implements IQuery {
 			$result->Id = $connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			$result = $pdoException->getMessage();
+			throw $pdoException;
 		} catch (Exception $exception) {
-			$result = $exception->getMessage();
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -175,7 +176,7 @@ class CompanyAddress implements IQuery {
 			$query->bindParam(':address_country', $address->Country, PDO::PARAM_STR);
 			$query->bindParam(':address_city', $address->City, PDO::PARAM_STR);
 			$query->bindParam(':address_area', $address->Area, PDO::PARAM_STR);
-			$query->bindParam(':e_nation_id', $address->Nation, PDO::PARAM_INT);
+			$query->bindParam(':e_nation_id', $address->Nation->Id, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
@@ -186,12 +187,12 @@ class CompanyAddress implements IQuery {
 			$result->Id = $id;
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			$result = $pdoException->getMessage();
+			throw $pdoException;
 		} catch (Exception $exception) {
-			$result = $exception->getMessage();
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -207,7 +208,7 @@ class CompanyAddress implements IQuery {
 			WHERE
 			id = :id";
 
-		
+			
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
@@ -219,12 +220,12 @@ class CompanyAddress implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

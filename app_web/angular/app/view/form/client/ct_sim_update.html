@@ -41,19 +41,19 @@
                     <div class="form-group">
                         <label class="control-label col-md-2">SimVendor</label>
                         <div class="col-md-10">
-                            <select class="form-control" ng-model="sim.SimVendor" ng-options="simVendor.Id as simVendor.Name for simVendor in flag.SimVendors" required />
+                            <select class="form-control" ng-model="sim.SimVendor" ng-options="simVendor as simVendor.Name for simVendor in flag.SimVendors track by simVendor.Id" required />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-2">Status</label>
                         <div class="col-md-10">
-                            <select class="form-control" ng-model="sim.Status" ng-options="status.Value as status.Name for status in flag.Statuses" required />
+                            <select class="form-control" ng-model="sim.Status" ng-options="status as status.Name for status in flag.Statuses track by status.Id" required />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-2">Company</label>
                         <div class="col-md-10">
-                            <select class="form-control" ng-model="sim.Company"  ng-options="company.Id as company.Name for company in companies" required />
+                            <select class="form-control" ng-model="sim.Company"  ng-options="company as company.Name for company in companies track by company.Id" required />
                         </div>
                     </div>
                 </fieldset>

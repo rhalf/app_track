@@ -21,7 +21,7 @@ app.controller('companyInsertController', function (
     parent
     ) {
 
-  
+
 
     //Form
     $scope.form = {};
@@ -29,7 +29,7 @@ app.controller('companyInsertController', function (
         Company.save($scope.company,
             //Success
             function (result) {
-                $scope.companyInfo.Company = result.Id;
+                $scope.companyInfo.Company = { 'Id': result.Id };
 
                 CompanyInfo.save($scope.companyInfo,
                     //Success
@@ -60,9 +60,8 @@ app.controller('companyInsertController', function (
 
     $scope.init = function () {
         $scope.flag = flagFactory;
-        
+
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
 
@@ -74,7 +73,7 @@ app.controller('companyInsertController', function (
         $scope.ui.dateTimePicker.toggle = function (index) {
             $scope.ui.dateTimePicker.isOpen[index] = !$scope.ui.dateTimePicker.isOpen[index];
         };
-    
+
         $scope.ui.alert.items = [];
 
 

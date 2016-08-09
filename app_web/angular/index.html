@@ -9,18 +9,18 @@
 
 </head>
 <body ng-app="app" ng-controller="appController">
-    <div ng-view></div>
+    <div panel-loading ng-show="ui.isLoading"></div>
+    <div ng-view ng-cloak ng-show="!ui.isLoading"></div>
     <!-- ======================================================================================= -->
     <!--Jquery-->
-    <script src="Scripts/jquery-1.9.1.min.js"></script>
-
+    <script src="Scripts/jquery-3.1.0.slim.js"></script>
     <!--Jquery-->
     <!--BootStrap-->
     <script src="Scripts/bootstrap.min.js"></script>
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="Content/bootstrap-theme.css" rel="stylesheet" />
     <!--BootStrap-->
     <!-- ======================================================================================= -->
-
     <!--Angular-->
     <script src="Scripts/angular.js"></script>
     <script src="Scripts/angular-animate.js"></script>
@@ -35,11 +35,15 @@
     <script src="Scripts/angular-ui/ui-bootstrap.min.js"></script>
     <script src="Scripts/angular-ui/ui-bootstrap-tpls.min.js"></script>
     <!-- Angular Bootstrap-->
-
     <!--Leaflets-->
     <link href="Content/leaflet.css" rel="stylesheet" />
     <script src="Scripts/leaflet-0.7.3.min.js"></script>
-    <script src="https:/cdnjs.cloudflare.com/ajax/libs/angular-leaflet-directive/0.10.0/angular-leaflet-directive.min.js"></script>
+
+    <script src="Scripts/leaflet.rotatedMarker.js"></script>
+
+    <link href="Content/MarkerCluster.Default.css" rel="stylesheet" />
+    <link href="Content/MarkerCluster.css" rel="stylesheet" />
+    <script src="Scripts/leaflet.markercluster-src.js"></script>
     <!--Leaflets-->
     <!--Start Bootstrap-->
     <link href="Content/start-bootstrap.css" rel="stylesheet" />
@@ -58,18 +62,12 @@
     <script src="app/factory/validationFactory.js"></script>
     <script src="app/factory/fleetFactory.js"></script>
     <script src="app/factory/systemFactory.js"></script>
-
-
+    <script src="app/factory/leafletFactory.js"></script>
 
     <!-- Filter -->
     <script src="app/filter/appFilter.js"></script>
     <script src="app/filter/dateFilter.js"></script>
     <script src="app/filter/startFromFilter.js"></script>
-    <script src="app/filter/flagByIdFilter.js"></script>
-    <script src="app/filter/flagByValueFilter.js"></script>
-    <script src="app/filter/collectionFilter.js"></script>
-
-
 
     <!-- Service -->
     <script src="app/service/sessionService.js"></script>
@@ -83,7 +81,6 @@
     <script src="app/config/appConfig.js"></script>
     <script src="app/run/appRun.js"></script>
 
-
     <!-- Controller -->
     <script src="app/controller/directive/panelLeftController.js"></script>
     <script src="app/controller/directive/panelCenterController.js"></script>
@@ -94,6 +91,8 @@
 
 
     <script src="app/controller/form/loginController.js"></script>
+    <script src="app/controller/form/aboutController.js"></script>
+
 
     <!-- System -->
     <!--Company-->
@@ -135,9 +134,6 @@
 
     <!-- Administrate -->
     <script src="app/controller/form/client/ctCompanyUpdateController.js"></script>
-
-
-
     <script src="app/controller/form/client/ctUsersController.js"></script>
     <script src="app/controller/form/client/ctUserInsertController.js"></script>
     <script src="app/controller/form/client/ctUserUpdateController.js"></script>
@@ -166,15 +162,18 @@
     <script src="app/controller/form/client/ctDistributeController.js"></script>
     <script src="app/controller/form/client/ctDistributeInsertController.js"></script>
 
+    <!-- Map -->
+    <script src="app/controller/form/map/ctPoisController.js"></script>
+    <script src="app/controller/form/map/ctPoiInsertController.js"></script>
 
-    
-    
+
+
+
 
 
     <script src="app/controller/appController.js"></script>
 
 
-    <link rel="stylesheet" href="app/view/directive/panelMenu.css" />
     <!--=============================================================================================================================-->
 
 </body>

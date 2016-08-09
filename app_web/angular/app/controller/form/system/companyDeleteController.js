@@ -26,7 +26,6 @@ app.controller('companyDeleteController', function (
         $scope.flag = flagFactory;
 
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.company = company;
     }

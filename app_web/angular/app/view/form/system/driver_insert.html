@@ -46,19 +46,19 @@
                     <div class="form-group">
                         <label class="control-label col-md-2">Rfid</label>
                         <div class="col-md-10">
-                            <input type="number" class="form-control" ng-model="driver.Rfid" required />
+                            <input type="text" class="form-control" ng-model="driver.Rfid" required />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-2">Status</label>
                         <div class="col-md-10">
-                            <select class="form-control" ng-model="driver.Status" ng-init="driver.Status = flag.Statuses[0].Value" ng-options="status.Value as status.Name for status in flag.Statuses" required />
+                            <select class="form-control" ng-model="driver.Status" ng-init="driver.Status = flag.Statuses[0]" ng-options="status as status.Name for status in flag.Statuses track by status.Id" required />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-2">Company</label>
                         <div class="col-md-10">
-                            <select class="form-control" ng-model="driver.Company" ng-init="driver.Company = companies[0].Id" ng-options="company.Id as company.Name for company in companies" required />
+                            <select class="form-control" ng-model="driver.Company" ng-init="driver.Company = companies[0]" ng-options="company as company.Name for company in companies track by company.Id" required />
                         </div>
                     </div>
                 </fieldset>

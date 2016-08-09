@@ -23,7 +23,6 @@ app.controller('unitsController', function (
     $scope.init = function () {
         $scope.flag = flagFactory;
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
         $scope.ui = uiFactory;
         $scope.load();
     };
@@ -86,10 +85,6 @@ app.controller('unitsController', function (
                 user: unit
             }
         });
-    };
-
-    $scope.clearCompany = function () {
-        $scope.selectedCompany = "";
     };
 
 

@@ -21,6 +21,9 @@
 
 
     <div class="modal-body">
+        <div class="noty">
+            <uib-alert ng-repeat="alert in ui.alert.items" type="{{alert.type}}" close="closeAlert($index)" dismiss-on-timeout="{{ui.alert.timeout}}">{{alert.message}} </uib-alert>
+        </div>
         <table class="table table-responsive">
             <thead>
                 <tr>
@@ -34,8 +37,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="vehicle in fleet.vehicles | filter : selectedVehicle" ng-init="load()">
-                    <td>{{$index + 1}}</td>
+                <tr ng-repeat="vehicle in fleet.vehicles | filter : selectedVehicle | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize1 | limitTo : ui.pagination.pageSize1">
+                    <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize1 }}</td>
                     <td><input type="checkbox" ng-model="vehicle.Checked"></td>
                     <td>{{vehicle.Name}}</td>
                     <td>{{vehicle.Plate}}</td>
@@ -44,9 +47,14 @@
                     <td>{{vehicle.Driver.Name}}</td>
                 </tr>
             </tbody>
-
         </table>
-
+        <uib-pagination boundary-links="true"
+                        force-ellipses="true"
+                        total-items="fleet.vehicles.length"
+                        ng-model="ui.pagination.currentPage"
+                        items-per-page="ui.pagination.pageSize1"
+                        class="center-block">
+        </uib-pagination>
 
     </div>
 

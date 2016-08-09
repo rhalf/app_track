@@ -20,6 +20,7 @@ app.controller('userInsertController', function (
     User,
     UserInfo,
     Company,
+    Sim,
 
     parent
 
@@ -56,7 +57,7 @@ app.controller('userInsertController', function (
                 //Success
                 var alert = { type: 'success', message: '1 user has been added successfully.' };
                 $scope.ui.alert.addItem(alert);
-                $scope.userInfo.User = result.Id;
+                $scope.userInfo.User = { 'Id': result.Id };
                 UserInfo.save(
                     $scope.userInfo,
                     function (result) {
@@ -94,7 +95,6 @@ app.controller('userInsertController', function (
         $scope.flag = flagFactory;
        
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
 
@@ -113,13 +113,11 @@ app.controller('userInsertController', function (
         $scope.user = new User();
         $scope.userInfo = new UserInfo();
         $scope.companies = Company.query();
+        $scope.sims = Sim.getByCompany({company : $scope.authUser.Company.Id});
+
 
         $scope.user.DtExpired = $filter('date')(new Date(), 'yyyy-MM-dd');
 
-    };
-
-    $scope.clearSim = function () {
-        $scope.user.Sim = null;
     };
 
     $scope.cancel = function () {

@@ -58,7 +58,6 @@ app.controller('vehicleInsertController', function (
         $scope.flag = flagFactory;
 
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
 
@@ -74,11 +73,11 @@ app.controller('vehicleInsertController', function (
         $scope.ui.alert.items = [];
 
         $scope.vehicle = new Vehicle();
+        $scope.vehicle.DtSubscribed = $filter('date')(new Date(), 'yyyy-MM-dd');
         $scope.companies = Company.query();
-        $scope.units = Unit.getByCompany({ company: $scope.authCompany.Id });
-        $scope.drivers = Driver.getByCompany({ company: $scope.authCompany.Id });
+        $scope.units = Unit.getByCompany({ company: $scope.authUser.Company.Id });
+        $scope.drivers = Driver.getByCompany({ company: $scope.authUser.Company.Id });
 
-        console.log($scope.drivers);
     };
 
 

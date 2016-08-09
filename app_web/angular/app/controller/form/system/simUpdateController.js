@@ -60,7 +60,6 @@ app.controller('simUpdateController', function (
     $scope.init = function () {
         $scope.flag = flagFactory;
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.form = {};
         $scope.form.isDisabled = true;

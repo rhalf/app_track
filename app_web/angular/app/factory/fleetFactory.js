@@ -20,23 +20,14 @@ app.factory('fleetFactory', function (
     fleetFactory.load = function (callback) {
 
         user = authFactory.getUser();
-        company = authFactory.getCompany();
 
-        Vehicle.query(
+        Vehicle.getByCompany( user.Company.Id,
             function (vehicles) {
+
                 fleetFactory.vehicles = vehicles;
-                angular.forEach(fleetFactory.vehicles, function (vehicle, index) {
-                    vehicle.Driver = Driver.get({ id: vehicle.Driver });
-                    Unit.get(
-                         { id: vehicle.Unit },
-                         function (unit) {
-                             vehicle.Unit = unit;
-                             vehicle.Unit.Sim = Sim.get({ id: unit.Sim });
-                         });
-                });
 
                 Collection.getByCompany(
-                      { company: company.Id },
+                      { company: user.Company.Id },
                       function (collections) {
                           fleetFactory.collections = collections;
 
@@ -44,13 +35,9 @@ app.factory('fleetFactory', function (
                               VehicleCollection.getByCollection(
                                   { collection: collection.Id },
                                   function (vehicleCollections) {
-                                      collection.vehicles = [];
-                                      angular.forEach(fleetFactory.vehicles, function (vehicle) {
-                                          angular.forEach(vehicleCollections, function (vehicleCollection) {
-                                              if (vehicle.Id === vehicleCollection.Vehicle) {
-                                                  collection.vehicles.push(vehicle);
-                                              }
-                                          });
+                                      collection.Vehicles = [];
+                                      angular.forEach(vehicleCollections, function (vehicleCollection) {
+                                          collection.Vehicles.push(vehicleCollection.Vehicle);
                                       });
 
                                       if (callback) {
@@ -66,8 +53,6 @@ app.factory('fleetFactory', function (
                       function (result) {
                           //Failed
                       });
-
-               
             });
     };
 
@@ -79,8 +64,8 @@ app.factory('fleetFactory', function (
                     if (vehicle.Checked) {
 
                         var object = new VehicleCollection();
-                        object.Vehicle = vehicle.Id;
-                        object.Collection = collection.Id
+                        object.Vehicle = vehicle;
+                        object.Collection = collection
 
                         VehicleCollection.save(
                         object,
@@ -94,6 +79,12 @@ app.factory('fleetFactory', function (
                         });
                     }
                 });
+                //Success
+                callback();
+            },
+            function (result) {
+                //Failed
+                callback();
             });
     };
 

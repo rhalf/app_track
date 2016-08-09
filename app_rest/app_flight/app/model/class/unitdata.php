@@ -3,138 +3,100 @@
 class UnitData implements IQuery {
 
 	public $Id;
-	public $DateTimeServer;
-	public $DateTimeDevice;
+	public $DtServer;
+	public $DtDevice;
 	public $Command;
 	public $Event;
 	public $Byte;
-	public $UnitDataType;
-	public $Company;
+	public $Coordinate;
+	public $Altitude;
+	public $Rfid;
+	public $Mode;
+	public $Speed;
+	public $Time;
+	public $Odometer;
+	public $Heading;
+	public $Picture;
+	public $GpsSatellite;
+	public $GpsStatus;
+	public $GpsAccuracy;
+	public $GprsSignal;
+	public $GprsStatus;
+	public $Reserve;
+
+	public $Di = array();
+	public $Do = array();
+	public $Ai = array();
+	public $Ao = array();
+	
+
+
 	
 	public function __construct() {
-	}
 
-	public static function selectAll() {
-		
-		$connection = Flight::dbMain();
-
-		try {
-
-			$sql = "SELECT * FROM UnitData;";
-			$query = $connection->prepare($sql);
-
-			$query->execute();
-
-			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
-
-			$result = array();
-
-			foreach ($rows as $row) {	
-				$UnitData = new UnitData();
-				$UnitData->Id = (int) $row['id'];
-				$UnitData->Imei = $row['UnitData_imei'];
-				$UnitData->DtCreated = $row['UnitData_dt_created'];
-				$UnitData->SerialNumber = $row['UnitData_serial_number'];
-
-				$UnitData->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
-
-				$UnitData->UnitDataType = (int) $row['UnitData_type_id'];
-				$UnitData->Company = (int) $row['company_id'];
-				$UnitData->UnitDataStatus = (int) $row['e_status_UnitData_id'];
-				
-				array_push($result, $UnitData);
-			}
-
-			Flight::ok($result);
-
-		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
-		} catch (Exception $exception) {
-			Flight::error($exception);
-		} finally {
-			$connection = null;
-		}
-	}
-
-	public static function selectByCompany($id) {
-		
-		$connection = Flight::dbMain();
-
-		try {
-
-			$sql = "SELECT * FROM UnitData WHERE company_id = :company;";
-			$query = $connection->prepare($sql);
-			$query->bindParam(':company',$id, PDO::PARAM_INT);
-
-			$query->execute();
-
-			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
-
-			$result = array();
-
-			foreach ($rows as $row) {	
-				$UnitData = new UnitData();
-				$UnitData->Id = (int) $row['id'];
-				$UnitData->Imei = $row['UnitData_imei'];
-				$UnitData->DtCreated = $row['UnitData_dt_created'];
-				$UnitData->SerialNumber = $row['UnitData_serial_number'];
-
-				$UnitData->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
-
-				$UnitData->UnitDataType = (int) $row['UnitData_type_id'];
-				$UnitData->Company = (int) $row['company_id'];
-				$UnitData->UnitDataStatus = (int) $row['e_status_UnitData_id'];
-				
-				array_push($result, $UnitData);
-			}
-
-			Flight::ok($result);
-
-		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
-		} catch (Exception $exception) {
-			Flight::error($exception);
-		} finally {
-			$connection = null;
-		}
 	}
 
 	public static function select($id) {
 		
-		$connection = Flight::dbMain();
+		$connection = Flight::dbData();
+
+		$tableName = 'data_' . $id;
 
 		try {
 
-			$sql = "SELECT * FROM UnitData WHERE id = :id;";
+			$sql = "SELECT * FROM data_". $id . " ORDER BY dt_device ASC LIMIT 1;";
 			$query = $connection->prepare($sql);
-			$query->bindParam(':id',$id, PDO::PARAM_INT);
-
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
-			$UnitData = new UnitData();
-			$UnitData->Id = (int) $row['id'];
-			$UnitData->Imei = $row['UnitData_imei'];
-			$UnitData->DtCreated = $row['UnitData_dt_created'];
-			$UnitData->SerialNumber = $row['UnitData_serial_number'];
+			$unitData = new UnitData();
+			$unitData->Id = (int) $row['id'];
+			$unitData->DtServer = $row['dt_server'];
+			$unitData->DtDevice = $row['dt_device'];
+			$unitData->Command = $row['command'];
 
-			$UnitData->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
+			$unitData->Event =  (int) $row['event'];
+			$unitData->Byte = (int) $row['byte'];
+			$unitData->Rfid =  $row['rfid'];
+			$unitData->Mode = (int)$row['mode'];
+			$unitData->Coordinate =  new Coordinate($row['latitude'], $row['longitude']);
+			$unitData->Altitude =  (int)$row['altitude'];
+			$unitData->Mode =  $row['mode'];
+			$unitData->Speed =  (int)$row['speed'];
+			$unitData->Time =  (int)$row['time'];
+			$unitData->Odometer = (int)$row['odometer'];
+			$unitData->Heading =  (int)$row['heading'];
+			$unitData->Picture = $row['picture'];
+			$unitData->GpsSatellite =  (int)$row['gps_satellite'];
+			$unitData->GpsStatus =  (int)$row['gps_status'];
+			$unitData->GpsAccuracy =  (int)$row['gps_accuracy'];
+			$unitData->GprsSignal =  (int)$row['gprs_signal'];
+			$unitData->GprsStatus =  $row['gprs_status'];
+			$unitData->Reserve =  $row['reserve'];
 
-			$UnitData->UnitDataType = (int) $row['UnitData_type_id'];
-			$UnitData->Company = (int) $row['company_id'];
-			$UnitData->UnitDataStatus = (int) $row['e_status_UnitData_id'];
 
-			Flight::ok($UnitData);
+			for($index = 0; $index < 11; $index++) {
+				array_push($unitData->Di, (int)$row['di_' . $index]);
+				array_push($unitData->Ai, (int)$row['ai_' . $index]);
+
+			}
+
+			for($index = 0; $index < 4; $index++) {
+				array_push($unitData->Do,(int)$row['do_' . $index]);
+				array_push($unitData->Ao,(int)$row['ao_' . $index]);
+			}
+
+			return $unitData;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -147,9 +109,9 @@ class UnitData implements IQuery {
 
 		try {
 
-			$UnitData = json_decode(file_get_contents("php://input"));
+			$unitData = json_decode(file_get_contents("php://input"));
 
-			if ($UnitData == null) {
+			if ($unitData == null) {
 				throw new Exception(json_get_error());
 			}
 			
@@ -160,7 +122,7 @@ class UnitData implements IQuery {
 			//Query 1 //=================================
 
 			$sql = "
-			INSERT INTO UnitData 
+			INSERT INTO unitData 
 			(UnitData_imei, UnitData_serial_number, sim_id, UnitData_type_id, company_id, e_status_UnitData_id, UnitData_dt_created)
 			VALUES
 			(:UnitData_imei, :UnitData_serial_number, :sim_id, :UnitData_type_id, :company_id, :e_status_UnitData_id, :UnitData_dt_created);";
@@ -168,12 +130,12 @@ class UnitData implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':UnitData_imei', $UnitData->Imei, PDO::PARAM_INT);
-			$query->bindParam(':UnitData_serial_number', $UnitData->SerialNumber, PDO::PARAM_STR);
-			$query->bindParam(':sim_id', $UnitData->Sim, PDO::PARAM_INT);
-			$query->bindParam(':UnitData_type_id', $UnitData->UnitDataType, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $UnitData->Company, PDO::PARAM_INT);
-			$query->bindParam(':e_status_UnitData_id', $UnitData->UnitDataStatus, PDO::PARAM_INT);
+			$query->bindParam(':UnitData_imei', $unitData->Imei, PDO::PARAM_INT);
+			$query->bindParam(':UnitData_serial_number', $unitData->SerialNumber, PDO::PARAM_STR);
+			$query->bindParam(':sim_id', $unitData->Sim->Id, PDO::PARAM_INT);
+			$query->bindParam(':UnitData_type_id', $unitData->UnitDataType->Id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $unitData->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':e_status_UnitData_id', $unitData->UnitDataStatus->Id, PDO::PARAM_INT);
 			$query->bindParam(':UnitData_dt_created',$dateTime, PDO::PARAM_STR);
 
 			$query->execute();
@@ -190,7 +152,7 @@ class UnitData implements IQuery {
 
 			// $tableName = "data_id_" .  $result->Id;
 			
-			$imei = $UnitData->Imei;
+			$imei = $unitData->Imei;
 			$tableName = "data_$imei";
 
 
@@ -270,188 +232,7 @@ class UnitData implements IQuery {
 		}
 	}
 
-	public static function update($id) {
-
-		$connection = Flight::dbMain();
-
-		try {
-
-			$UnitDataNew = json_decode(file_get_contents("php://input"));
-
-			if ($UnitDataNew == null) {
-				throw new Exception(json_get_error());
-			}
-
-
-			/* Begin Transaction */
-			$connection->beginTransaction();
-
-			/*Query 1 Select UnitData(old) */
-			$sql = "SELECT * FROM UnitData WHERE id = :id;";
-			$query = $connection->prepare($sql);
-			$query->bindParam(':id',$id, PDO::PARAM_INT);
-
-			$query->execute();
-
-			$row = $query->fetch(PDO::FETCH_ASSOC);
-
-			$UnitDataOld = new UnitData();
-			$UnitDataOld->Id = (int) $row['id'];
-			$UnitDataOld->Imei = $row['UnitData_imei'];
-			$UnitDataOld->DtCreated = $row['UnitData_dt_created'];
-			$UnitDataOld->SerialNumber = $row['UnitData_serial_number'];
-			$UnitDataOld->Sim = (int) $row['sim_id'];
-			$UnitDataOld->UnitDataType = (int) $row['UnitData_type_id'];
-			$UnitDataOld->Company = (int) $row['company_id'];
-			$UnitDataOld->UnitDataStatus = (int) $row['e_status_UnitData_id'];
-
-			/*Query 2 Update UnitData*/
-			$sql = "
-			UPDATE UnitData 
-			SET 
-			UnitData_imei = :UnitData_imei,
-			UnitData_dt_created = :UnitData_dt_created, 
-			UnitData_serial_number = :UnitData_serial_number,
-			sim_id = :sim_id, 
-			UnitData_type_id = :UnitData_type_id,
-			company_id = :company_id,
-			e_status_UnitData_id = :e_status_UnitData_id
-			WHERE
-			id = :id;";
-
-			$query = $connection->prepare($sql);
-			$query->bindParam(':UnitData_imei', $UnitDataNew->Imei, PDO::PARAM_INT);
-			$query->bindParam(':UnitData_dt_created', $UnitDataNew->DtCreated, PDO::PARAM_STR);
-			$query->bindParam(':UnitData_serial_number', $UnitDataNew->SerialNumber, PDO::PARAM_STR);
-			$query->bindParam(':sim_id', $UnitDataNew->Sim, PDO::PARAM_INT);
-			$query->bindParam(':UnitData_type_id', $UnitDataNew->UnitDataType, PDO::PARAM_BOOL);
-			$query->bindParam(':company_id', $UnitDataNew->Company, PDO::PARAM_INT);
-			$query->bindParam(':e_status_UnitData_id', $UnitDataNew->UnitDataStatus, PDO::PARAM_INT);
-
-			
-			$query->bindParam(':id', $id, PDO::PARAM_INT);
-
-			$query->execute();
-
-
-			/*Query 2 Alter table "data_$imei" name*/
-			$year = date('Y');
-			$schema = "app_data_$year";
-
-			$imeiOld = $UnitDataOld->Imei;
-			$imeiNew = $UnitDataNew->Imei;
-
-			$tableNameOld = "data_$imeiOld";
-			$tableNameNew = "data_$imeiNew";
-
-			$sql = "
-			ALTER TABLE 
-			$schema.$tableNameOld
-			RENAME TO 
-			$schema.$tableNameNew;
-			";
-
-			$query = $connection->prepare($sql);
-			$query->execute();
-
-			$connection->commit();
-
-			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Message = 'Done';
-			$result->Id = $id;
-
-			Flight::ok($result);
-
-		} catch (PDOException $pdoException) {
-			$connection->rollBack();
-			Flight::error($pdoException);
-		} catch (Exception $exception) {
-			$connection->rollBack();
-			Flight::error($exception);
-		} finally {
-			$connection = null;
-		}
-	}
-
-	public static function delete($id) {
-
-		$connection = Flight::dbMain();
-
-		try {
-
-			/* Begin Transaction */
-			$connection->beginTransaction();
-
-			/*Query 1 Select UnitData*/
-			$sql = "SELECT * FROM UnitData WHERE id = :id;";
-			$query = $connection->prepare($sql);
-			$query->bindParam(':id',$id, PDO::PARAM_INT);
-			$query->execute();
-
-			$rows = $query->fetchAll(PDO::FETCH_ASSOC);
-
-			$row = $rows[0];
-
-			$UnitData = new UnitData();
-			$UnitData->Id = (int) $row['id'];
-			$UnitData->Imei = $row['UnitData_imei'];
-			$UnitData->DtCreated = $row['UnitData_dt_created'];
-			$UnitData->SerialNumber = $row['UnitData_serial_number'];
-			$UnitData->Sim = (int) $row['sim_id'];
-			$UnitData->UnitDataType = (int) $row['UnitData_type_id'];
-			$UnitData->Company = (int) $row['company_id'];
-			$UnitData->UnitDataStatus = (int) $row['e_status_UnitData_id'];
-
-
-
-			/*Query 2 Delete UnitData*/
-			$sql = "
-			DELETE FROM UnitData 
-			WHERE
-			id = :id";
-
-			$query = $connection->prepare($sql);
-			$query->bindParam(':id', $id, PDO::PARAM_INT);
-			$query->execute();
-
-			/*Query 3 Drop data_UnitData.imei table*/
-			$year = date('Y');
-			$schema = "app_data_$year";
-
-			$imei = $UnitData->Imei;
-
-			$tableName = "data_$imei";
-
-			$sql = "
-			
-			DROP TABLE IF EXISTS $schema.$tableName;
-
-			";
-
-			$query = $connection->prepare($sql);
-			$query->execute();
-
-			$connection->commit();
-
-			
-			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
-
-			Flight::ok($result);
-
-		} catch (PDOException $pdoException) {
-			$connection->rollBack();
-			Flight::error($pdoException);
-		} catch (Exception $exception) {
-			$connection->rollBack();
-			Flight::error($exception);
-		} finally {
-			$connection = null;
-		}
-	}
+	
 }
 
 ?>

@@ -57,8 +57,7 @@ app.controller('ctUserUpdateCredentialController', function (
     $scope.init = function () {
         $scope.form = {};
         $scope.form.isDisabled = true;
-           $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
+        $scope.authUser = authFactory.getUser();
         $scope.ui = uiFactory;
         $scope.flag = flagFactory;
 

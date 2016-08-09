@@ -52,23 +52,28 @@ class Vehicle implements IQuery {
 				$vehicle->MaLimit = (int)$row['vehicle_ma_limit'];
 				$vehicle->MaMaintenance = (int)$row['vehicle_ma_maintenance'];
 				$vehicle->SpeedMax = (int)$row['vehicle_speed_max'];
-				$vehicle->Status = (int)$row['e_status_value'];
 				$vehicle->FuelMax = (int)$row['vehicle_fuel_max'];
-				$vehicle->Driver =  $row['driver_id'] == null ? null : (int)$row['driver_id'];
-				$vehicle->Unit = $row['unit_id'] == null ? null : (int)$row['unit_id'];
-				$vehicle->Company = (int) $row['company_id'];
-				$vehicle->TrackeeType = (int) $row['e_trackee_type_id'];
+				// $vehicle->Driver =  $row['driver_id'] == null ? null : (int)$row['driver_id'];
+				// $vehicle->Unit = $row['unit_id'] == null ? null : (int)$row['unit_id'];
+				// $vehicle->Company = (int) $row['company_id'];
+				// $vehicle->TrackeeType = (int) $row['e_trackee_type_id'];
+				// $vehicle->Status = (int)$row['e_status_id'];
 
+				$vehicle->Driver =  Driver::select($row['driver_id']);
+				$vehicle->Unit = Unit::select($row['unit_id']);
+				$vehicle->Company = Company::select($row['company_id']);
+				$vehicle->TrackeeType =TrackeeType::select($row['e_trackee_type_id']);
+				$vehicle->Status = Status::select($row['e_status_id']);
 
 				array_push($result, $vehicle);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -87,7 +92,7 @@ class Vehicle implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -104,19 +109,26 @@ class Vehicle implements IQuery {
 			$vehicle->MaLimit = (int)$row['vehicle_ma_limit'];
 			$vehicle->MaMaintenance = (int)$row['vehicle_ma_maintenance'];
 			$vehicle->SpeedMax = (int)$row['vehicle_speed_max'];
-			$vehicle->Status = (int)$row['e_status_value'];
 			$vehicle->FuelMax = (int)$row['vehicle_fuel_max'];
-			$vehicle->Driver =  $row['driver_id'] == null ? null : (int)$row['driver_id'];
-			$vehicle->Unit = $row['unit_id'] == null ? null : (int)$row['unit_id'];
-			$vehicle->Company = (int) $row['company_id'];
-			$vehicle->TrackeeType = (int) $row['e_trackee_type_id'];
+			// $vehicle->Status = (int)$row['e_status_id'];
+			// $vehicle->Driver =  $row['driver_id'] == null ? null : (int)$row['driver_id'];
+			// $vehicle->Unit = $row['unit_id'] == null ? null : (int)$row['unit_id'];
+			// $vehicle->Company = (int) $row['company_id'];
+			// $vehicle->TrackeeType = (int) $row['e_trackee_type_id'];
+			$vehicle->Status = (int)$row['e_status_id'];
+			$vehicle->Driver =  Driver::select($row['driver_id']);
+			$vehicle->Unit = Unit::select($row['unit_id']);
+			$vehicle->Company = Company::select($row['company_id']);
+			$vehicle->TrackeeType =TrackeeType::select($row['e_trackee_type_id']);
+			$vehicle->Status = Status::select($row['e_status_id']);
 
-			Flight::ok($vehicle);
+
+			return $vehicle;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -151,24 +163,29 @@ class Vehicle implements IQuery {
 				$vehicle->MaLimit = (int)$row['vehicle_ma_limit'];
 				$vehicle->MaMaintenance = (int)$row['vehicle_ma_maintenance'];
 				$vehicle->SpeedMax = (int)$row['vehicle_speed_max'];
-				$vehicle->Status = (int)$row['e_status_value'];
 				$vehicle->FuelMax = (int)$row['vehicle_fuel_max'];
-				$vehicle->Driver =  $row['driver_id'] == null ? null : (int)$row['driver_id'];
-				$vehicle->Unit = $row['unit_id'] == null ? null : (int)$row['unit_id'];
-				$vehicle->Company = (int) $row['company_id'];
-				$vehicle->TrackeeType = (int) $row['e_trackee_type_id'];
-
+				// $vehicle->Status = (int)$row['e_status_id'];
+				// $vehicle->Driver =  $row['driver_id'] == null ? null : (int)$row['driver_id'];
+				// $vehicle->Unit = $row['unit_id'] == null ? null : (int)$row['unit_id'];
+				// $vehicle->Company = (int) $row['company_id'];
+				// $vehicle->TrackeeType = (int) $row['e_trackee_type_id'];
+				$vehicle->Status = (int)$row['e_status_id'];
+				$vehicle->Driver =  Driver::select($row['driver_id']);
+				$vehicle->Unit = Unit::select($row['unit_id']);
+				$vehicle->Company = Company::select($row['company_id']);
+				$vehicle->TrackeeType =TrackeeType::select($row['e_trackee_type_id']);
+				$vehicle->Status = Status::select($row['e_status_id']);
 
 				array_push($result, $vehicle);
 			}
 
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -199,7 +216,7 @@ class Vehicle implements IQuery {
 			vehicle_ma_limit, 
 			vehicle_ma_maintenance, 
 			vehicle_speed_max, 
-			e_status_value, 
+			e_status_id, 
 			vehicle_name, 
 			vehicle_model,
 			vehicle_fuel_max, 
@@ -218,7 +235,7 @@ class Vehicle implements IQuery {
 			:vehicle_ma_limit, 
 			:vehicle_ma_maintenance, 
 			:vehicle_speed_max, 
-			:e_status_value, 
+			:e_status_id, 
 			:vehicle_name, 
 			:vehicle_model,
 			:vehicle_fuel_max, 
@@ -239,15 +256,15 @@ class Vehicle implements IQuery {
 			$query->bindParam(':vehicle_ma_limit', $vehicle->MaLimit, PDO::PARAM_INT);
 			$query->bindParam(':vehicle_ma_maintenance', $vehicle->MaMaintenance, PDO::PARAM_INT);
 			$query->bindParam(':vehicle_speed_max', $vehicle->SpeedMax, PDO::PARAM_INT);
-			$query->bindParam(':e_status_value', $vehicle->Status, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $vehicle->Status->Id, PDO::PARAM_INT);
 			$query->bindParam(':vehicle_name', $vehicle->Name, PDO::PARAM_STR);
 			$query->bindParam(':vehicle_model', $vehicle->Model, PDO::PARAM_STR);
 
 			$query->bindParam(':vehicle_fuel_max', $vehicle->FuelMax, PDO::PARAM_INT);
-			$query->bindParam(':driver_id', $vehicle->Driver, PDO::PARAM_INT);
-			$query->bindParam(':unit_id', $vehicle->Unit, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $vehicle->Company, PDO::PARAM_INT);
-			$query->bindParam(':e_trackee_type_id', $vehicle->TrackeeType, PDO::PARAM_INT);
+			$query->bindParam(':driver_id', $vehicle->Driver->Id, PDO::PARAM_INT);
+			$query->bindParam(':unit_id', $vehicle->Unit->Id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $vehicle->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':e_trackee_type_id', $vehicle->TrackeeType->Id, PDO::PARAM_INT);
 
 
 			$query->execute();
@@ -257,12 +274,12 @@ class Vehicle implements IQuery {
 			$result->Id = $connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -290,7 +307,7 @@ class Vehicle implements IQuery {
 			vehicle_ma_limit = :vehicle_ma_limit,
 			vehicle_ma_maintenance = :vehicle_ma_maintenance,
 			vehicle_speed_max = :vehicle_speed_max,
-			e_status_value = :e_status_value,
+			e_status_id = :e_status_id,
 			vehicle_name = :vehicle_name,
 			vehicle_model = :vehicle_model,
 
@@ -313,15 +330,15 @@ class Vehicle implements IQuery {
 			$query->bindParam(':vehicle_ma_limit', $vehicle->MaLimit, PDO::PARAM_INT);
 			$query->bindParam(':vehicle_ma_maintenance', $vehicle->MaMaintenance, PDO::PARAM_INT);
 			$query->bindParam(':vehicle_speed_max', $vehicle->SpeedMax, PDO::PARAM_INT);
-			$query->bindParam(':e_status_value', $vehicle->Status, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $vehicle->Status->Id, PDO::PARAM_INT);
 			$query->bindParam(':vehicle_name', $vehicle->Name, PDO::PARAM_STR);
 			$query->bindParam(':vehicle_model', $vehicle->Model, PDO::PARAM_STR);
 
 			$query->bindParam(':vehicle_fuel_max', $vehicle->FuelMax, PDO::PARAM_INT);
-			$query->bindParam(':driver_id', $vehicle->Driver, PDO::PARAM_INT);
-			$query->bindParam(':unit_id', $vehicle->Unit, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $vehicle->Company, PDO::PARAM_INT);
-			$query->bindParam(':e_trackee_type_id', $vehicle->TrackeeType, PDO::PARAM_INT);
+			$query->bindParam(':driver_id', $vehicle->Driver->Id, PDO::PARAM_INT);
+			$query->bindParam(':unit_id', $vehicle->Unit->Id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $vehicle->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':e_trackee_type_id', $vehicle->TrackeeType->Id, PDO::PARAM_INT);
 
 
 
@@ -334,12 +351,12 @@ class Vehicle implements IQuery {
 			$result->Id = $id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -367,12 +384,12 @@ class Vehicle implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

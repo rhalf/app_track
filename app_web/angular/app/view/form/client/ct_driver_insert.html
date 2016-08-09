@@ -58,7 +58,7 @@
                     <div class="form-group">
                         <label class="control-label col-md-2">Company</label>
                         <div class="col-md-10">
-                            <select class="form-control" ng-model="driver.Company" ng-init="driver.Company = authCompany.Id" ng-options="company.Id as company.Name for company in companies" disabled required />
+                            <select class="form-control" ng-model="driver.Company" ng-init="driver.Company = authUser.Company" ng-options="company as company.Name for company in companies track by company.Id" disabled required />
                         </div>
                     </div>
                 </fieldset>

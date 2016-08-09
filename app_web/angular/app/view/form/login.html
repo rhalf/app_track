@@ -12,34 +12,56 @@
     </div>
 
     <div class="content">
-        <div class="form-group">
-            <h4>
-                <span class="glyphicon glyphicon-log-in" /> Login
-            </h4>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="h3"><span class="glyphicon glyphicon-log-in" /> Login</div>
+                </div>
+            </div>
             <hr />
-            <form name="loginForm">
-                <label>Username </label>
-                <div class="inner-addon left-addon">
-                    <i class="glyphicon glyphicon-user"></i>
-                    <input type="text" class="form-control" name="userName" ng-model="authUser.Name" placeholder="Username" required />
-                </div>
+            <br />
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <form name="loginForm">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                </div>
+                                <input type="text" class="form-control" name="userName" ng-model="authUser.Name" placeholder="Username" required="required" />
+                            </div>
+                        </div>
 
-                <label>Password </label>
-                <div class="inner-addon left-addon">
-                    <i class="glyphicon glyphicon-lock"></i>
-                    <input type="Password" class="form-control" name="userPassword" ng-model="authUser.Password" placeholder="Password" required />
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-lock"></span>
+                                </div>
+                                <input type="Password" class="form-control" name="userPassword" ng-model="authUser.Password" placeholder="Password" required="required" />
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <br />
-                <button class="btn btn-default" type="submit" ng-click="login()">Login</button>
-            </form>
-            <!--<pre>{{user | json}}</pre>-->
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <button class="btn btn-primary form-control" type="submit" ng-click="login()">Login</button>
+                </div>
+            </div>
+            <br />
         </div>
     </div>
+
+
 
     <style type="text/css">
         html, body {
             /*background: #3399ff;*/
-            background: #efefef;
+            /*background: #99ddff;*/
+            background: radial-gradient(black 15%, transparent 16%) 0 0, radial-gradient(black 15%, transparent 16%) 8px 8px, radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px, radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;
+            background-color: #282828;
+            background-size: 16px 16px;
         }
 
         .noty {
@@ -51,59 +73,16 @@
 
         .content {
             position: absolute;
-            width: 350px;
-            /* Center form in page horizontally & vertically */
+            width: 300px;
+            /*Center form in page horizontally & vertically*/
             top: 50%;
             left: 50%;
-            margin-top: -150px;
+            margin-top: -200px;
             margin-left: -150px;
-            border-radius: 10px;
             background: #ffffff;
-            -webkit-box-shadow: 0px 0px 15px 5px rgba(159,159,159,1);
-            -moz-box-shadow: 0px 0px 15px 5px rgba(159,159,159,1);
-            box-shadow: 0px 0px 15px 5px rgba(159,159,159,1);
-        }
-
-        .form-group {
-            margin: 10px;
-            padding: 10px;
-        }
-
-        .form-control {
-            margin-top: 5px;
-            margin-bottom: 5px;
-        }
-
-
-        /**/
-        /* enable absolute positioning */
-        .inner-addon {
-            position: relative;
-        }
-
-            /* style icon */
-            .inner-addon .glyphicon {
-                position: absolute;
-                padding: 10px;
-                pointer-events: none;
-            }
-
-        /* align icon */
-        .left-addon .glyphicon {
-            left: 0px;
-        }
-
-        .right-addon .glyphicon {
-            right: 0px;
-        }
-
-        /* add padding  */
-        .left-addon input {
-            padding-left: 30px;
-        }
-
-        .right-addon input {
-            padding-right: 30px;
+            -webkit-box-shadow: 0px 0px 15px 5px rgba(255,255,255,0.6);
+            -moz-box-shadow: 0px 0px 15px 5px rgba(255,255,255,0.6);
+            box-shadow: 0px 0px 15px 5px rgba(255,255,255,0.6);
         }
     </style>
 </body>

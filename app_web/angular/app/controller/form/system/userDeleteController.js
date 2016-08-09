@@ -23,7 +23,6 @@ app.controller('userDeleteController', function (
         $scope.flag = flagFactory;
 
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.user = user;
     }

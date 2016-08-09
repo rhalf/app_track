@@ -127,6 +127,8 @@ app.factory('Unit', function ($resource) {
     });
 });
 
+
+
 app.factory('UnitSim', function ($resource) {
     return $resource('http://184.107.179.181/v1/main/unitsim/:id', { id: '@id' }, {
         'update': {
@@ -227,6 +229,32 @@ app.factory('Session', function ($resource) {
 
 app.factory('Collection', function ($resource) {
     return $resource('http://184.107.179.181/v1/main/collection/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
+        },
+        getByCompany: {
+            method: 'GET',
+            params: {
+                company: '@company'
+            },
+            isArray: true
+        }
+    });
+});
+
+
+
+//Data
+app.factory('UnitData', function ($resource) {
+    return $resource('http://184.107.179.181/v1/data/unitdata/:imei', { imei: '@imei' }, {
+        'update': {
+            method: 'PUT'
+        }
+    });
+});
+
+app.factory('Poi', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/poi/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         },

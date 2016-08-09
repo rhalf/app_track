@@ -12,6 +12,7 @@ app.controller('ctCollectionInsertController', function (
     authFactory,
     flagFactory,
     uiFactory,
+    fleetFactory,
 
     Collection,
     Company,
@@ -32,6 +33,7 @@ app.controller('ctCollectionInsertController', function (
                 var alert = { type: 'success', message: '1 collection has been added successfully.' };
                 $scope.ui.alert.addItem(alert);
                 parent.load();
+                $scope.fleet.load();
                 $scope.ui.isLoading = false;
 
             },
@@ -48,28 +50,23 @@ app.controller('ctCollectionInsertController', function (
     //Alert
     $scope.closeAlert = function (index) {
         $scope.ui.alert.closeItem(index);
-    }
-
-    $scope.clearUser = function () {
-        $scope.collection.User = null;
     };
 
     $scope.init = function () {
         $scope.flag = flagFactory;
 
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
 
         $scope.ui = uiFactory;
 
+        $scope.fleet = fleetFactory;
+
         $scope.ui.alert.items = [];
 
-        $scope.driver = new Collection();
+        $scope.collection = new Collection();
         $scope.companies = Company.query();
-        $scope.users = User.getByCompany({ company: $scope.authCompany.Id });
-
-
-    }
+        $scope.users = User.getByCompany({ company: $scope.authUser.Company.Id });
+    };
 
     $scope.cancel = function () {
         $uibModalInstance.close();

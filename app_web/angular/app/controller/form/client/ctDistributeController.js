@@ -20,14 +20,15 @@ app.controller('ctDistributeController', function (
     $scope.init = function () {
         $scope.flag = flagFactory;
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
         $scope.ui = uiFactory;
         $scope.fleet = fleetFactory;
     };
 
-    $scope.add = function (collection) {
+    $scope.addRemove = function () {
 
-        if (!collection) {
+        if (!$scope.selected) {
+            var alert = { type: 'danger', message: 'Select collection first.' };
+            $scope.ui.alert.addItem(alert);
             return;
         }
 
@@ -38,11 +39,16 @@ app.controller('ctDistributeController', function (
             keyboard: true,
             size: 'lg',
             resolve: {
-                collection: collection,
-                parent : $scope
+                collection: $scope.selected
             }
         });
     };
+
+    //Alert
+    $scope.closeAlert = function (index) {
+        $scope.ui.alert.closeItem(index);
+    };
+
     $scope.cancel = function () {
         $uibModalInstance.close();
     };

@@ -38,7 +38,7 @@ class Geofence implements IQuery {
 			foreach ($rows as $row) {	
 				$geofence = new Geofence();
 				$geofence->Id = (int) $row['id'];
-				$geofence->Company = (int) $row['company_id'];
+				$geofence->Company = Company::select($row['company_id']);
 				$geofence->Name = $row['geofence_name'];
 				$geofence->Desc = $row['geofence_desc'];
 				$geofence->Coordinates = $row['geofence_coordinates'];
@@ -55,12 +55,12 @@ class Geofence implements IQuery {
 			}
 
 			
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -79,7 +79,7 @@ class Geofence implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -87,7 +87,7 @@ class Geofence implements IQuery {
 			
 			$geofence = new Geofence();
 			$geofence->Id = (int) $row['id'];
-			$geofence->Company = (int) $row['company_id'];
+			$geofence->Company = Company::select($row['company_id']);
 			$geofence->Name = $row['geofence_name'];
 			$geofence->Desc = $row['geofence_desc'];
 			$geofence->Coordinates = $row['geofence_coordinates'];
@@ -99,13 +99,12 @@ class Geofence implements IQuery {
 			$geofence->IsGlobal = (int) $row['geofence_is_global'];
 			$geofence->IsVisible = (int) $row['geofence_is_visible'];
 
-
-			Flight::ok($geofence);
+			return $geofence;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -155,7 +154,7 @@ class Geofence implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':company_id', $geofence->Company, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $geofence->Company->Id, PDO::PARAM_INT);
 			$query->bindParam(':geofence_name', $geofence->Name, PDO::PARAM_STR);
 			$query->bindParam(':geofence_desc', $geofence->Desc, PDO::PARAM_STR);
 			$query->bindParam(':geofence_coordinates', $geofence->Coordinates, PDO::PARAM_STR);
@@ -174,12 +173,12 @@ class Geofence implements IQuery {
 			$result->Id = $connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $geofence;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -215,7 +214,7 @@ class Geofence implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':company_id', $geofence->Company, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $geofence->Company->Id, PDO::PARAM_INT);
 			$query->bindParam(':geofence_name', $geofence->Name, PDO::PARAM_STR);
 			$query->bindParam(':geofence_desc', $geofence->Desc, PDO::PARAM_STR);
 			$query->bindParam(':geofence_coordinates', $geofence->Coordinates, PDO::PARAM_STR);
@@ -236,12 +235,12 @@ class Geofence implements IQuery {
 			$result->Id = $id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $geofence;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -269,12 +268,12 @@ class Geofence implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $geofence;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}

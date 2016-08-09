@@ -24,9 +24,8 @@ app.run(function (
         if (next.$$route.authenticated) {
 
             var user = authFactory.getUser();
-            var company = authFactory.getCompany();
 
-            if (!user || !company) {
+            if (!user) {
                 $location.path('/');
             }
 

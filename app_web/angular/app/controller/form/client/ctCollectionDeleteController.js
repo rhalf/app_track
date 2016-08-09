@@ -11,6 +11,8 @@ app.controller('ctCollectionDeleteController', function (
 
     authFactory,
     flagFactory,
+    uiFactory,
+    fleetFactory,
 
     Collection,
 
@@ -22,10 +24,9 @@ app.controller('ctCollectionDeleteController', function (
 
     $scope.init = function () {
         $scope.flag = flagFactory;
-
+        $scope.ui = uiFactory;
         $scope.authUser = authFactory.getUser();
-        $scope.authCompany = authFactory.getCompany();
-
+        $scope.fleet = fleetFactory;
         $scope.collection = collection;
     }
 
@@ -34,6 +35,7 @@ app.controller('ctCollectionDeleteController', function (
         Collection.delete({ id: $scope.collection.Id }, function (result) {
             parent.load();
             $scope.ui.isLoading = false;
+            $scope.fleet.load();
             $scope.cancel();
         });
     };

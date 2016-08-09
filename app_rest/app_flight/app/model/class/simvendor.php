@@ -31,18 +31,18 @@ class SimVendor implements IQuery {
 				$simVendor->Id = (int) $row['id'];
 				$simVendor->Name = $row['sim_vendor_name'];
 				$simVendor->Desc = $row['sim_vendor_desc'];
-				$simVendor->Nation = (int) $row['e_nation_id'];
+				$simVendor->Nation = Nation::select($row['e_nation_id']);
 				
 
 				array_push($result, $simVendor);
 			}
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -61,7 +61,7 @@ class SimVendor implements IQuery {
 			$query->execute();
 
 			if ($query->rowCount() < 1){
-				Flight::notFound("id not found");
+				return null;
 			}
 
 			$row = $query->fetch(PDO::FETCH_ASSOC);
@@ -70,14 +70,14 @@ class SimVendor implements IQuery {
 			$simVendor->Id = (int) $row['id'];
 			$simVendor->Name = $row['sim_vendor_name'];
 			$simVendor->Desc = $row['sim_vendor_desc'];
-			$simVendor->Nation = (int) $row['e_nation_id'];
+			$simVendor->Nation = Nation::select($row['e_nation_id']);
 
-			Flight::ok($simVendor);
+			return $simVendor;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -105,7 +105,7 @@ class SimVendor implements IQuery {
 
 			$query->bindParam(':sim_vendor_name', $simVendor->Name, PDO::PARAM_STR);
 			$query->bindParam(':sim_vendor_desc', $simVendor->Desc, PDO::PARAM_STR);
-			$query->bindParam(':e_nation_id', $simVendor->Nation, PDO::PARAM_INT);
+			$query->bindParam(':e_nation_id', $simVendor->Nation->Id, PDO::PARAM_INT);
 			
 			$query->execute();
 			
@@ -114,12 +114,12 @@ class SimVendor implements IQuery {
 			$result->Id = $connection->lastInsertId();
 			$result->Message = 'Done';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -150,7 +150,7 @@ class SimVendor implements IQuery {
 
 			$query->bindParam(':sim_vendor_name', $simVendor->Name, PDO::PARAM_STR);
 			$query->bindParam(':sim_vendor_desc', $simVendor->Desc, PDO::PARAM_STR);
-			$query->bindParam(':e_nation_id', $simVendor->Nation, PDO::PARAM_INT);
+			$query->bindParam(':e_nation_id', $simVendor->Nation->Id, PDO::PARAM_INT);
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
@@ -161,12 +161,12 @@ class SimVendor implements IQuery {
 			$result->Id = $id;
 			$result->Message = 'Done.';
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
@@ -194,12 +194,12 @@ class SimVendor implements IQuery {
 			$result->Message = 'Done';
 			$result->Id = $id;
 
-			Flight::ok($result);
+			return $result;
 
 		} catch (PDOException $pdoException) {
-			Flight::error($pdoException);
+			throw $pdoException;
 		} catch (Exception $exception) {
-			Flight::error($exception);
+			throw $exception;
 		} finally {
 			$connection = null;
 		}
