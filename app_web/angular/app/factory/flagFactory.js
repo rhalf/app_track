@@ -12,10 +12,13 @@ app.factory('flagFactory', function (
     SimVendor,
     UnitStatus,
     UnitType,
-    TrackeeType
+    TrackeeType,
+
+    AppNote
 
     ) {
     var flagFactory = {};
+
 
     flagFactory.Statuses = {};
     flagFactory.Fields = {};
@@ -25,6 +28,7 @@ app.factory('flagFactory', function (
     flagFactory.UnitStatuses = {};
     flagFactory.UnitTypes = {};
     flagFactory.TrackeeTypes = {};
+    flagFactory.AppNotes = {};
 
 
 
@@ -55,6 +59,9 @@ app.factory('flagFactory', function (
             case 'trackeetypes':
                 flagFactory.TrackeeTypes = TrackeeType.query();
                 break;
+            case 'appnotes':
+                flagFactory.AppNotes = AppNote.query();
+                break;
         }
     };
 
@@ -69,7 +76,8 @@ app.factory('flagFactory', function (
                 SimVendor.query(),
                 UnitStatus.query(),
                 UnitType.query(),
-                TrackeeType.query()
+                TrackeeType.query(),
+                AppNote.query()
             ]
         );
 
@@ -83,6 +91,7 @@ app.factory('flagFactory', function (
             flagFactory.UnitStatuses = result[5];
             flagFactory.UnitTypes = result[6];
             flagFactory.TrackeeTypes = result[7];
+            flagFactory.AppNotes = result[8];
 
             console.log("<-=======Loading data finished======->");
             if (callback) {

@@ -1,0 +1,4 @@
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\bin\Debug\GaiaWatcher.dll
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\bin\Debug\GaiaWatcher.pdb
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\obj\Debug\GaiaWatcher.dll
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\obj\Debug\GaiaWatcher.pdb

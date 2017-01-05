@@ -34,3 +34,10 @@ app.directive('panelLoading', function () {
         controller: 'panelLoadingController'
     }
 });
+
+app.directive('panelBottom', function () {
+    return {
+        templateUrl: '/app/view/directive/panelBottom.html',
+        controller: 'panelBottomController'
+    }
+});

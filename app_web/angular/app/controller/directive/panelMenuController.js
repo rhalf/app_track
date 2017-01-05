@@ -28,28 +28,32 @@ app.controller('panelMenuController', function (
 
     //System
     $scope.showCompanies = function () {
-        $scope.ui.panelSystemTemplate = 'app/view/form/system/companies.html';
+        $scope.ui.panelModeTemplate = 'app/view/form/system/companies.html';
     };
 
     $scope.showUsers = function () {
-        $scope.ui.panelSystemTemplate = 'app/view/form/system/users.html';
+        $scope.ui.panelModeTemplate = 'app/view/form/system/users.html';
     };
 
 
     $scope.showSims = function () {
-        $scope.ui.panelSystemTemplate = 'app/view/form/system/sims.html';
+        $scope.ui.panelModeTemplate = 'app/view/form/system/sims.html';
     };
 
     $scope.showUnits = function () {
-        $scope.ui.panelSystemTemplate = 'app/view/form/system/units.html';
+        $scope.ui.panelModeTemplate = 'app/view/form/system/units.html';
     };
 
     $scope.showDrivers = function () {
-        $scope.ui.panelSystemTemplate = 'app/view/form/system/drivers.html';
+        $scope.ui.panelModeTemplate = 'app/view/form/system/drivers.html';
     };
 
     $scope.showVehicles = function () {
-        $scope.ui.panelSystemTemplate = 'app/view/form/system/vehicles.html';
+        $scope.ui.panelModeTemplate = 'app/view/form/system/vehicles.html';
+    };
+
+    $scope.showUserOnlines = function () {
+        $scope.ui.panelModeTemplate = 'app/view/form/system/useronlines.html';
     };
 
 
@@ -67,7 +71,7 @@ app.controller('panelMenuController', function (
         });
     };
 
-    $scope.showClientUnits= function () {
+    $scope.showClientUnits = function () {
         $uibModal.open({
             animation: true,
             templateUrl: 'app/view/form/client/ct_units.html',
@@ -138,7 +142,7 @@ app.controller('panelMenuController', function (
             size: 'lg'
         });
     };
-    
+
     //Map
     $scope.showClientPois = function () {
         $uibModal.open({
@@ -149,7 +153,34 @@ app.controller('panelMenuController', function (
             size: 'lg'
         });
     };
+    $scope.showClientGeofences = function () {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'app/view/form/map/ct_geofences.html',
+            controller: 'ctGeofencesController',
+            keyboard: true,
+            size: 'lg'
+        });
+    };
+    $scope.showClientAreas = function () {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'app/view/form/map/ct_areas.html',
+            controller: 'ctAreasController',
+            keyboard: true,
+            size: 'lg'
+        });
+    };
 
+    $scope.showClientRoutes = function () {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'app/view/form/map/ct_routes.html',
+            controller: 'ctRoutesController',
+            keyboard: true,
+            size: 'lg'
+        });
+    };
     //About
     $scope.showAbout = function () {
         $uibModal.open({
@@ -170,11 +201,23 @@ app.controller('panelMenuController', function (
     };
 
 
-
-    $scope.switchToSystem = function () {
-        $scope.ui.panelSystem = !$scope.ui.panelSystem;
+    $scope.openNote = function (appNote) {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'app/view/form/app_note.html',
+            controller: 'appNoteController',
+            keyboard: true,
+            size: 'md',
+            resolve: {
+                appNote: appNote
+            }
+        });
     };
-   
+
+    $scope.panelModeSelect = function (index) {
+        $scope.ui.panelMode= index;
+    };
+
     $scope.init();
 });
 

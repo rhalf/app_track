@@ -37,25 +37,25 @@
                 <tr>
                     <th>#</th>
                     <th>Name</th>
-                    <th>Desc</th>
+                    <th class="hidden-xs">Desc</th>
                     <th class="hidden-xs">Company</th>
-                    <th>Coordinate</th>
+                    <th class="hidden-xs">Coordinate</th>
                     <th>IsVisible</th>
-                    <th>IsGlobal</th>
+                    <!--<th>IsGlobal</th>-->
                     <th>Option</th>
             </thead>
             <tbody>
                 <tr ng-repeat="poi in pois | filter : selected | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 | limitTo : ui.pagination.pageSize2">
                     <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 }}</td>
                     <td>{{poi.Name}}</td>
-                    <td>{{poi.Desc}}</td>
+                    <td class="hidden-xs">{{poi.Desc}}</td>
                     <td class="hidden-xs">{{poi.Company.Name}}</td>
-                    <td>{{poi.Coordinate}}</td>
+                    <td class="hidden-xs">{{poi.Coordinate}}</td>
                     <td>{{poi.IsVisible}}</td>
-                    <td>{{poi.IsGlobal}}</td>
+                    <!--<td>{{poi.IsGlobal}}</td>-->
                     <td>
-                        <button ng-click="select(collection)" ng-hide="authUser.Privilege.Value > 4"><span class="glyphicon glyphicon-cog" /></button>
-                        <button ng-click="delete(collection)" ng-hide="authUser.Privilege.Value > 4"><span class="glyphicon glyphicon-trash" /></button>
+                        <button ng-click="select(poi)" ng-hide="authUser.Privilege.Value > 4"><span class="glyphicon glyphicon-cog" /></button>
+                        <button ng-click="delete(poi)" ng-hide="authUser.Privilege.Value > 4"><span class="glyphicon glyphicon-trash" /></button>
                     </td>
                 </tr>
             </tbody>

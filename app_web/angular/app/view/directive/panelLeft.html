@@ -6,7 +6,7 @@
 </head>
 <body>
     <!-- Sidebar -->
-    <div id="sidebar-wrapper">
+    <div id="left-side-wrapper">
         <div class="container-fluid">
             <br />
             <!--<hr />-->
@@ -83,7 +83,7 @@
                         </uib-accordion-group>-->
                         <uib-accordion-group ng-repeat="collection in fleet.collections" is-open="accordion[$index + 1]">
                             <uib-accordion-heading>
-                                {{collection.Name}}
+                                {{ collection.Name  | limitTo : 15 }}
 
                                 <span class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accordion[$index + 1], 'glyphicon-chevron-right': !accordion[$index + 1]}"></span>
                                 <span class="pull-right">&nbsp</span>
@@ -92,7 +92,7 @@
 
                             <div ng-repeat="vehicle in collection.Vehicles | filter : selected track by vehicle.Id">
                                 <ul class="list-inline">
-                                   
+
                                     <li><input type="checkbox" class="checkbox" ng-model="vehicle.Tracked" ng-change="check(this.vehicle)" /></li>
                                     <li>
                                         <div ng-show="selectedProperty == 'Plate'">{{vehicle.Plate}}</div>
@@ -109,7 +109,7 @@
                                 </ul>
                             </div>
 
-                           
+
                         </uib-accordion-group>
                     </uib-accordion>
 

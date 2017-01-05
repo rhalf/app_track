@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3271A767-A578-4D8B-B13A-9A4E935927B4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GaiaWatcher</RootNamespace>
+    <AssemblyName>GaiaWatcher</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.6.9.9\lib\net40\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Ats\Command.cs" />
+    <Compile Include="Ats\Ats.cs" />
+    <Compile Include="Ats\AtsSocketManager.cs" />
+    <Compile Include="Classes\Analog.cs" />
+    <Compile Include="Classes\Coordinate.cs" />
+    <Compile Include="Classes\Digital.cs" />
+    <Compile Include="Classes\Log.cs" />
+    <Compile Include="Classes\NetworkTool.cs" />
+    <Compile Include="Classes\Unit.cs" />
+    <Compile Include="Classes\UnitDatas.cs" />
+    <Compile Include="Classes\CommandData.cs" />
+    <Compile Include="Database\Query.cs" />
+    <Compile Include="Database\DatabaseProfile.cs" />
+    <Compile Include="Database\Database.cs" />
+    <Compile Include="Meitrack\MeitrackEvent.cs" />
+    <Compile Include="Meitrack\MeitrackCommand.cs" />
+    <Compile Include="Classes\Company.cs" />
+    <Compile Include="Classes\Gprs.cs" />
+    <Compile Include="Classes\Counter.cs" />
+    <Compile Include="Classes\Helper.cs" />
+    <Compile Include="Classes\Io.cs" />
+    <Compile Include="Client.cs" />
+    <Compile Include="Clients.cs" />
+    <Compile Include="Meitrack\MeitrackSocketManager.cs" />
+    <Compile Include="SocketManager.cs" />
+    <Compile Include="Service.cs" />
+    <Compile Include="GaiaWatcher.cs" />
+    <Compile Include="Meitrack\T1.cs" />
+    <Compile Include="Meitrack\Mvt100.cs" />
+    <Compile Include="Meitrack\Meitrack.cs" />
+    <Compile Include="SocketProfile.cs" />
+    <Compile Include="Classes\Gps.cs" />
+    <Compile Include="Classes\Header.cs" />
+    <Compile Include="Classes\UnitData.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Teltonika\TeltonikaSocketManager.cs" />
+    <Compile Include="Teltonika\Teltonika.cs" />
+    <Compile Include="Teltonika\Fm1100.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -97,6 +97,7 @@ app.controller('loginController', function (
                     $scope.ui.panelAdmin = false;
                     $scope.ui.isLoading = false;
 
+              
                     $location.path('/form');
                     break;
                 case 2:

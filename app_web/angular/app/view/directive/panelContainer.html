@@ -10,13 +10,20 @@
             <div panel-menu></div>
         </div>
         <div class="row">
-            <div id="wrapper" ng-class="{ 'toggled' : ui.panelLeft }">
-                <div panel-left></div>
-                <div panel-center></div>
+            <div id="wrapper">
+
+                <div id="left" ng-class="{ 'toggled' : ui.panelLeft }">
+                    <div panel-left></div>
+
+                    <div id="bottom" ng-class="{ 'toggled' : ui.panelLeft }">
+                        <div panel-center></div>
+                        <div panel-bottom></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-   
-  
+
+
 </body>
 </html>

@@ -1,0 +1,7 @@
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\bin\x64\Debug\GaiaWatcher.dll.config
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\bin\x64\Debug\GaiaWatcher.dll
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\bin\x64\Debug\GaiaWatcher.pdb
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\bin\x64\Debug\MySql.Data.dll
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\obj\x64\Debug\GaiaWatcher.dll
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\obj\x64\Debug\GaiaWatcher.pdb
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\obj\x64\Debug\GaiaWatcher.csprojResolveAssemblyReference.cache

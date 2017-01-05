@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="modal-title">Geofence</h3>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" ng-model="selected" placeholder="Search" />
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" ng-click="selected = ''">
+                            <span class="glyphicon glyphicon-ban-circle" />
+                        </button>
+                        <button class="btn btn-default" type="button" ng-click="add()" ng-hide="authUser.Privilege.Value > 4">
+                            <span class="glyphicon glyphicon-plus" />
+                        </button>
+                        <button class="btn btn-default" type="button" ng-click="cancel()">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-body">
+        <table class="table  table-responsive table-hover table-condensed small">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th class="hidden-xs">Desc</th>
+                    <th class="hidden-xs">Company</th>
+                    <!--<th class="hidden-xs">Coordinates</th>-->
+                    <th>IsVisible</th>
+                    <th class="hidden-xs">Light/Min.Speed</th>
+                    <th class="hidden-xs">Light/Max.Speed</th>
+                    <th class="hidden-xs">Heavy/Min.Speed</th>
+                    <th class="hidden-xs">Heavy/Max.Speed</th>
+                    <th>Option</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="geofence in geofences | filter : selected | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 | limitTo : ui.pagination.pageSize2">
+                    <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize2 }}</td>
+                    <td>{{geofence.Name}}</td>
+                    <td class="hidden-xs">{{geofence.Desc}}</td>
+                    <td class="hidden-xs">{{geofence.Company.Name}}</td>
+                    <!--<td class="hidden-xs">{{geofence.Coordinates}}</td>-->
+                    <td>{{geofence.IsVisible}}</td>
+                    <td class="hidden-xs">{{geofence.SpeedMinL}}</td>
+                    <td class="hidden-xs">{{geofence.SpeedMaxL}}</td>
+                    <td class="hidden-xs">{{geofence.SpeedMinH}}</td>
+                    <td class="hidden-xs">{{geofence.SpeedMaxH}}</td>
+         
+                    <td>
+                        <button ng-click="select(geofence)" ng-hide="authUser.Privilege.Value > 4"><span class="glyphicon glyphicon-cog" /></button>
+                        <button ng-click="delete(geofence)" ng-hide="authUser.Privilege.Value > 4"><span class="glyphicon glyphicon-trash" /></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal-footer">
+        <center>
+            <uib-pagination boundary-links="true"
+                            force-ellipses="true"
+                            total-items="geofences.length"
+                            ng-model="ui.pagination.currentPage"
+                            items-per-page="ui.pagination.pageSize1"
+                            style="padding:0;margin:0;">
+            </uib-pagination>
+        </center>
+    </div>
+</body>
+</html>

@@ -2,7 +2,12 @@
 
 app.filter('startFromFilter', function () {
     return function (input, index) {
-        if (input > 0) {
+
+        if (input == null) {
+            return input;
+        }
+
+        if (index < (input.length + 1)) {
             return input.slice(index);
         } else {
             return input;

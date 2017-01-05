@@ -67,7 +67,7 @@ app.factory('Nation', function ($resource) {
 
 
 app.factory('User', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/user/:id/:type', { id: '@id', type: '@type'}, {
+    return $resource('http://184.107.179.181/v1/main/user/:id/:type', { id: '@id', type: '@type' }, {
         'update': {
             method: 'PUT'
         },
@@ -192,14 +192,14 @@ app.factory('VehicleCollection', function ($resource) {
         getByCollection: {
             method: 'GET',
             params: {
-                collection : '@collection'
+                collection: '@collection'
             },
             isArray: true
         },
         deleteByCollection: {
             method: 'DELETE',
             params: {
-                collection : '@collection'
+                collection: '@collection'
             },
             isArray: false
         }
@@ -216,7 +216,7 @@ app.factory('TrackeeType', function ($resource) {
 });
 
 app.factory('Session', function ($resource) {
-    return $resource('http://184.107.179.181/v1/session/login/',{}, {
+    return $resource('http://184.107.179.181/v1/session/login/', {}, {
         'login': {
             method: 'POST',
             data: {
@@ -262,6 +262,73 @@ app.factory('Poi', function ($resource) {
             method: 'GET',
             params: {
                 company: '@company'
+            },
+            isArray: true
+        }
+    });
+});
+app.factory('Geofence', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/geofence/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
+        },
+        getByCompany: {
+            method: 'GET',
+            params: {
+                company: '@company'
+            },
+            isArray: true
+        }
+    });
+});
+app.factory('Route', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/route/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
+        },
+        getByCompany: {
+            method: 'GET',
+            params: {
+                company: '@company'
+            },
+            isArray: true
+        }
+    });
+});
+app.factory('Area', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/area/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
+        },
+        getByNation: {
+            method: 'GET',
+            params: {
+                nation: '@nation'
+            },
+            isArray: true
+        }
+    });
+});
+//===============================================================================
+//System
+//===============================================================================
+app.factory('AppNote', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/appnote/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
+        }
+    });
+});
+
+app.factory('UserOnline', function ($resource) {
+    return $resource('http://184.107.179.181/v1/main/useronline/:id', { id: '@id' }, {
+        'update': {
+            method: 'PUT'
+        },
+        getByTime: {
+            method: 'GET',
+            params: {
+                time: '@time'
             },
             isArray: true
         }

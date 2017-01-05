@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <h3 class="modal-title">Route (Add)</h3>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+
+                <div class="noty">
+                    <uib-alert ng-repeat="alert in ui.alert.items" type="{{alert.type}}" close="closeAlert($index)" dismiss-on-timeout="{{ui.alert.timeout}}">{{alert.message}} </uib-alert>
+                </div>
+                <form class="form-horizontal" role="form">
+                    <fieldset ng-disabled="form.isDisabled">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" ng-model="route.Name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Desc</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" ng-model="route.Desc" required />
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Company</label>
+                            <div class="col-md-10">
+                                <select class="form-control" ng-model="route.Company" ng-init="route.Company = authUser.Company" ng-options="company as company.Name for company in companies track by company.Id" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Coordinates</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{route.Coordinates}}" disabled />
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default" ng-click="showMinimap()">Select</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">IsVisible</label>
+                            <div class="col-md-10">
+                                <input type="checkbox" class="form-control" ng-model="route.IsVisible" ng-true-value="true" ng-false-value="false" />
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Light Vehicle / Min. Speed</label>
+                            <div class="col-md-10">
+                                <input type="number" class="form-control" ng-model="route.SpeedMinL" ng-init="route.SpeedMinL = 0" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Light Vehicle / Max. Speed</label>
+                            <div class="col-md-10">
+                                <input type="number" class="form-control" ng-model="route.SpeedMaxL" ng-init="route.SpeedMaxL = 80" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Heavy Vehicle / Min. Speed</label>
+                            <div class="col-md-10">
+                                <input type="number" class="form-control" ng-model="route.SpeedMinH" ng-init="route.SpeedMinH = 0" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Heavy Vehicle / Max. Speed</label>
+                            <div class="col-md-10">
+                                <input type="number" class="form-control" ng-model="route.SpeedMaxH" ng-init="route.SpeedMaxH = 60" />
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="add()">Add</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+
+    <style type="text/css">
+        form {
+            margin: 20px;
+        }
+    </style>
+</body>
+</html>

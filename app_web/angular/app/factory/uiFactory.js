@@ -8,8 +8,17 @@ app.factory('uiFactory', function () {
 
     uiFactory.panelLeft = false;
     uiFactory.panelMenuMobile = false;
-    uiFactory.panelSystem = false;
-    uiFactory.panelSystemTemplate = null;
+    //uiFactory.panelSystem = false;
+
+    uiFactory.panelMode = 0;
+    uiFactory.panelModes = [
+        { Name: 'Tracking' },
+        { Name: 'Reporting' },
+        { Name: 'Administrating' },
+    ];
+    uiFactory.panelModeTemplate = null;
+
+    
 
     uiFactory.dateTimePicker = {};
     uiFactory.dateTimePicker.format = ["yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd", "HH:mm:ss"];

@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "app_api_flight", "app_api_flight\", "{61306443-E6EB-4589-829E-0CF794DD3C0D}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv2.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_19909"
+		Debug.AspNetCompiler.PhysicalPath = "app_api_flight\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_19909\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_19909"
+		Release.AspNetCompiler.PhysicalPath = "app_api_flight\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_19909\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "19909"
+		SlnRelativePath = "app_api_flight\"
+	EndProjectSection
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "app_api_lumen", "app_api_lumen\", "{07B1877D-EC6C-47A0-88DB-EEA939344249}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_19917"
+		Debug.AspNetCompiler.PhysicalPath = "app_api_lumen\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_19917\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_19917"
+		Release.AspNetCompiler.PhysicalPath = "app_api_lumen\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_19917\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "19917"
+		SlnRelativePath = "app_api_lumen\"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{61306443-E6EB-4589-829E-0CF794DD3C0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61306443-E6EB-4589-829E-0CF794DD3C0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07B1877D-EC6C-47A0-88DB-EEA939344249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07B1877D-EC6C-47A0-88DB-EEA939344249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="modal-header">
+                <div class="col-md-12">
+                    <h4 class="pull-left">{{appNote.Name}} </h4>
+                    <h4 class="pull-right">{{appNote.DtCreated | dateFilter : 'date' }} </h4>
+                </div>
+            </div>
+            <div class="modal-body">
+               {{appNote.Message}}
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

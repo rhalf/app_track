@@ -1,0 +1,13 @@
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcherSocket\bin\Debug\GaiaWatcherSocket.exe
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcherSocket\bin\Debug\GaiaWatcherSocket.pdb
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcherSocket\obj\Debug\MainWindow.g.cs
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcherSocket\obj\Debug\App.g.cs
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcherSocket\obj\Debug\GaiaWatcherSocket_MarkupCompile.cache
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcherSocket\obj\Debug\GaiaWatcherSocket_MarkupCompile.lref
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcherSocket\obj\Debug\MainWindow.baml
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcherSocket\obj\Debug\GaiaWatcherSocket.g.resources
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcherSocket\obj\Debug\GaiaWatcherSocket.Properties.Resources.resources
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcherSocket\obj\Debug\GaiaWatcherSocket.csproj.GenerateResource.Cache
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcherSocket\obj\Debug\GaiaWatcherSocket.exe
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcherSocket\obj\Debug\GaiaWatcherSocket.pdb
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcherSocket\obj\Debug\GaiaWatcherSocket.csprojResolveAssemblyReference.cache

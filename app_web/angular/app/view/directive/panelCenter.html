@@ -5,10 +5,10 @@
     <meta charset="utf-8" />
 </head>
 <body>
-    <div id="page-content-wrapper">
-            <div panel-map ng-show="!ui.panelSystem"></div>
-            <div panel-system ng-show="ui.panelSystem">
-                <ng-include src="ui.panelSystemTemplate"></ng-include>
+    <div id="content-wrapper">
+            <div panel-map ng-show="ui.panelMode == 0"></div>
+            <div panel-system ng-show="ui.panelMode == 2">
+                <ng-include src="ui.panelModeTemplate"></ng-include>
             </div>
     </div>
 </body>

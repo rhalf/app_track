@@ -47,9 +47,9 @@
                             <label class="control-label col-md-2">Coordinate</label>
                             <div class="col-md-10">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" ng-model="poi.Coordinate" disabled  />
+                                    <input type="text" class="form-control" value="{{object.getPoiCoordinate()}}" disabled/>
                                     <div class="input-group-btn">
-                                        <button class="btn btn-default" ng-click="alert('ji');">Select</button>
+                                        <button class="btn btn-default" ng-click="showMinimap()">Select</button>
                                     </div>
                                 </div>
                             </div>
@@ -62,12 +62,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="control-label col-md-2">IsGlobal</label>
-                            <div class="col-md-10">
-                                <input type="checkbox" class="form-control" ng-model="poi.IsGlobal" />
-                            </div>
-                        </div>
+                     
                     </fieldset>
                 </form>
             </div>

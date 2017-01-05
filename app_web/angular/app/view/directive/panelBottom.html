@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div id="bottom-wrapper">
+        <div class="container-fluid">
+            <div id="bottom-area">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>id</td>
+                            <td>name</td>
+                            <td>dtServer</td>
+                            <td>dtClient</td>
+                            <!--<td>command</td>-->
+                            <!--<td>event</td>-->
+                            <td>length</td>
+                            <td>gps</td>
+                            <!--<td>coordinate</td>-->
+                            <!--<td>latitude</td>-->
+                            <!--<td>longitude</td>-->
+                            <!--<td>altitude</td>-->
+                            <!--<td>course</td>-->
+                            <!--<td>satellite</td>-->
+                            <!--<td>status</td>-->
+                            <!--<td>accuracy</td>-->
+                            <td>gprs</td>
+                            <!--<td>signal</td>-->
+                            <!--<td>status</td>-->
+                            <!--<td>course</td>-->
+
+                            <td>speed</td>
+                            <td>runtime</td>
+                            <td>odo</td>
+                            <td>acc</td>
+                            <td>sos</td>
+                            <td>epc</td>
+                            <td>bat</td>
+                            <td>vcc</td>
+                            <td>acce</td>
+                            <td>dece</td>
+                            <td>rpm</td>
+                            <td>fuel</td>
+                            <td>ibutton</td>
+
+                            <!--"alarm":"0","mode":"0","pic":null,"ibutton":null,"weight":"0","relay1":"0","relay2":"0","relay3":"0","relay4":"0"}}-->
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr ng-repeat="vehicle in fleetFactory.vehicles">
+                            <td>{{vehicle.Id}}</td>
+                            <td>{{vehicle.Name}}</td>
+                            <td>{{vehicle.DtClient}}</td>
+                            <td>{{vehicle.Length}}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <style type="text/css">
+        #bottom-area {
+            height: 300px;
+            width: calc(100%-300px);
+
+            padding: 5px;
+            overflow-y: scroll;
+        }
+    </style>
+</body>
+</html>

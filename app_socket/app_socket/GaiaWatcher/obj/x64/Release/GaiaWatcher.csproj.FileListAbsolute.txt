@@ -1,0 +1,6 @@
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\bin\x64\Release\GaiaWatcher.dll.config
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\bin\x64\Release\GaiaWatcher.dll
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\bin\x64\Release\GaiaWatcher.pdb
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\bin\x64\Release\MySql.Data.dll
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\obj\x64\Release\GaiaWatcher.dll
+C:\Users\Rhalf\Documents\GitHub\app_track\app_socket\app_socket\GaiaWatcher\obj\x64\Release\GaiaWatcher.pdb

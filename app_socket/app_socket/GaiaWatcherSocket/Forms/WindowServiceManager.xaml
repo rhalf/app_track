@@ -1,0 +1,29 @@
+﻿<Window x:Class="GaiaWatcherSocket.Forms.WindowSocketManager"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GaiaWatcherSocket.Forms"
+        mc:Ignorable="d"
+        Title="WindowServiceManager" Height="330.435" Width="784.783">
+    <Grid>
+        <Grid.RowDefinitions>
+            <!--<RowDefinition Height="50"></RowDefinition>-->
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ListView Name="listViewServiceManager" >
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn Header="id" Width="150" DisplayMemberBinding="{Binding id}"></GridViewColumn>
+                        <GridViewColumn Header="ip" Width="150" DisplayMemberBinding="{Binding ip}"></GridViewColumn>
+                        <GridViewColumn Header="imei" Width="150" DisplayMemberBinding="{Binding imei}"></GridViewColumn>
+                        <GridViewColumn Header="dateTime" Width="150" DisplayMemberBinding="{Binding dateTime}"></GridViewColumn>
+                        <GridViewColumn Header="iBytes" Width="150" DisplayMemberBinding="{Binding iBytes}"></GridViewColumn>
+                        <GridViewColumn Header="oBytes" Width="150" DisplayMemberBinding="{Binding oBytes}"></GridViewColumn>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>
