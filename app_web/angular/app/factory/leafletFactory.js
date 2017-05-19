@@ -1,13 +1,28 @@
-﻿var app = angular.module('app');
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Factory for leafletFactory. 
+                            Used for managing leaflet stuffs.
+*/
+var app = angular.module('app');
 
 
 app.factory('leafletFactory', function (
+
+    $uibModal,
+
     $compile,
     $timeout,
     $filter,
 
     authFactory,
     leafletDataFactory,
+    validationFactory,
+    toolFactory,
 
     Poi,
     Geofence,
@@ -15,6 +30,8 @@ app.factory('leafletFactory', function (
     Route
     ) {
 
+    var user = null;
+    var company = null;
 
     var leafletFactory = {};
 
@@ -27,11 +44,12 @@ app.factory('leafletFactory', function (
 
 
     leafletFactory.vehiclesLayer = new L.markerClusterGroup();
+    //leafletFactory.vehiclesLayer = new L.layerGroup();
 
-    leafletFactory.poisLayer = new L.LayerGroup();
-    leafletFactory.geofencesLayer = new L.LayerGroup();
-    leafletFactory.routesLayer = new L.LayerGroup();
-    leafletFactory.areasLayer = new L.LayerGroup();
+    leafletFactory.poisLayer = new L.layerGroup();
+    leafletFactory.geofencesLayer = new L.layerGroup();
+    leafletFactory.routesLayer = new L.layerGroup();
+    leafletFactory.areasLayer = new L.layerGroup();
 
     leafletFactory.center = [25.3000, 51.5167];
 
@@ -39,36 +57,29 @@ app.factory('leafletFactory', function (
     leafletFactory.zoomMinimap = 14;
 
     leafletFactory.minZoom = 9;
-    leafletFactory.maxZoom = 18;
+    leafletFactory.maxZoom = 22;
 
     leafletFactory.maxBound = [
        [26.641168, 49.732361],
        [23.118733, 52.819519]
     ];
 
-    leafletFactory.isAllowed = function () {
-        if (authFactory.getUser().Privilege.Value < 5) {
-            return true;
-        } else {
-            return false;
-        }
-    };
 
 
 
     leafletFactory.map = null;
 
     leafletFactory.init = function () {
-        leafletFactory.initMap(function () {
-            leafletFactory.loadPoi();
-            leafletFactory.loadGeofence();
-            leafletFactory.loadArea();
-            leafletFactory.loadRoute();
-        });
+        $timeout(function () {
+            leafletFactory.initMap();
+        }, 500);
+        $timeout(function () {
+            leafletFactory.refresh();
+        }, 1000);
     };
     //Initialized map
-    leafletFactory.initMap = function (callback) {
-        var openCycle = new L.tileLayer(leafletDataFactory.mapLayer.openCycle);
+    leafletFactory.initMap = function () {
+        //var openCycle = new L.tileLayer(leafletDataFactory.mapLayer.openCycle);
         var openStreet = new L.tileLayer(leafletDataFactory.mapLayer.openStreet)
 
         // initialize the map
@@ -81,7 +92,7 @@ app.factory('leafletFactory', function (
             maxZoom: leafletFactory.maxZoom,
 
             layers: [
-                openCycle,
+                //openCycle,
                 openStreet,
 
                 leafletFactory.vehiclesLayer,
@@ -92,10 +103,8 @@ app.factory('leafletFactory', function (
             ]
         });
 
-
-
         var mapsLayers = {
-            "OpenCycleMap": openCycle,
+            //"OpenCycleMap": openCycle,
             "OpenStreetMap": openStreet
         };
 
@@ -112,11 +121,32 @@ app.factory('leafletFactory', function (
 
         leafletFactory.map.setView(leafletFactory.center, leafletFactory.zoom);
 
+        leafletFactory.load();
+    };
 
-        $timeout(function () {
-            leafletFactory.map.invalidateSize();
+    leafletFactory.load = function (callback) {
+        leafletFactory.vehicles = [];
+        leafletFactory.pois = [];
+        leafletFactory.areas = [];
+        leafletFactory.geofences = [];
+        leafletFactory.routes = [];
+
+        user = authFactory.getUser();
+        company = authFactory.getCompany();
+
+        leafletFactory.vehiclesLayer.clearLayers();
+        leafletFactory.loadPoi();
+        leafletFactory.loadGeofence();
+        leafletFactory.loadArea();
+        leafletFactory.loadRoute();
+
+        if (typeof (callback) == 'function') {
             callback();
-        }, 1000);
+        }
+    };
+
+    leafletFactory.refresh = function () {
+        leafletFactory.map.invalidateSize();
     };
     //poi
     leafletFactory.loadPoi = function () {
@@ -124,11 +154,11 @@ app.factory('leafletFactory', function (
         leafletFactory.poisLayer.clearLayers();
 
         Poi.getByCompany(
-        { company: authFactory.getUser().Company.Id },
+        { company: company.id },
         function (result) {
             leafletFactory.pois = result;
             angular.forEach(leafletFactory.pois, function (poi, index) {
-                if (poi.IsVisible) {
+                if (poi.isVisible) {
                     leafletFactory.createPoi(poi);
                 }
             });
@@ -136,23 +166,23 @@ app.factory('leafletFactory', function (
     };
     leafletFactory.createPoi = function (poi) {
 
-        //var icon = new L.icon({
-        //    iconUrl: leafletDataFactory.icons.pois[0],
-        //    iconSize: [32, 32],
-        //    iconAnchor: [16, 32],
-        //    popupAnchor: [0, 0]
-        //});
+        var icon = new L.icon({
+            iconUrl: leafletDataFactory.icons.pois[0],
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, 0]
+        });
 
-        var coordinate = new L.latLng(poi.Coordinate.latitude, poi.Coordinate.longitude);
+        var coordinate = new L.latLng(poi.coordinate.latitude, poi.coordinate.longitude);
 
         var marker = new L.marker(coordinate, {
-            //icon: icon,
-            poi: poi.Id,
+            icon: icon,
+            poi: poi.id,
             riseOnHover: true
 
         });
 
-        //marker.bindTooltip(poi.Name, { noHide: true, direction: 'auto', offset: [5, -15] });
+        marker.bindTooltip(poi.name);
 
         marker.bindPopup(leafletFactory.createPopupForPoi(poi));
 
@@ -161,12 +191,12 @@ app.factory('leafletFactory', function (
     leafletFactory.createPopupForPoi = function (poi) {
 
         //Validation
-        if (!poi || !poi.Coordinate) {
+        if (!poi || !poi.coordinate) {
             return null;
         }
 
         var popup =
-          "<h4>" + poi.Name + "</h4>" + poi.Desc + "<br />";
+          "<h4>" + poi.name + "</h4>" + poi.desc + "<br />";
 
         return popup;
     };
@@ -176,20 +206,22 @@ app.factory('leafletFactory', function (
         leafletFactory.geofencesLayer.clearLayers();
 
         Geofence.getByCompany(
-        { company: authFactory.getUser().Company.Id },
+        { company: company.id },
         function (result) {
             leafletFactory.geofences = result;
-            angular.forEach(leafletFactory.geofences, function (geofence, index) {
-                if (geofence.IsVisible) {
-                    leafletFactory.createGeofence(geofence);
-                }
-            });
+
+            angular.forEach(leafletFactory.geofences,
+                function (geofence, index) {
+                    if (geofence.isVisible) {
+                        leafletFactory.createGeofence(geofence);
+                    }
+                });
         });
     };
     leafletFactory.createGeofence = function (geofence) {
 
         var coordinates = [];
-        angular.forEach(geofence.Coordinates, function (coordinate, index) {
+        angular.forEach(geofence.coordinates, function (coordinate, index) {
             //console.log(coordinate);
             coordinates.push([coordinate.latitude, coordinate.longitude]);
         });
@@ -197,7 +229,7 @@ app.factory('leafletFactory', function (
         var polygon = new L.polygon(coordinates);
 
         polygon.bindPopup(leafletFactory.createPopupForGeofence(geofence));
-        //polygon.bindTooltip(geofence.Name, { noHide: true, direction: 'auto', offset: [5, -15] });
+        //polygon.bindTooltip(geofence.name, { noHide: true, direction: 'auto', offset: [5, -15] });
 
 
         leafletFactory.geofencesLayer.addLayer(polygon);
@@ -205,19 +237,19 @@ app.factory('leafletFactory', function (
     leafletFactory.createPopupForGeofence = function (geofence) {
 
         //Validation
-        if (!geofence || !geofence.Coordinates) {
+        if (!geofence || !geofence.coordinates) {
             return null;
         }
 
         var popup =
-          "<h4>" + geofence.Name + "</h4>" +
+          "<h4>" + geofence.name + "</h4>" +
           "<strong>Light Vehicle</strong><br />" +
-          "Speed Min : " + geofence.SpeedMinL + "<br />" +
-          "Speed Max : " + geofence.SpeedMaxL + "<br />" +
+          "Speed Min : " + geofence.speedMinL + "<br />" +
+          "Speed Max : " + geofence.speedMaxL + "<br />" +
           "<br />" +
           "<strong>Heavy Vehicle</strong><br />" +
-          "Speed Min : " + geofence.SpeedMaxH + "<br />" +
-          "Speed Max : " + geofence.SpeedMaxH + "<br />";
+          "Speed Min : " + geofence.speedMaxH + "<br />" +
+          "Speed Max : " + geofence.speedMaxH + "<br />";
 
         return popup;
     };
@@ -227,11 +259,11 @@ app.factory('leafletFactory', function (
         leafletFactory.routesLayer.clearLayers();
 
         Route.getByCompany(
-        { company: authFactory.getUser().Company.Id },
+        { company: company.id },
         function (result) {
             leafletFactory.routes = result;
             angular.forEach(leafletFactory.routes, function (route, index) {
-                if (route.IsVisible) {
+                if (route.isVisible) {
                     leafletFactory.createRoute(route);
                 }
             });
@@ -240,35 +272,35 @@ app.factory('leafletFactory', function (
     leafletFactory.createRoute = function (route) {
 
         var coordinates = [];
-        angular.forEach(route.Coordinates, function (coordinate, index) {
+        angular.forEach(route.coordinates, function (coordinate, index) {
             //console.log(coordinate);
             coordinates.push([coordinate.latitude, coordinate.longitude]);
         });
 
-        var polygon = new L.polyline(coordinates, { color: '#00FF88' });
+        var polyline = new L.polyline(coordinates, { color: '#00FF88' });
 
-        polygon.bindPopup(leafletFactory.createPopupForRoute(route));
-        //polygon.bindTooltip(route.Name, { noHide: true, direction: 'auto', offset: [5, -15] });
+        polyline.bindPopup(leafletFactory.createPopupForRoute(route));
+        //polyline.bindTooltip(route.name, { noHide: true, direction: 'auto', offset: [5, -15] });
 
 
-        leafletFactory.routesLayer.addLayer(polygon);
+        leafletFactory.routesLayer.addLayer(polyline);
     };
     leafletFactory.createPopupForRoute = function (route) {
 
         //Validation
-        if (!route || !route.Coordinates) {
+        if (!route || !route.coordinates) {
             return null;
         }
 
         var popup =
-          "<h4>" + route.Name + "</h4>" +
+          "<h4>" + route.name + "</h4>" +
           "<strong>Light Vehicle</strong><br />" +
-          "Speed Min : " + route.SpeedMinL + "<br />" +
-          "Speed Max : " + route.SpeedMaxL + "<br />" +
+          "Speed Min : " + route.speedMinL + "<br />" +
+          "Speed Max : " + route.speedMaxL + "<br />" +
           "<br />" +
           "<strong>Heavy Vehicle</strong><br />" +
-          "Speed Min : " + route.SpeedMaxH + "<br />" +
-          "Speed Max : " + route.SpeedMaxH + "<br />";
+          "Speed Min : " + route.speedMaxH + "<br />" +
+          "Speed Max : " + route.speedMaxH + "<br />";
 
         return popup;
     };
@@ -281,7 +313,7 @@ app.factory('leafletFactory', function (
          function (result) {
              leafletFactory.areas = result;
              angular.forEach(leafletFactory.areas, function (area, index) {
-                 if (area.IsVisible) {
+                 if (area.isVisible) {
                      leafletFactory.createArea(area);
                  }
              });
@@ -291,7 +323,7 @@ app.factory('leafletFactory', function (
 
 
         var coordinates = [];
-        angular.forEach(area.Coordinates, function (coordinate, index) {
+        angular.forEach(area.coordinates, function (coordinate, index) {
             //console.log(coordinate);
             coordinates.push([coordinate.latitude, coordinate.longitude]);
         });
@@ -300,7 +332,7 @@ app.factory('leafletFactory', function (
         var polygon = new L.polygon(coordinates, { color: 'green' });
 
         polygon.bindPopup(leafletFactory.createPopupForArea(area));
-        //polygon.bindTooltip(area.Name, { noHide: true, direction: 'auto', offset: [5, -15] });
+        //polygon.bindTooltip(area.name, { noHide: true, direction: 'auto', offset: [5, -15] });
 
 
         leafletFactory.areasLayer.addLayer(polygon);
@@ -308,185 +340,309 @@ app.factory('leafletFactory', function (
     leafletFactory.createPopupForArea = function (area) {
 
         //Validation
-        if (!area || !area.Coordinates) {
+        if (!area || !area.coordinates) {
             return null;
         }
 
         var popup =
-          "<h4>" + area.Name + "</h4>" +
+          "<h4>" + area.name + "</h4>" +
           "<strong>Light Vehicle</strong><br />" +
-          "Speed Min : " + area.SpeedMinL + "<br />" +
-          "Speed Max : " + area.SpeedMaxL + "<br />" +
+          "Speed Min : " + area.speedMinL + "<br />" +
+          "Speed Max : " + area.speedMaxL + "<br />" +
           "<br />" +
           "<strong>Heavy Vehicle</strong><br />" +
-          "Speed Min : " + area.SpeedMaxH + "<br />" +
-          "Speed Max : " + area.SpeedMaxH + "<br />";
+          "Speed Min : " + area.speedMaxH + "<br />" +
+          "Speed Max : " + area.speedMaxH + "<br />";
 
         return popup;
     };
-    //Vehicles
-    leafletFactory.setVehicle = function (vehicle) {
-        object = leafletFactory.getVehicleObject(vehicle);
-        if (object == null) {
-            leafletFactory.addVehicles(vehicle);
-        } else {
-            leafletFactory.updateVehicles(vehicle);
-        }
-    };
-    leafletFactory.updateVehicles = function (vehicle) {
-        object = leafletFactory.getVehicleObject(vehicle);
-
-        var icon = leafletFactory.createIconForVehicle(vehicle);
-        var popup = leafletFactory.createPopupForVehicle(vehicle);
-        var coordinate = new L.latLng(vehicle.Unit.UnitData.gps.coordinate.latitude, vehicle.Unit.UnitData.gps.coordinate.longitude);
-
-        if (!icon || !popup) {
-            return;
-        }
-
-        object.bindPopup(popup);
-        object.setLatLng(coordinate);
-
-        console.log("vehicle updated to the layer!");
-    };
-    leafletFactory.removeVehicle = function (vehicle) {
-        object = leafletFactory.getVehicleObject(vehicle);
-
-        if (object) {
-            leafletFactory.vehiclesLayer.removeLayer(object);
-            leafletFactory.vehicles.splice(object.Id, 1);
-
-            console.log("vehicle removed from the layer!");
-        }
-    };
-    leafletFactory.addVehicles = function (vehicle) {
-
-        var icon = leafletFactory.createIconForVehicle(vehicle);
-        var popup = leafletFactory.createPopupForVehicle(vehicle);
-        var coordinate = new L.latLng(vehicle.Unit.UnitData.gps.coordinate.latitude, vehicle.Unit.UnitData.gps.coordinate.longitude);
-
-   
-
-        if (!icon || !popup) {
-            return;
-        }
-
-        var marker = new L.marker(coordinate, {
-            rotationAngle: vehicle.Unit.UnitData.gps.coordinate.course,
-            icon: icon,
-            vehicle: vehicle.Id,
-            riseOnHover: true
-        });
-
-        marker.bindTooltip(vehicle.Name);
-        marker.bindPopup(popup).openPopup();
-
-        leafletFactory.vehiclesLayer.addLayer(marker);
-        leafletFactory.vehicles[vehicle.Id] = marker;
-
-        console.log("vehicle added to the layer!");
-    };
     //Icon
-    leafletFactory.createIconForVehicle = function (vehicle) {
-        var iconUrl = null;
+    leafletFactory.createVehicleIcon = function (vehicle, unitData) {
 
-        //Validation
-        if (!vehicle || !vehicle.Unit || !vehicle.Unit.UnitData) {
-            return null;
+        var vehicleIconUrl = null;
+        var alertIconUrl = null;
+
+        //Vehicle icon
+
+        //powercut
+        //if (unitData.io.epc == 1) {
+        //    vehicleIconUrl = 'img/markers/marker_64_yellow.png';
+        //}
+        //overspeeding
+        if (unitData.io.speed >= vehicle.speedMax) {
+            vehicleIconUrl = 'img/markers/marker_64_red.png';
+        }
+            //running
+        else if (unitData.io.speed > 0 && unitData.io.acc == 1) {
+            vehicleIconUrl = 'img/markers/marker_64_blue.png';
+        }
+            //idling
+        else if (unitData.io.speed == 0 && unitData.io.acc == 1) {
+            vehicleIconUrl = 'img/markers/marker_64_orange.png';
+        }
+            //halt
+        else if (unitData.io.speed == 0 && unitData.io.acc == 0) {
+            vehicleIconUrl = 'img/markers/marker_64_gray.png';
+        }
+            //tow
+        else if (unitData.io.speed > 0 && unitData.io.acc == 0) {
+            vehicleIconUrl = 'img/markers/marker_64_yellow.png';
         }
 
-        //Running
-        if (vehicle.Unit.UnitData.io.speed > 0 && vehicle.Unit.UnitData.io.acc == 1) {
-            iconUrl = 'img/markers/marker_triangle_50_blue.gif';
-        }
-            //Idling
-        else if (vehicle.Unit.UnitData.io.speed == 0 && vehicle.Unit.UnitData.io.acc == 1) {
-            iconUrl = 'img/markers/marker_triangle_50_orange.gif';
-        }
-        else if (vehicle.Unit.UnitData.io.speed == 0 && vehicle.Unit.UnitData.io.acc == 0) {
-            iconUrl = 'img/markers/marker_triangle_50_gray.gif';
+        //Alert icon
+        //late data
+        var dtServer = new Date(unitData.header.dtServer);
+        var dtClient = new Date(unitData.header.dtClient);
+
+        var resultA = dtServer.getTime() - dtClient.getTime();
+        var resultB = Date.now() - dtServer.getTime();
+
+        //console.log(resultB);
+
+        if (resultA > (1000 * 60 * 3) && resultA < (1000 * 60 * 60 * 24)) {
+            alertIconUrl = 'img/alerts/alert_64_clock.png';
+        } else if (resultB > (1000 * 60 * 60 * 24)) {
+            alertIconUrl = 'img/alerts/alert_64_wrench.png';
         } else {
-            iconUrl = 'img/markers/marker_triangle_50_yellow.gif';
+            //Distance Limit
+            if (vehicle.maLimit > 0) {
+                var current = (unitData.io.odo / 1000) + vehicle.maInitial;
+                var limit = vehicle.maLimit;
+                if (current > limit) {
+                    alertIconUrl = 'img/alerts/alert_64_km.png';
+                }
+            }
+
+            //extertal power cut
+            if (unitData.io.epc != 0) {
+                alertIconUrl = 'img/alerts/alert_64_flash.png';
+            }
+                //no gps
+            else if (unitData.gps.status == 0) {
+                alertIconUrl = 'img/alerts/alert_64_satellite.png';
+            }
+                //low gprs
+            else if (unitData.gprs.signal < 5) {
+                alertIconUrl = 'img/alerts/alert_64_4g.png';
+            }
+                //sos
+            else if (unitData.io.sos == 1) {
+                alertIconUrl = 'img/alerts/alert_64_sos.png';
+            }
+                //battery
+            else if (unitData.io.batt < 3.7) {
+                alertIconUrl = 'img/alerts/alert_64_battery.png';
+            }
+
+                //vehicle expired
+            else if (validationFactory.isExpired(vehicle.dtExpired)) {
+                alertIconUrl = 'img/alerts/alert_64_car.png';
+            }
+                //unit expired
+            else if (validationFactory.isExpired(vehicle.unit.dtExpired)) {
+                alertIconUrl = 'img/alerts/alert_64_monitor.png';
+            }
+
         }
+
+
 
         var icon = L.icon({
-            iconUrl: iconUrl,
+            iconUrl: vehicleIconUrl,
             //iconRetinaUrl: 'my-icon@2x.png',
-            iconSize: [24, 24],
-            iconAnchor: [12, 12],
-            popupAnchor: [0, -12],
-            //shadowUrl: 'my-icon-shadow.png',
+            iconSize: [32, 32],
+            iconAnchor: [16, 16],
+            shadowUrl: alertIconUrl,
             //shadowRetinaUrl: 'my-icon-shadow@2x.png',
-            //shadowSize: [68, 95],  
-            //shadowAnchor: [22, 94]
+            shadowSize: [24, 24],
+            shadowAnchor: [0, 32]
         });
 
         return icon;
     };
     leafletFactory.createPopupForVehicle = function (vehicle) {
 
-        //Validation
-        if (!vehicle || !vehicle.Unit || !vehicle.Unit.UnitData) {
-            return null;
-        }
+        var content = "<h4>" + vehicle.name + "</h4>" +
+        "plateNo : " + vehicle.plate + "<br />" +
+        "model : " + vehicle.model + "<br />" +
+        "type : " + vehicle.type.name + "<br />" +
+        "<hr />" +
+        "unitImei : " + vehicle.unit.imei + "<br />" +
+        "unitType : " + vehicle.unit.unitType.name + "<br />" +
+        "simNumber : " + vehicle.unit.sim.number + "<br />" +
+        "<hr />" +
+        "acc : " + (vehicle.unit.unitData.io.acc ? "On" : "Off") + "<br />" +
+        "speed : " + vehicle.unit.unitData.io.speed + "kph<br />" +
+        "<hr />" +
+        "address : " + vehicle.address + "<br />";
+
+
+        //function (param) {
+        //    $uibModal.open({
+        //        animation: true,
+        //        templateUrl: 'app/view/report/option.html',
+        //        controller: 'optionController',
+        //        keyboard: true,
+        //        size: 'md',
+        //        resolve: {
+        //            vehicle: vehicle
+        //        }
+        //    });
+        //    return 1;
+        //}
 
         var popup = L.popup({
-            closeButton : false
+            closeButton: false
         })
-        .setContent(
-        "<h4>" + vehicle.Name + "</h4>" +
-        "ServerTime : " + $filter('dateFilter')(vehicle.Unit.UnitData.header.dtServer) + "<br />" +
-        "DeviceTime : " + $filter('dateFilter')(vehicle.Unit.UnitData.header.dtClient) + "<br />" +
-        "Command : " + vehicle.Unit.UnitData.header.command + "<br />" +
-        "Event : " + vehicle.Unit.UnitData.header.event + "<br />" +
-        "Length : " + vehicle.Unit.UnitData.header.length + " bytes <br />" +
-        "<br /><strong>GPS</strong><br />" +
-        "latitude : " + vehicle.Unit.UnitData.gps.coordinate.latitude + "<br />" +
-        "longitude : " + vehicle.Unit.UnitData.gps.coordinate.longitude + "<br />" +
-        "Altitude : " + vehicle.Unit.UnitData.gps.coordinate.altitude + "<br />" +
-        "Course : " + vehicle.Unit.UnitData.gps.coordinate.course + "<br />" +
-        "Satellite: " + vehicle.Unit.UnitData.gps.satellite + "<br />" +
-        "Status: " + vehicle.Unit.UnitData.gps.status + "<br />" +
-        "Accuracy: " + vehicle.Unit.UnitData.gps.accuracy + "<br />" +
-        "<br /><strong>GPRS</strong><br />" +
-        "Signal : " + vehicle.Unit.UnitData.gprs.signal + "<br />" +
-        "Status : " + vehicle.Unit.UnitData.gprs.status + "<br />" +
-        "<br /><strong>IO</strong><br />" +
-        "Speed : " + vehicle.Unit.UnitData.io.speed + "<br />" +
-        "Runtime : " + vehicle.Unit.UnitData.io.runtime + "<br />" +
-        "Odometer : " + vehicle.Unit.UnitData.io.odo + " km <br />" +
-        "Ignition/Acc : " + vehicle.Unit.UnitData.io.acc + "<br />" +
-        "Emergency/Sos: " + vehicle.Unit.UnitData.io.sos + "<br />" +
-        "PowerCut/Epc : " + vehicle.Unit.UnitData.io.epc + "<br />" +
-        "Battery/Batt : " + vehicle.Unit.UnitData.io.batt + " volts<br />" +
-        "Source/Vcc : " + vehicle.Unit.UnitData.io.vcc + " volts<br />" +
-        "Tow : " + vehicle.Unit.UnitData.io.tow + "<br />" +
-        "Motion : " + vehicle.Unit.UnitData.io.motion + "<br />" +
-        "Fuel : " + vehicle.Unit.UnitData.io.fuel + "<br />" +
-        "Rpm : " + vehicle.Unit.UnitData.io.rpm + "<br />" +
-        "Alarm : " + vehicle.Unit.UnitData.io.alarm + "<br />" +
-        "Mode : " + vehicle.Unit.UnitData.io.mode + "<br />" +
-        "Pic : " + vehicle.Unit.UnitData.io.pic + "<br />" +
-        "Ibutton : " + vehicle.Unit.UnitData.io.ibutton + "<br />" +
-        "Weight : " + vehicle.Unit.UnitData.io.weight + "<br />" +
-        "Relay1: " + vehicle.Unit.UnitData.io.relay1 + "<br />" +
-        "Relay2: " + vehicle.Unit.UnitData.io.relay2 + "<br />" +
-        "Relay3: " + vehicle.Unit.UnitData.io.relay3 + "<br />" +
-        "Relay4: " + vehicle.Unit.UnitData.io.relay4 + "<br />");
+      .setContent(content);
+
+
 
         return popup;
 
     };
-    leafletFactory.getVehicleObject = function (vehicle) {
-        var instance = leafletFactory.vehicles[vehicle.Id];
-        if (instance) {
-            return instance;
+    //Vehicles
+    leafletFactory.setVehicle = function (vehicle) {
+
+        if (!vehicle) return;
+        if (!vehicle.unit) return;
+        if (!vehicle.unit.unitData) return;
+
+
+        var marker = leafletFactory.getVehicleMarker(vehicle);
+        if (marker == null) {
+            leafletFactory.addVehicles(vehicle);
         } else {
-            return null;
+            leafletFactory.updateVehicles(vehicle);
         }
     };
+    leafletFactory.updateVehicles = function (vehicle) {
+
+        var marker = leafletFactory.getVehicleMarker(vehicle);
+        if (marker == null) return;
+
+
+        var icon = leafletFactory.createVehicleIcon(vehicle, vehicle.unit.unitData);
+        var popup = leafletFactory.createPopupForVehicle(vehicle);
+        var coordinate = new L.latLng(vehicle.unit.unitData.gps.coordinate.latitude, vehicle.unit.unitData.gps.coordinate.longitude);
+
+        if (!icon || !popup) {
+            return;
+        }
+
+  
+        //if (marker.getLatLng != coordinate.getLatLng) {
+        //    marker.slideTo(coordinate, {
+        //        duration: 30000,
+        //        keepAtCenter: false
+        //    });
+        //}
+
+        marker.bindPopup(popup);
+        marker.setLatLng(coordinate);
+        marker.setIcon(icon);
+        marker.setRotationAngle(vehicle.unit.unitData.gps.coordinate.course);
+
+     
+        console.log("vehicle updated to the layer!");
+    };
+    leafletFactory.removeVehicle = function (vehicle) {
+
+        var marker = leafletFactory.getVehicleMarker(vehicle);
+
+        if (marker == null) return;
+
+        leafletFactory.vehiclesLayer.removeLayer(marker);
+        leafletFactory.removeVehicleMarker(vehicle);
+        console.log("vehicle removed from the layer!");
+
+    };
+    leafletFactory.removeVehicles = function () {
+        leafletFactory.vehiclesLayer.clearLayers();
+        leafletFactory.vehicles = [];
+        console.log("vehicles cleared from layer!");
+
+    };
+    leafletFactory.addVehicles = function (vehicle) {
+
+        if (!vehicle) { return; }
+        if (!vehicle.unit) { return; }
+        if (!vehicle.unit.unitData) { return; }
+
+        var icon = leafletFactory.createVehicleIcon(vehicle, vehicle.unit.unitData);
+        var popup = leafletFactory.createPopupForVehicle(vehicle);
+        var coordinate = new L.latLng(vehicle.unit.unitData.gps.coordinate.latitude, vehicle.unit.unitData.gps.coordinate.longitude);
 
 
 
+        if (!icon || !popup) {
+            return;
+        }
+
+        var marker = new L.marker(coordinate, {
+            rotationAngle: vehicle.unit.unitData.gps.coordinate.course,
+            icon: icon,
+            vehicle: vehicle.id,
+            riseOnHover: true
+        });
+
+        marker.bindTooltip(vehicle.name);
+        marker.bindPopup(popup).openPopup();
+
+
+        var array = [vehicle.id, marker];
+        leafletFactory.vehiclesLayer.addLayer(marker);
+        leafletFactory.vehicles.push(array);
+
+        console.log("vehicle added to the layer!");
+    };
+    leafletFactory.findVehicle = function (vehicle) {
+        var marker = leafletFactory.getVehicleMarker(vehicle);
+
+        if (marker == null) return;
+
+        leafletFactory.map.setView(marker.getLatLng());
+        marker.openTooltip();
+    };
+    leafletFactory.getVehicleMarker = function (vehicle) {
+        var instance = null;
+        angular.forEach(leafletFactory.vehicles, function (array, index) {
+            if (array[0] == vehicle.id)
+                instance = array[1];
+        });
+        return instance;
+    };
+    leafletFactory.removeVehicleMarker = function (vehicle) {
+        angular.forEach(leafletFactory.vehicles,
+            function (array, index) {
+                if (array[0] == vehicle.id) {
+                    leafletFactory.vehicles.splice(index, 1);
+                    console.log(leafletFactory.vehicles);
+                }
+            });
+
+    };
+    leafletFactory.setGeofence = function (unitData) {
+        if (!unitData) return;
+        if (!unitData.gps) return;
+        angular.forEach(leafletFactory.geofences,
+            function (geofence, index) {
+                if (toolFactory.inPolygon(geofence.coordinates, unitData.gps.coordinate)) {
+                    unitData.geofence = geofence;
+                };
+            });
+
+    };
+    leafletFactory.setArea = function (unitData) {
+        if (!unitData) return;
+        if (!unitData.gps) return;
+        angular.forEach(leafletFactory.areas,
+            function (area, index) {
+                if (toolFactory.inPolygon(area.coordinates, unitData.gps.coordinate)) {
+                    unitData.area = area;
+                };
+            });
+
+    };
     return leafletFactory;
 });

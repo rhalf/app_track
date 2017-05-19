@@ -17,7 +17,7 @@ namespace GaiaWatcher {
             }
             return instance;
         }
-        private Command() : base(Service.COMMAND) {
+        private Command () : base(Service.COMMAND) {
 
         }
 
@@ -25,7 +25,23 @@ namespace GaiaWatcher {
 
 
         public override CommandData parseCommandData (byte[] data) {
-            return base.parseCommandData(data);
+            //unitImei,unitType,unitBrand,commandType,commandParam
+            CommandData commandData = null;
+
+            string parse = ASCIIEncoding.UTF8.GetString(data);
+
+            string[] parses = parse.Split(',');
+
+            commandData = new CommandData {
+                imei = parses[0],
+                service = new Service(parses[1]),
+                command = parses[3],
+                parameter = parses[4]
+
+            };
+
+
+            return commandData;
         }
     }
 }

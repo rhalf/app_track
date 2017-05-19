@@ -1,4 +1,13 @@
-﻿var app = angular.module('app');
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Controller for panelContainerController.
+*/
+var app = angular.module('app');
 
 app.controller('panelContainerController', function (
     $scope,
@@ -6,6 +15,7 @@ app.controller('panelContainerController', function (
     uiFactory,
     flagFactory,
     authFactory,
+
     UserOnline
     ) {
 
@@ -13,13 +23,11 @@ app.controller('panelContainerController', function (
     $scope.init = function () {
         $scope.flag = flagFactory;
         $scope.ui = uiFactory;
+        $scope.auth = authFactory;
 
-        $scope.authUser = authFactory.getUser();
 
         var userOnline = new UserOnline();
-        userOnline.User = $scope.authUser;
-
-
+        userOnline.user = $scope.auth.getUser();
 
         UserOnline.save(userOnline);
         $interval(function () {

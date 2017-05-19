@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <h3 class="modal-title">Update</h3>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="container-fluid">
+
+            <form class="form-horizontal" role="form">
+                <fieldset ng-disabled="form.isDisabled">
+                    <uib-tabset active="active">
+                        <uib-tab index="0" heading="Basic">
+                            <div class="group">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" ng-model="vehicle.name" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Plate Number</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" ng-model="vehicle.plate" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Model</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" ng-model="vehicle.model" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">DateTime Expired</label>
+                                    <div class="col-sm-10">
+                                        <p class="input-group">
+                                            <input type="text" class="form-control"
+                                                   uib-datepicker-popup="{{ui.dateTimePicker.format[1]}}"
+                                                   ng-model="vehicle.dtExpired"
+                                                   is-open="ui.dateTimePicker.isOpen[0]"
+                                                   datepicker-options="ui.dateTimePicker.options"
+                                                   ng-required="true"
+                                                   close-text="Close"
+                                                   date-directive />
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="ui.dateTimePicker.toggle(0)">
+                                                    <i class="glyphicon glyphicon-calendar"></i>
+                                                </button>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </uib-tab>
+                        <uib-tab index="1" heading="Settings">
+                            <div class="group">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Mileage (Initial)</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" ng-model="vehicle.maInitial" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Mileage (Limit)</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" ng-model="vehicle.maLimit" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Mileage (Maintenance)</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" ng-model="vehicle.maMaintenance" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Speed (Max)</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" ng-model="vehicle.speedMax" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Fuel (Max)</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" ng-model="vehicle.fuelMax" />
+                                    </div>
+                                </div>
+                            </div>
+                        </uib-tab>
+
+                        <uib-tab index="2" heading="Selection">
+                            <div class="group">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Type</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control" ng-model="vehicle.type" ng-options="Type as Type.name for Type in flag.types track by Type.id" required />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Vehicle status</label>
+                                    <div class="col-sm-10">
+                                        <select class="form-control" ng-model="vehicle.status" ng-options="status as status.name for status in flag.statuses track by status.id" required />
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group" ng-class="valid.isObject(vehicle.unit) ? 'has-success' : 'has-error'" ng-hide="auth.getUser().privilege.value > 3">
+                                    <label class="control-label col-sm-2">Unit</label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group">
+                                            <input class="form-control" type="text" ng-model="vehicle.unit" ng-model-options="units"
+                                                   uib-typeahead="unit as unit.imei for unit in units | filter:$viewValue | limitTo:10" />
+                                            <div class="input-group-btn" ng-click="vehicle.unit = null">
+                                                <button class="btn btn-default">Clear</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group" ng-class="valid.isObject(vehicle.driver) ? 'has-success' : 'has-error'">
+                                    <label class="control-label col-sm-2">Driver</label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group">
+                                            <input class="form-control" type="text" ng-model="vehicle.driver" ng-model-options="units"
+                                                   uib-typeahead="driver as driver.name for driver in drivers | filter:$viewValue | limitTo:10" />
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-default" ng-click="vehicle.driver = null">Clear</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </uib-tab>
+                    </uib-tabset>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+
+
+    <div class="modal-footer">
+
+        <button ng-show="form.isDisabled" class="btn btn-default" type="button" ng-click="toggle()">Edit</button>
+        <button ng-show="!form.isDisabled" class="btn btn-default" type="button" ng-click="update()">Update</button>
+
+    </div>
+
+
+
+    <style type="text/css">
+        .group {
+            margin: 20px;
+        }
+    </style>
+</body>
+</html>

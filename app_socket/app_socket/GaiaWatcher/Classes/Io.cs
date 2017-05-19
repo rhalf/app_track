@@ -31,11 +31,11 @@ namespace GaiaWatcher {
             get;
             set;
         }
-        public double batt {
+        public int batt {
             get;
             set;
         }
-        public double vcc {
+        public int vcc {
             get;
             set;
         }

@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="modal-title">Replay</h3>
+                <h6>{{report.vehicle.name}}</span></h6>
+            </div>
+            <div class="col-md-4">
+                <!--<h6>Imei  {{report.vehicle.unit.imei}}</span></h6>
+                <h6>From  {{report.dateFrom | dateFilter }}</span></h6>
+                <h6>To  {{report.dateTo | dateFilter}}</span></h6>-->
+            </div>
+            <div class="col-md-4">
+                <h6>Imei  {{report.vehicle.unit.imei}}</span></h6>
+                <h6>From  {{report.dateFrom | dateFilter }}</span></h6>
+                <h6>To  {{report.dateTo | dateFilter}}</span></h6>
+                <!--<h6>Distance  {{report.totalDistance / 1000  | limitTo : 5}}</span> kilometers</h6>
+                <h6>Time  {{ report.totalDistance  | limitTo : 5}}</span> seconds</h6>
+                <h6>Fuel  {{ report.totalDistance / 11000  | limitTo : 5}}</span> liters</h6>-->
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="minimap"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <input type="range" ng-model="slider.value" min="{{slider.minimum}}" max="{{slider.maximum}}" ng-change="updateUnitData()" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="text-left">
+                    <div class="btn-group">
+                        <button class="btn btn-default" ng-click="speedDown()"><span class="glyphicon glyphicon-backward"></span></button>
+                        <button class="btn btn-default" ng-click="playing.pause()"><span class="glyphicon glyphicon-pause"></span></button>
+                        <button class="btn btn-default" ng-click="playing.play()"><span class="glyphicon glyphicon-play"></span></button>
+                        <button class="btn btn-default" ng-click="playing.stop()"><span class="glyphicon glyphicon-stop"></span></button>
+                        <button class="btn btn-default" ng-click="speedUp()"><span class="glyphicon glyphicon-forward"></span></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="text-right">
+                    <div class="btn-group">
+                        <button class="btn btn-success">speed</button>
+                        <button class="btn btn-success">{{playing.speed}}</button>
+                        <button class="btn btn-warning">current</button>
+                        <button class="btn btn-warning">{{slider.value}}</button>
+                        <button class="btn btn-danger">maximum</button>
+                        <button class="btn btn-danger">{{slider.maximum}}</button>
+                        <button class="btn btn-default" ng-click="download()"><span class="glyphicon glyphicon-download"></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <hr />
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <label>header</label>
+                <div>id : {{data.id}}</div>
+                <div>server :  {{data.header.dtServer | dateFilter}}</div>
+                <div>client : {{data.header.dtClient | dateFilter}}</div>
+                <div>command : {{data.header.command}}</div>
+                <div>event : {{data.header.event}}</div>
+                <div>length : {{data.header.length}}bytes</div>
+                <div>geofence : {{data.geofence.name}}</div>
+                <div>area : {{data.area.name}}</div>
+                <div ng-click="getAddress(data)">address  {{data.address}}</div>
+            </div>
+            <div class="col-sm-3">
+                <label>gps</label>
+                <div>latitude : {{data.gps.coordinate.latitude}}</div>
+                <div>longitude : {{data.gps.coordinate.longitude}}</div>
+                <div>altitude : {{data.gps.coordinate.altitude}}meters</div>
+                <div>course : {{data.gps.coordinate.course}}degrees</div>
+                <div>satellite : {{data.gps.satellite}}</div>
+                <div>status : {{data.gps.status}}</div>
+                <div>accuracy : {{data.gps.accuracy}}</div>
+                <label>gprs</label>
+                <div>signal : {{data.gprs.signal}}</div>
+                <div>status : {{data.gprs.status}}</div>
+            </div>
+            <div class="col-sm-3">
+                <label>io</label>
+                <div>speed : {{data.io.speed}}kph</div>
+                <div>runtime : {{data.io.runtime}}seconds</div>
+                <div>odo : {{((data.io.odo*1) + (param.vehicle.maInitial*1)) / 1000 | number : 2}}km</div>
+                <div>acc : {{data.io.acc}}</div>
+                <div>sos : {{data.io.sos}}</div>
+                <div>epc : {{data.io.epc}}</div>
+                <div>batt : {{data.io.batt / 1000 | number : 2}}volts</div>
+                <div>vcc : {{data.io.vcc / 1000 | number : 2}}volts</div>
+                <div>relay : {{data.io.relay4}}{{data.io.relay3}}{{data.io.relay2}}{{data.io.relay1}}</div>
+            </div>
+            <div class="col-sm-3">
+                <label>optional</label>
+                <div>acce : {{data.io.acce}}km/s2</div>
+                <div>decce : {{data.io.decce}}km/s2</div>
+                <div>rpm : {{data.io.rpm}}rpm</div>
+                <div>fuel : {{data.io.fuel}}liters</div>
+                <div>ibutton : {{data.io.ibutton}}</div>
+                <div>alarm : {{data.io.alarm}}</div>
+                <div>mode : {{data.io.mode}}</div>
+                <div>pic : {{data.io.pic}}</div>
+                <div>weight : {{data.io.weight}}kgs</div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="cancel()">Close</button>
+    </div>
+    <style type="text/css">
+        #minimap {
+            min-height: 400px;
+            width: 100%;
+            background-color: gray;
+            position: center;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            margin: 10px 0;
+            width: 100%;
+        }
+
+            input[type=range]:focus {
+                outline: none;
+            }
+
+            input[type=range]::-webkit-slider-runnable-track {
+                width: 100%;
+                height: 5px;
+                cursor: pointer;
+                animate: 0.2s;
+                box-shadow: 0px 0px 0px #000000;
+                background: #2497E3;
+                border-radius: 1px;
+                border: 0px solid #000000;
+            }
+
+            input[type=range]::-webkit-slider-thumb {
+                box-shadow: 0px 0px 0px #000000;
+                border: 1px solid #2497E3;
+                height: 18px;
+                width: 18px;
+                border-radius: 25px;
+                background: #A1D0FF;
+                cursor: pointer;
+                -webkit-appearance: none;
+                margin-top: -7px;
+            }
+
+            input[type=range]:focus::-webkit-slider-runnable-track {
+                background: #2497E3;
+            }
+
+            input[type=range]::-moz-range-track {
+                width: 100%;
+                height: 5px;
+                cursor: pointer;
+                animate: 0.2s;
+                box-shadow: 0px 0px 0px #000000;
+                background: #2497E3;
+                border-radius: 1px;
+                border: 0px solid #000000;
+            }
+
+            input[type=range]::-moz-range-thumb {
+                box-shadow: 0px 0px 0px #000000;
+                border: 1px solid #2497E3;
+                height: 18px;
+                width: 18px;
+                border-radius: 25px;
+                background: #A1D0FF;
+                cursor: pointer;
+            }
+
+            input[type=range]::-ms-track {
+                width: 100%;
+                height: 5px;
+                cursor: pointer;
+                animate: 0.2s;
+                background: transparent;
+                border-color: transparent;
+                color: transparent;
+            }
+
+            input[type=range]::-ms-fill-lower {
+                background: #2497E3;
+                border: 0px solid #000000;
+                border-radius: 2px;
+                box-shadow: 0px 0px 0px #000000;
+            }
+
+            input[type=range]::-ms-fill-upper {
+                background: #2497E3;
+                border: 0px solid #000000;
+                border-radius: 2px;
+                box-shadow: 0px 0px 0px #000000;
+            }
+
+            input[type=range]::-ms-thumb {
+                box-shadow: 0px 0px 0px #000000;
+                border: 1px solid #2497E3;
+                height: 18px;
+                width: 18px;
+                border-radius: 25px;
+                background: #A1D0FF;
+                cursor: pointer;
+            }
+
+            input[type=range]:focus::-ms-fill-lower {
+                background: #2497E3;
+            }
+
+            input[type=range]:focus::-ms-fill-upper {
+                background: #2497E3;
+            }
+    </style>
+</body>
+</html>

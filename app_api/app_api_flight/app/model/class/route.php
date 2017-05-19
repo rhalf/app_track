@@ -1,17 +1,25 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class route and supplies the requests such as select, insert, update & delete.
+*/
 class Route implements IQuery {
 
-	public $Id;
-	public $Name;
-	public $Desc;
+	public $id;
+	public $name;
+	public $desc;
 	public $Coordinates;
-	public $SpeedMinL;
-	public $SpeedMaxL;
-	public $SpeedMinH;
-	public $SpeedMaxH;
-	public $IsVisible;
-	public $Company;
+	public $speedMinL;
+	public $speedMaxL;
+	public $speedMinH;
+	public $speedMaxH;
+	public $isVisible;
+	public $company;
 
 	public function __construct() {
 	}
@@ -33,18 +41,18 @@ class Route implements IQuery {
 
 			foreach ($rows as $row) {	
 				$route = new Route();
-				$route->Id = (int) $row['id'];
-				$route->Name = $row['route_name'];
-				$route->Desc = $row['route_description'];
-				$route->Coordinates = json_decode($row['route_coordinates']);
+				$route->id = (int) $row['id'];
+				$route->name = $row['route_name'];
+				$route->desc = $row['route_description'];
+				$route->coordinates = json_decode($row['route_coordinates']);
 
-				$route->SpeedMinL =  (int) $row['route_speed_min_l'];
-				$route->SpeedMaxL = (int) $row['route_speed_max_l'];
-				$route->SpeedMinH = (int) $row['route_speed_min_h'];
-				$route->SpeedMaxH = (int) $row['route_speed_max_h'];
+				$route->speedMinL =  (int) $row['route_speed_min_l'];
+				$route->speedMaxL = (int) $row['route_speed_max_l'];
+				$route->speedMinH = (int) $row['route_speed_min_h'];
+				$route->speedMaxH = (int) $row['route_speed_max_h'];
 
-				$route->IsVisible = (bool) $row['route_is_visible'];
-				$route->Company = Company::select($row['company_id']);
+				$route->isVisible = (bool) $row['route_is_visible'];
+				$route->company = Company::select($row['company_id']);
 
 				array_push($result, $route);
 			}
@@ -79,18 +87,18 @@ class Route implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$route = new Route();
-			$route->Id = (int) $row['id'];
-			$route->Name = $row['route_name'];
-			$route->Desc = $row['route_description'];
-			$route->Coordinates = json_decode($row['route_coordinates']);
+			$route->id = (int) $row['id'];
+			$route->name = $row['route_name'];
+			$route->desc = $row['route_description'];
+			$route->coordinates = json_decode($row['route_coordinates']);
 
-			$route->SpeedMinL =  (int) $row['route_speed_min_l'];
-			$route->SpeedMaxL = (int) $row['route_speed_max_l'];
-			$route->SpeedMinH = (int) $row['route_speed_min_h'];
-			$route->SpeedMaxH = (int) $row['route_speed_max_h'];
+			$route->speedMinL =  (int) $row['route_speed_min_l'];
+			$route->speedMaxL = (int) $row['route_speed_max_l'];
+			$route->speedMinH = (int) $row['route_speed_min_h'];
+			$route->speedMaxH = (int) $row['route_speed_max_h'];
 
-			$route->IsVisible = (bool) $row['route_is_visible'];
-			$route->Company = Company::select($row['company_id']);
+			$route->isVisible = (bool) $row['route_is_visible'];
+			$route->company = Company::select($row['company_id']);
 
 
 			return $route;
@@ -123,18 +131,18 @@ class Route implements IQuery {
 
 			foreach ($rows as $row) {	
 				$route = new Route();
-				$route->Id = (int) $row['id'];
-				$route->Name = $row['route_name'];
-				$route->Desc = $row['route_description'];
-				$route->Coordinates = json_decode($row['route_coordinates']);
+				$route->id = (int) $row['id'];
+				$route->name = $row['route_name'];
+				$route->desc = $row['route_description'];
+				$route->coordinates = json_decode($row['route_coordinates']);
 
-				$route->SpeedMinL =  (int) $row['route_speed_min_l'];
-				$route->SpeedMaxL = (int) $row['route_speed_max_l'];
-				$route->SpeedMinH = (int) $row['route_speed_min_h'];
-				$route->SpeedMaxH = (int) $row['route_speed_max_h'];
+				$route->speedMinL =  (int) $row['route_speed_min_l'];
+				$route->speedMaxL = (int) $row['route_speed_max_l'];
+				$route->speedMinH = (int) $row['route_speed_min_h'];
+				$route->speedMaxH = (int) $row['route_speed_max_h'];
 
-				$route->IsVisible = (bool) $row['route_is_visible'];
-				$route->Company = Company::select($row['company_id']);
+				$route->isVisible = (bool) $row['route_is_visible'];
+				$route->company = Company::select($row['company_id']);
 
 				array_push($result, $route);
 			}
@@ -171,27 +179,27 @@ class Route implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':route_name', $route->Name, PDO::PARAM_STR);
-			$query->bindParam(':route_description', $route->Desc, PDO::PARAM_STR);
+			$query->bindParam(':route_name', $route->name, PDO::PARAM_STR);
+			$query->bindParam(':route_description', $route->desc, PDO::PARAM_STR);
 
-			$json = json_encode($route->Coordinates);
+			$json = json_encode($route->coordinates);
 			$query->bindParam(':route_coordinates', $json, PDO::PARAM_STR);
 
-			$query->bindParam(':route_speed_min_l', $route->SpeedMinL, PDO::PARAM_INT);
-			$query->bindParam(':route_speed_max_l', $route->SpeedMaxL, PDO::PARAM_INT);
-			$query->bindParam(':route_speed_min_h', $route->SpeedMinH, PDO::PARAM_INT);
-			$query->bindParam(':route_speed_max_h', $route->SpeedMaxH, PDO::PARAM_INT);
+			$query->bindParam(':route_speed_min_l', $route->speedMinL, PDO::PARAM_INT);
+			$query->bindParam(':route_speed_max_l', $route->speedMaxL, PDO::PARAM_INT);
+			$query->bindParam(':route_speed_min_h', $route->speedMinH, PDO::PARAM_INT);
+			$query->bindParam(':route_speed_max_h', $route->speedMaxH, PDO::PARAM_INT);
 
-			$query->bindParam(':route_is_visible', $route->IsVisible, PDO::PARAM_BOOL);
-			$query->bindParam(':company_id', $route->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':route_is_visible', $route->isVisible, PDO::PARAM_BOOL);
+			$query->bindParam(':company_id', $route->company->id, PDO::PARAM_INT);
 
 
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -235,28 +243,28 @@ class Route implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':route_name', $route->Name, PDO::PARAM_STR);
-			$query->bindParam(':route_description', $route->Desc, PDO::PARAM_STR);
+			$query->bindParam(':route_name', $route->name, PDO::PARAM_STR);
+			$query->bindParam(':route_description', $route->desc, PDO::PARAM_STR);
 
-			$json = json_encode($route->Coordinates);
+			$json = json_encode($route->coordinates);
 			$query->bindParam(':route_coordinates', $json, PDO::PARAM_STR);
 
-			$query->bindParam(':route_speed_min_l', $route->SpeedMinL, PDO::PARAM_INT);
-			$query->bindParam(':route_speed_max_l', $route->SpeedMaxL, PDO::PARAM_INT);
-			$query->bindParam(':route_speed_min_h', $route->SpeedMinH, PDO::PARAM_INT);
-			$query->bindParam(':route_speed_max_h', $route->SpeedMaxH, PDO::PARAM_INT);
+			$query->bindParam(':route_speed_min_l', $route->speedMinL, PDO::PARAM_INT);
+			$query->bindParam(':route_speed_max_l', $route->speedMaxL, PDO::PARAM_INT);
+			$query->bindParam(':route_speed_min_h', $route->speedMinH, PDO::PARAM_INT);
+			$query->bindParam(':route_speed_max_h', $route->speedMaxH, PDO::PARAM_INT);
 			
-			$query->bindParam(':route_is_visible', $route->IsVisible, PDO::PARAM_BOOL);
-			$query->bindParam(':company_id', $route->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':route_is_visible', $route->isVisible, PDO::PARAM_BOOL);
+			$query->bindParam(':company_id', $route->company->id, PDO::PARAM_INT);
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -287,9 +295,9 @@ class Route implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

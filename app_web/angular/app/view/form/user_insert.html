@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <h3 class="modal-title">User (Add)</h3>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="container-fluid">
+  
+
+            <uib-tabset active="active">
+                <uib-tab index="0" heading="User">
+                    <form class="form-horizontal" role="form">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">name</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="user.name" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Password</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" ng-model="user.password" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Re-Type Password</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" ng-model="user.password1" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">DateTime Expired</label>
+                                <div class="col-sm-10">
+                                    <p class="input-group">
+                                        <input type="text" class="form-control"
+                                               uib-datepicker-popup="{{ui.dateTimePicker.format[1]}}"
+                                               ng-model="user.dtExpired"
+                                               is-open="ui.dateTimePicker.isOpen[0]"
+                                               datepicker-options="ui.dateTimePicker.options"
+                                               ng-required="true"
+                                               close-text="Close"
+                                               date-directive/>
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="ui.dateTimePicker.toggle(0)">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">status</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" ng-model="user.status"  ng-init="user.status = flag.statuses[0]" ng-options="status as status.name for status in flag.statuses track by status.id" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Privilege</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" ng-model="user.privilege"  ng-init="user.privilege = flag.privileges[0]" ng-options="privilege as privilege.name for privilege in flag.privileges track by privilege.id " required />
+                                </div>
+                            </div>
+                          
+                            <div class="form-group" ng-class="valid.isObject(user.sim) ? 'has-success' : 'has-error'">
+                                <label class="control-label col-sm-2">Sim</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <input class="form-control" type="text" ng-model="user.sim" ng-model-options="sims"
+                                               uib-typeahead="sim as sim.number for sim in sims | filter:$viewValue | limitTo:10" />
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-default" ng-click="user.sim = null">Clear</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </uib-tab>
+                <uib-tab index="1" heading="UserInfo">
+                    <form class="form-horizontal" role="form">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Email</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="userInfo.email" />
+                                </div>
+                            </div>
+               
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Telephone</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="userInfo.telephone"/>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+
+                </uib-tab>
+        </div>
+    </div>
+
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="add()">Add</button>
+        
+    </div>
+
+    <style type="text/css">
+        form {
+            margin: 20px;
+        }
+    </style>
+
+</body>
+</html>

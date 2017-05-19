@@ -1,11 +1,19 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class unitStatus and supplies the requests such as select, insert, update & delete.
+*/
 class UnitStatus implements IQuery {
 
-	public $Id;
-	public $Name;
-	public $Desc;
-	public $Value;
+	public $id;
+	public $name;
+	public $desc;
+	public $value;
 	
 	public function __construct() {
 	}
@@ -26,10 +34,10 @@ class UnitStatus implements IQuery {
 
 			foreach ($rows as $row) {	
 				$unitStatus = new UnitStatus();
-				$unitStatus->Id = (int) $row['id'];
-				$unitStatus->Name = $row['status_name'];
-				$unitStatus->Desc = $row['status_desc'];
-				$unitStatus->Value = (int)$row['status_value'];
+				$unitStatus->id = (int) $row['id'];
+				$unitStatus->name = $row['status_name'];
+				$unitStatus->desc = $row['status_desc'];
+				$unitStatus->value = (int)$row['status_value'];
 				
 				array_push($result, $unitStatus);
 			}
@@ -64,10 +72,10 @@ class UnitStatus implements IQuery {
 
 
 			$unitStatus = new UnitStatus();
-			$unitStatus->Id = (int) $row['id'];
-			$unitStatus->Name = $row['status_name'];
-			$unitStatus->Desc = $row['status_desc'];
-			$unitStatus->Value = (int)$row['status_value'];
+			$unitStatus->id = (int) $row['id'];
+			$unitStatus->name = $row['status_name'];
+			$unitStatus->desc = $row['status_desc'];
+			$unitStatus->value = (int)$row['status_value'];
 
 			return $unitStatus;
 
@@ -101,16 +109,16 @@ class UnitStatus implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':status_name', $unitStatus->Name, PDO::PARAM_STR);
-			$query->bindParam(':status_desc', $unitStatus->Desc, PDO::PARAM_STR);
-			$query->bindParam(':status_value',$unitStatus->Value, PDO::PARAM_INT);
+			$query->bindParam(':status_name', $unitStatus->name, PDO::PARAM_STR);
+			$query->bindParam(':status_desc', $unitStatus->desc, PDO::PARAM_STR);
+			$query->bindParam(':status_value',$unitStatus->value, PDO::PARAM_INT);
 			
 			$query->execute();
 			
 			$result = new Result();
-			$result->UnitStatus = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -147,18 +155,18 @@ class UnitStatus implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':status_name', $unitStatus->Name, PDO::PARAM_STR);
-			$query->bindParam(':status_desc', $unitStatus->Desc, PDO::PARAM_STR);
-			$query->bindParam(':status_value', $unitStatus->Value, PDO::PARAM_INT);
+			$query->bindParam(':status_name', $unitStatus->name, PDO::PARAM_STR);
+			$query->bindParam(':status_desc', $unitStatus->desc, PDO::PARAM_STR);
+			$query->bindParam(':status_value', $unitStatus->value, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->UnitStatus = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -189,9 +197,9 @@ class UnitStatus implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->UnitStatus = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

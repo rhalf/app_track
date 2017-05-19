@@ -1,18 +1,18 @@
 ﻿var app = angular.module('app');
 
+var ip = 'http://184.107.175.155/';
+//var ip = 'http://184.107.179.182/';
 
 app.factory('Company', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/company/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/company/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         }
     });
 });
 
-
-
 app.factory('CompanyInfo', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/companyinfo/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/companyinfo/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         },
@@ -26,7 +26,7 @@ app.factory('CompanyInfo', function ($resource) {
 });
 
 app.factory('Field', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/field/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/field/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         }
@@ -34,7 +34,7 @@ app.factory('Field', function ($resource) {
 });
 
 app.factory('Status', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/status/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/status/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         }
@@ -42,7 +42,7 @@ app.factory('Status', function ($resource) {
 });
 
 app.factory('Privilege', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/privilege/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/privilege/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         }
@@ -50,7 +50,7 @@ app.factory('Privilege', function ($resource) {
 });
 
 app.factory('SimVendor', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/simvendor/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/simvendor/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         }
@@ -58,16 +58,15 @@ app.factory('SimVendor', function ($resource) {
 });
 
 app.factory('Nation', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/nation/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/nation/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         }
     });
 });
 
-
 app.factory('User', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/user/:id/:type', { id: '@id', type: '@type' }, {
+    return $resource(ip + 'v1/main/user/:id/:type', { id: '@id', type: '@type' }, {
         'update': {
             method: 'PUT'
         },
@@ -85,7 +84,7 @@ app.factory('User', function ($resource) {
 });
 
 app.factory('UserInfo', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/userinfo/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/userinfo/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         },
@@ -97,8 +96,9 @@ app.factory('UserInfo', function ($resource) {
         }
     });
 });
+
 app.factory('Sim', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/sim/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/sim/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         },
@@ -113,7 +113,7 @@ app.factory('Sim', function ($resource) {
 });
 
 app.factory('Unit', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/unit/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/unit/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         },
@@ -127,10 +127,8 @@ app.factory('Unit', function ($resource) {
     });
 });
 
-
-
 app.factory('UnitSim', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/unitsim/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/unitsim/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         }
@@ -138,7 +136,7 @@ app.factory('UnitSim', function ($resource) {
 });
 
 app.factory('UnitType', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/unittype/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/UnitType/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         }
@@ -146,16 +144,15 @@ app.factory('UnitType', function ($resource) {
 });
 
 app.factory('UnitStatus', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/unitstatus/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/unitstatus/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         }
     });
 });
 
-
 app.factory('Driver', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/driver/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/driver/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         },
@@ -170,7 +167,7 @@ app.factory('Driver', function ($resource) {
 });
 
 app.factory('Vehicle', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/vehicle/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/vehicle/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         },
@@ -185,7 +182,7 @@ app.factory('Vehicle', function ($resource) {
 });
 
 app.factory('VehicleCollection', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/vehiclecollection/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/vehiclecollection/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         },
@@ -206,9 +203,8 @@ app.factory('VehicleCollection', function ($resource) {
     });
 });
 
-
-app.factory('TrackeeType', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/trackeetype/:id', { id: '@id' }, {
+app.factory('Type', function ($resource) {
+    return $resource(ip + 'v1/main/type/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         }
@@ -216,7 +212,7 @@ app.factory('TrackeeType', function ($resource) {
 });
 
 app.factory('Session', function ($resource) {
-    return $resource('http://184.107.179.181/v1/session/login/', {}, {
+    return $resource(ip + 'v1/session/login/', {}, {
         'login': {
             method: 'POST',
             data: {
@@ -228,7 +224,7 @@ app.factory('Session', function ($resource) {
 });
 
 app.factory('Collection', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/collection/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/collection/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         },
@@ -241,34 +237,33 @@ app.factory('Collection', function ($resource) {
         }
     });
 });
-
-
 
 //Data
-app.factory('UnitData', function ($resource) {
-    return $resource('http://184.107.179.181/v1/data/unitdata/:imei', { imei: '@imei' }, {
+//app.factory('UnitData', function ($resource) {
+//    return $resource(ip + 'v1/data/unitdata/:unit', { unit: '@unit' }, {
+//        'update': {
+//            method: 'PUT'
+//        }
+//    });
+//});
+
+app.factory('Poi', function ($resource) {
+    return $resource(ip + 'v1/main/poi/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
+        },
+        getByCompany: {
+            method: 'GET',
+            params: {
+                company: '@company'
+            },
+            isArray: true
         }
     });
 });
 
-app.factory('Poi', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/poi/:id', { id: '@id' }, {
-        'update': {
-            method: 'PUT'
-        },
-        getByCompany: {
-            method: 'GET',
-            params: {
-                company: '@company'
-            },
-            isArray: true
-        }
-    });
-});
 app.factory('Geofence', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/geofence/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/geofence/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         },
@@ -281,8 +276,9 @@ app.factory('Geofence', function ($resource) {
         }
     });
 });
+
 app.factory('Route', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/route/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/route/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         },
@@ -295,8 +291,9 @@ app.factory('Route', function ($resource) {
         }
     });
 });
+
 app.factory('Area', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/area/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/area/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         },
@@ -313,7 +310,7 @@ app.factory('Area', function ($resource) {
 //System
 //===============================================================================
 app.factory('AppNote', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/appnote/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/appnote/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         }
@@ -321,7 +318,7 @@ app.factory('AppNote', function ($resource) {
 });
 
 app.factory('UserOnline', function ($resource) {
-    return $resource('http://184.107.179.181/v1/main/useronline/:id', { id: '@id' }, {
+    return $resource(ip + 'v1/main/useronline/:id', { id: '@id' }, {
         'update': {
             method: 'PUT'
         },
@@ -333,4 +330,40 @@ app.factory('UserOnline', function ($resource) {
             isArray: true
         }
     });
+});
+
+//===============================================================================
+//Data
+//===============================================================================
+
+app.factory('Report', function ($resource) {
+    return $resource(ip + 'v1/data/report',{}, {
+        generate: {
+            method: 'POST',
+            isArray: false,
+            params: {
+                param: '@param'
+            }
+        }
+    });
+});
+
+
+app.factory('Command', function ($resource) {
+    return $resource(ip + 'v1/main/command', {}, {
+        prepare: {
+            method: 'POST',
+            isArray: false,
+            params: {
+                command: '@command'
+            }
+        }
+    });
+});
+
+
+//
+
+app.factory('GoogleGeocode', function ($resource) {
+    return $resource('https://maps.googleapis.com/maps/api/geocode/json?latlng=:latlng', { latlng: '@latlng' });
 });

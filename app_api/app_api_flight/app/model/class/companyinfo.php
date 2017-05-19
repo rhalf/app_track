@@ -1,14 +1,22 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class company and supplies the requests such as select, insert, update & delete.
+*/
 class CompanyInfo implements IQuery {
 
-	public $Id;
-	public $Logo;
-	public $Alert;
-	public $Notify;
-	public $Theme;
-	public $Field;
-	public $Company;
+	public $id;
+	public $logo;
+	public $alert;
+	public $notify;
+	public $theme;
+	public $field;
+	public $company;
 
 	public function __construct() {
 	}
@@ -32,13 +40,13 @@ class CompanyInfo implements IQuery {
 
 			foreach ($rows as $row) {	
 				$companyInfo = new CompanyInfo();
-				$companyInfo->Id = (int) $row['id'];
-				$companyInfo->Logo = $row['info_logo'];
-				$companyInfo->Alert = (int)$row['info_alert'];
-				$companyInfo->Notify = (int) $row['info_noti'];
-				$companyInfo->Theme = (int)$row['info_theme'];
-				$companyInfo->Field = Field::select($row['e_field_id']);
-				$companyInfo->Company = Company::select($row['company_id']);
+				$companyInfo->id = (int) $row['id'];
+				$companyInfo->logo = $row['info_logo'];
+				$companyInfo->alert = (int)$row['info_alert'];
+				$companyInfo->notify = (int) $row['info_noti'];
+				$companyInfo->theme = (int)$row['info_theme'];
+				$companyInfo->field = Field::select($row['e_field_id']);
+				$companyInfo->company = Company::select($row['company_id']);
 
 				array_push($result, $companyInfo);
 			}
@@ -74,13 +82,13 @@ class CompanyInfo implements IQuery {
 
 
 			$companyInfo = new CompanyInfo();
-			$companyInfo->Id = (int) $row['id'];
-			$companyInfo->Logo = $row['info_logo'];
-			$companyInfo->Alert = (int)$row['info_alert'];
-			$companyInfo->Notify = (int) $row['info_noti'];
-			$companyInfo->Theme = (int)$row['info_theme'];
-			$companyInfo->Field = Field::select($row['e_field_id']);
-			$companyInfo->Company = Company::select($row['company_id']);
+			$companyInfo->id = (int) $row['id'];
+			$companyInfo->logo = $row['info_logo'];
+			$companyInfo->alert = (int)$row['info_alert'];
+			$companyInfo->notify = (int) $row['info_noti'];
+			$companyInfo->theme = (int)$row['info_theme'];
+			$companyInfo->field = Field::select($row['e_field_id']);
+			$companyInfo->company = Company::select($row['company_id']);
 
 
 			return $companyInfo;
@@ -112,13 +120,13 @@ class CompanyInfo implements IQuery {
 
 
 			$companyInfo = new CompanyInfo();
-			$companyInfo->Id = (int) $row['id'];
-			$companyInfo->Logo = $row['info_logo'];
-			$companyInfo->Alert = (int)$row['info_alert'];
-			$companyInfo->Notify = (int) $row['info_noti'];
-			$companyInfo->Theme = (int)$row['info_theme'];
-			$companyInfo->Field = Field::select($row['e_field_id']);
-			$companyInfo->Company = Company::select($row['company_id']);
+			$companyInfo->id = (int) $row['id'];
+			$companyInfo->logo = $row['info_logo'];
+			$companyInfo->alert = (int)$row['info_alert'];
+			$companyInfo->notify = (int) $row['info_noti'];
+			$companyInfo->theme = (int)$row['info_theme'];
+			$companyInfo->field = Field::select($row['e_field_id']);
+			$companyInfo->company = Company::select($row['company_id']);
 
 
 			return $companyInfo;
@@ -154,20 +162,20 @@ class CompanyInfo implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':info_logo', $companyInfo->Logo, PDO::PARAM_STR);
-			$query->bindParam(':info_alert', $companyInfo->Alert, PDO::PARAM_INT);
-			$query->bindParam(':info_noti', $companyInfo->Notify, PDO::PARAM_INT);
-			$query->bindParam(':info_theme', $companyInfo->Theme, PDO::PARAM_INT);
-			$query->bindParam(':e_field_id', $companyInfo->Field->Id, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $companyInfo->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':info_logo', $companyInfo->logo, PDO::PARAM_STR);
+			$query->bindParam(':info_alert', $companyInfo->alert, PDO::PARAM_INT);
+			$query->bindParam(':info_noti', $companyInfo->notify, PDO::PARAM_INT);
+			$query->bindParam(':info_theme', $companyInfo->theme, PDO::PARAM_INT);
+			$query->bindParam(':e_field_id', $companyInfo->field->id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $companyInfo->company->id, PDO::PARAM_INT);
 
 
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -208,21 +216,21 @@ class CompanyInfo implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':info_logo', $companyInfo->Logo, PDO::PARAM_STR);
-			$query->bindParam(':info_alert', $companyInfo->Alert, PDO::PARAM_INT);
-			$query->bindParam(':info_noti', $companyInfo->Notify, PDO::PARAM_INT);
-			$query->bindParam(':info_theme', $companyInfo->Theme, PDO::PARAM_INT);
-			$query->bindParam(':e_field_id', $companyInfo->Field->Id, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $companyInfo->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':info_logo', $companyInfo->logo, PDO::PARAM_STR);
+			$query->bindParam(':info_alert', $companyInfo->alert, PDO::PARAM_INT);
+			$query->bindParam(':info_noti', $companyInfo->notify, PDO::PARAM_INT);
+			$query->bindParam(':info_theme', $companyInfo->theme, PDO::PARAM_INT);
+			$query->bindParam(':e_field_id', $companyInfo->field->id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $companyInfo->company->id, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -253,9 +261,9 @@ class CompanyInfo implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

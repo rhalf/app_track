@@ -1,11 +1,19 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
-class Status implements IQuery {
+	Modified by 	:		#
+	Modified on 	:		#
 
-	public $Id;
-	public $Name;
-	public $Desc;
-	public $Value;
+	functions 		:		Defines the class status and supplies the requests such as select, insert, update & delete.
+*/
+class status implements IQuery {
+
+	public $id;
+	public $name;
+	public $desc;
+	public $value;
 	
 	public function __construct() {
 	}
@@ -25,11 +33,11 @@ class Status implements IQuery {
 			$result = array();
 
 			foreach ($rows as $row) {	
-				$status = new Status();
-				$status->Id = (int) $row['id'];
-				$status->Name = $row['status_name'];
-				$status->Desc = $row['status_desc'];
-				$status->Value = (int)$row['status_value'];
+				$status = new status();
+				$status->id = (int) $row['id'];
+				$status->name = $row['status_name'];
+				$status->desc = $row['status_desc'];
+				$status->value = (int)$row['status_value'];
 				
 				array_push($result, $status);
 			}
@@ -63,11 +71,11 @@ class Status implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 
-			$status = new Status();
-			$status->Id = (int) $row['id'];
-			$status->Name = $row['status_name'];
-			$status->Desc = $row['status_desc'];
-			$status->Value = (int)$row['status_value'];
+			$status = new status();
+			$status->id = (int) $row['id'];
+			$status->name = $row['status_name'];
+			$status->desc = $row['status_desc'];
+			$status->value = (int)$row['status_value'];
 
 			return $status;
 
@@ -101,16 +109,16 @@ class Status implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':status_name', $status->Name, PDO::PARAM_STR);
-			$query->bindParam(':status_desc', $status->Desc, PDO::PARAM_STR);
-			$query->bindParam(':status_value',$status->Value, PDO::PARAM_INT);
+			$query->bindParam(':status_name', $status->name, PDO::PARAM_STR);
+			$query->bindParam(':status_desc', $status->desc, PDO::PARAM_STR);
+			$query->bindParam(':status_value',$status->value, PDO::PARAM_INT);
 			
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -147,18 +155,18 @@ class Status implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':status_name', $status->Name, PDO::PARAM_STR);
-			$query->bindParam(':status_desc', $status->Desc, PDO::PARAM_STR);
-			$query->bindParam(':status_value', $status->Value, PDO::PARAM_INT);
+			$query->bindParam(':status_name', $status->name, PDO::PARAM_STR);
+			$query->bindParam(':status_desc', $status->desc, PDO::PARAM_STR);
+			$query->bindParam(':status_value', $status->value, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -189,9 +197,9 @@ class Status implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

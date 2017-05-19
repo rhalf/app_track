@@ -1,9 +1,21 @@
-﻿var app = angular.module('app');
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Factory for flagFactory. 
+                            Class for storing temporary objects.
+*/
+var app = angular.module('app');
 
 
 app.factory('flagFactory', function (
     $q,
     $timeout,
+
+    uiFactory,
 
     Status,
     Field,
@@ -12,7 +24,7 @@ app.factory('flagFactory', function (
     SimVendor,
     UnitStatus,
     UnitType,
-    TrackeeType,
+    Type,
 
     AppNote
 
@@ -20,15 +32,15 @@ app.factory('flagFactory', function (
     var flagFactory = {};
 
 
-    flagFactory.Statuses = {};
-    flagFactory.Fields = {};
-    flagFactory.Privileges = {};
-    flagFactory.Nations = {};
-    flagFactory.SimVendors = {};
-    flagFactory.UnitStatuses = {};
-    flagFactory.UnitTypes = {};
-    flagFactory.TrackeeTypes = {};
-    flagFactory.AppNotes = {};
+    flagFactory.statuses = {};
+    flagFactory.fields = {};
+    flagFactory.privileges = {};
+    flagFactory.nations = {};
+    flagFactory.simVendors = {};
+    flagFactory.unitStatuses = {};
+    flagFactory.unitTypes = {};
+    flagFactory.types = {};
+    flagFactory.appNotes = {};
 
 
 
@@ -36,37 +48,37 @@ app.factory('flagFactory', function (
     flagFactory.load = function (type) {
         switch (type) {
             case 'statuses':
-                flagFactory.Statuses = Status.query();
+                flagFactory.statuses = Status.query();
                 break;
             case 'fields':
-                flagFactory.Fields = Field.query();
+                flagFactory.fields = Field.query();
                 break;
             case 'privileges':
-                flagFactory.Privileges = Privilege.query();
+                flagFactory.privileges = Privilege.query();
                 break;
             case 'nations':
-                flagFactory.Nations = Nation.query();
+                flagFactory.nations = Nation.query();
                 break;
-            case 'simvendors':
-                flagFactory.SimVendors = SimVendor.query();
+            case 'simVendors':
+                flagFactory.simVendors = SimVendor.query();
                 break;
-            case 'unitstatuses':
-                flagFactory.UnitStatuses = UnitStatus.query();
+            case 'unitStatuses':
+                flagFactory.unitStatuses = UnitStatus.query();
                 break;
-            case 'unittypes':
-                flagFactory.UnitTypes = UnitType.query();
+            case 'unitTypes':
+                flagFactory.unitTypes = UnitType.query();
                 break;
-            case 'trackeetypes':
-                flagFactory.TrackeeTypes = TrackeeType.query();
+            case 'types':
+                flagFactory.types = Type.query();
                 break;
             case 'appnotes':
-                flagFactory.AppNotes = AppNote.query();
+                flagFactory.appNotes = AppNote.query();
                 break;
         }
     };
 
     flagFactory.init = function (callback) {
-        console.log("<-=======Loading data started=======->");
+
         var promises = $q.all(
             [
                 Status.query(),
@@ -76,28 +88,30 @@ app.factory('flagFactory', function (
                 SimVendor.query(),
                 UnitStatus.query(),
                 UnitType.query(),
-                TrackeeType.query(),
+                Type.query(),
                 AppNote.query()
             ]
         );
 
-        promises.then(function (result) {
-            console.log(result);
-            flagFactory.Statuses = result[0];
-            flagFactory.Fields = result[1];
-            flagFactory.Privileges = result[2];
-            flagFactory.Nations = result[3];
-            flagFactory.SimVendors = result[4];
-            flagFactory.UnitStatuses = result[5];
-            flagFactory.UnitTypes = result[6];
-            flagFactory.TrackeeTypes = result[7];
-            flagFactory.AppNotes = result[8];
+        promises.then(
+            function (result) {
+                flagFactory.statuses = result[0];
+                flagFactory.fields = result[1];
+                flagFactory.privileges = result[2];
+                flagFactory.nations = result[3];
+                flagFactory.simVendors = result[4];
+                flagFactory.unitStatuses = result[5];
+                flagFactory.unitTypes = result[6];
+                flagFactory.types = result[7];
+                flagFactory.appNotes = result[8];
 
-            console.log("<-=======Loading data finished======->");
-            if (callback) {
-                callback();
-            }
-        });
+                if (callback) {
+                    callback();
+                }
+            }, function (result) {
+                var alert = { type: 'danger', message: "flagFactory failed, " + result};
+                uiFactory.alert.show(alert);
+            });
     };
 
     return flagFactory;

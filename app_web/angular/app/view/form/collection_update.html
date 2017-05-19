@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <h3 class="modal-title">Collection (Add)</h3>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="container-fluid">
+           
+            <form class="form-horizontal" role="form">
+                <fieldset ng-disabled="form.isDisabled">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="collection.name" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Desc</label>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" ng-model="collection.desc" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-class="valid.isObject(collection.user) ? 'has-success' : 'has-error'">
+                        <label class="control-label col-sm-2">User</label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <input class="form-control" type="text" ng-model="collection.user" ng-model-options="users"
+                                       uib-typeahead="user as user.name for user in users | filter:$viewValue | limitTo:10" />
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default" ng-click="collection.user = null">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                  
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <div class="btn btn-group">
+            <button ng-show="form.isDisabled" class="btn btn-default" type="button" ng-click="toggle()">Edit</button>
+            <button ng-show="!form.isDisabled" class="btn btn-default" type="button" ng-click="update()">Update</button>
+            <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </div>
+
+    <style type="text/css">
+        form {
+            margin: 20px;
+        }
+    </style>
+</body>
+</html>

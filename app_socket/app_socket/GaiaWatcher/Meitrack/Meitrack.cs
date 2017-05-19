@@ -151,8 +151,18 @@ namespace GaiaWatcher {
             _meitrackEvents.Add(new MeitrackEvent() { code = 139, description = "Maintenance Notice" });
         }
 
+        public String generateSum (String data) {
+            Byte[] dataByte = ASCIIEncoding.UTF8.GetBytes(data);
+            Int32 dataInt = 0;
 
+            for (int index = 0; index < dataByte.Length; index++) {
+                dataInt += dataByte[index];
+            }
 
+            String hex = dataInt.ToString("X2");
+            hex = hex.Substring((hex.Length - 2));
+            return hex;
+        }
 
         public bool checkSum (Byte[] unitData) {
 
@@ -182,6 +192,30 @@ namespace GaiaWatcher {
             }
             return false;
 
+        }
+
+        public bool fromDevice (byte[] data) {
+            if (data == null)
+                return false;
+            if (data.Length < 1)
+                return false;
+
+            if (data[0] != '$' || data[1] != '$')
+                return false;
+
+            return true;
+        }
+
+        public bool fromServer (byte[] data) {
+            if (data == null)
+                return false;
+            if (data.Length < 1)
+                return false;
+
+            if (data[0] != '@' || data[1] != '@')
+                return false;
+
+            return true;
         }
 
         public MeitrackEvent getMeitrackEvent (int code) {

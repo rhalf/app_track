@@ -1,4 +1,14 @@
-﻿var app = angular.module('app');
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Factory for authFactory. 
+                            Sets and unsets credential for authFactory.
+*/
+var app = angular.module('app');
 
 
 app.factory('authFactory', function ($cookies) {
@@ -8,47 +18,42 @@ app.factory('authFactory', function ($cookies) {
 
     //user
     authFactory.setUser = function (user) {
-        authFactory.user = user;
+        $cookies.putObject('user', user);
     };
 
 
     authFactory.getUser = function () {
-        var authFactory = $cookies.getObject('authFactory');
+        var user = $cookies.getObject('user');
 
-        if (authFactory) {
-            if (authFactory.user) {
-                return authFactory.user;
-            }
+        if (user) {
+            return user;
         }
+
         return null;
     };
 
     //company
-    //authFactory.setCompany = function (company) {
-    //    authFactory.company = company;
-    //};
+    authFactory.setCompany = function (company) {
+        $cookies.putObject('company', company);
+    };
 
 
-    //authFactory.getCompany = function () {
-    //    var authFactory = $cookies.getObject('authFactory');
+    authFactory.getCompany = function () {
+        var company = $cookies.getObject('company');
 
-    //    if (authFactory) {
-    //        if (authFactory.company) {
-    //            return authFactory.company;
-    //        }
-    //    }
-    //    return null;
-    //};
+        if (company) {
+            return company;
+        }
+
+        return null;
+    };
 
 
     //Additional functionallity
-    authFactory.save = function () {
-        $cookies.putObject('authFactory', authFactory);
-    };
-
-    authFactory.remove = function () {
-        $cookies.putObject('authFactory', null);
+    authFactory.clear = function () {
+        $cookies.putObject('user', null);
+        $cookies.putObject('company', null);
     };
 
     return authFactory;
-});                                                                                                                                                                                                                                         
+});

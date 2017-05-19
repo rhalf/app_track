@@ -1,5 +1,13 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Class definition of gps.
+*/
 class Gps {
 	public $coordinate;
 	public $satellite;

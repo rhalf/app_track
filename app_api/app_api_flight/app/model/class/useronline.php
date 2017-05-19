@@ -1,11 +1,19 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class userOnline and supplies the requests such as select, insert, update & delete.
+*/
 class UserOnline implements IQuery {
 
-	public $Id;
-	public $User;
-	public $Dt;
-	public $Ip;
+	public $id;
+	public $user;
+	public $dt;
+	public $ip;
 
 	
 	public function __construct() {
@@ -28,10 +36,10 @@ class UserOnline implements IQuery {
 
 			foreach ($rows as $row) {	
 				$userOnline = new UserOnline();
-				$userOnline->Id = (int) $row['id'];
-				$userOnline->User = User::select($row['user_id']);
-				$userOnline->Dt = $row['online_dt'];
-				$userOnline->Ip = $row['online_ip'];
+				$userOnline->id = (int) $row['id'];
+				$userOnline->user = User::select($row['user_id']);
+				$userOnline->dt = $row['online_dt'];
+				$userOnline->ip = $row['online_ip'];
 
 				array_push($result, $userOnline);
 			}
@@ -65,10 +73,10 @@ class UserOnline implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$userOnline = new UserOnline();
-			$userOnline->Id = (int) $row['id'];
-			$userOnline->User = User::select($row['user_id']);
-			$userOnline->Dt = $row['online_dt'];
-			$userOnline->Ip = $row['online_ip'];
+			$userOnline->id = (int) $row['id'];
+			$userOnline->user = User::select($row['user_id']);
+			$userOnline->dt = $row['online_dt'];
+			$userOnline->ip = $row['online_ip'];
 
 			return $userOnline;
 
@@ -103,10 +111,10 @@ class UserOnline implements IQuery {
 
 			foreach ($rows as $row) {	
 				$userOnline = new UserOnline();
-				$userOnline->Id = (int) $row['id'];
-				$userOnline->User = User::select($row['user_id']);
-				$userOnline->Dt = $row['online_dt'];
-				$userOnline->Ip = $row['online_ip'];
+				$userOnline->id = (int) $row['id'];
+				$userOnline->user = User::select($row['user_id']);
+				$userOnline->dt = $row['online_dt'];
+				$userOnline->ip = $row['online_ip'];
 
 				array_push($result, $userOnline);
 			}
@@ -142,10 +150,10 @@ class UserOnline implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$userOnline = new UserOnline();
-			$userOnline->Id = (int) $row['id'];
-			$userOnline->User = User::select($row['user_id']);
-			$userOnline->Dt = $row['online_dt'];
-			$userOnline->Ip = $row['online_ip'];
+			$userOnline->id = (int) $row['id'];
+			$userOnline->user = User::select($row['user_id']);
+			$userOnline->dt = $row['online_dt'];
+			$userOnline->ip = $row['online_ip'];
 
 			return $userOnline;
 
@@ -182,7 +190,7 @@ class UserOnline implements IQuery {
 			$query = $connection->prepare($sql);
 
 
-			$query->bindParam(':user_id', $userOnline->User->Id, PDO::PARAM_INT);
+			$query->bindParam(':user_id', $userOnline->user->id, PDO::PARAM_INT);
 			$query->bindParam(':online_dt', $dateTime, PDO::PARAM_STR);
 
 			$ip = getRemoteIp();
@@ -193,9 +201,9 @@ class UserOnline implements IQuery {
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -237,7 +245,7 @@ class UserOnline implements IQuery {
 
 
 			$query = $connection->prepare($sql);
-			$query->bindParam(':user_id', $userOnline->User->Id, PDO::PARAM_INT);
+			$query->bindParam(':user_id', $userOnline->user->id, PDO::PARAM_INT);
 			$query->bindParam(':online_dt', $dateTime, PDO::PARAM_STR);
 
 			$ip = getRemoteIp();
@@ -249,9 +257,9 @@ class UserOnline implements IQuery {
 			
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -284,9 +292,9 @@ class UserOnline implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

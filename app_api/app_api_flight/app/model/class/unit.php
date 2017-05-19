@@ -1,15 +1,25 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class unit and supplies the requests such as select, insert, update & delete.
+*/
 class Unit implements IQuery {
 
-	public $Id;
-	public $Imei;
-	public $DtCreated;
-	public $SerialNumber;
-	public $Sim;
-	public $UnitType;
-	public $Company;
-	public $UnitData;
+	public $id;
+	public $imei;
+	public $dtCreated;
+	public $dtExpired;
+	public $dtSubscribed;
+	public $serial;
+	public $sim;
+	public $unitType;
+	public $company;
+	public $unitData;
 	
 	public function __construct() {
 	}
@@ -31,16 +41,18 @@ class Unit implements IQuery {
 
 			foreach ($rows as $row) {	
 				$unit = new Unit();
-				$unit->Id = (int) $row['id'];
-				$unit->Imei = $row['unit_imei'];
-				$unit->DtCreated = $row['unit_dt_created'];
-				$unit->SerialNumber = $row['unit_serial_number'];
+				$unit->id = (int) $row['id'];
+				$unit->imei = $row['unit_imei'];
+				$unit->dtCreated = $row['unit_dt_created'];
+				$unit->dtExpired = $row['unit_dt_expired'];
+				$unit->dtSubscribed = $row['unit_dt_subscribed'];
+				$unit->serial = $row['unit_serial_number'];
 
-				$unit->Sim = Sim::select($row['sim_id']);
-				$unit->UnitStatus = UnitStatus::select($row['e_status_unit_id']);
-				$unit->UnitType = UnitType::select($row['unit_type_id']);
-				$unit->Company = Company::select($row['company_id']);
-				$unit->UnitData = UnitData::select($row['unit_imei']);
+				$unit->sim = Sim::select($row['sim_id']);
+				$unit->unitStatus = UnitStatus::select($row['e_status_unit_id']);
+				$unit->unitType = UnitType::select($row['unit_type_id']);
+				$unit->company = Company::select($row['company_id']);
+				$unit->unitData = UnitData::select($unit->imei, $unit->company);
 
 				array_push($result, $unit);
 			}
@@ -74,16 +86,20 @@ class Unit implements IQuery {
 
 			foreach ($rows as $row) {	
 				$unit = new Unit();
-				$unit->Id = (int) $row['id'];
-				$unit->Imei = $row['unit_imei'];
-				$unit->DtCreated = $row['unit_dt_created'];
-				$unit->SerialNumber = $row['unit_serial_number'];
+				$unit->id = (int) $row['id'];
+				$unit->imei = $row['unit_imei'];
 
-				$unit->Sim = Sim::select($row['sim_id']);
-				$unit->UnitStatus = UnitStatus::select($row['e_status_unit_id']);
-				$unit->UnitType = UnitType::select($row['unit_type_id']);
-				$unit->Company = Company::select($row['company_id']);
-				$unit->UnitData = UnitData::select($row['unit_imei']);
+				$unit->dtCreated = $row['unit_dt_created'];
+				$unit->dtExpired = $row['unit_dt_expired'];
+				$unit->dtSubscribed = $row['unit_dt_subscribed'];
+
+				$unit->serial = $row['unit_serial_number'];
+
+				$unit->sim = Sim::select($row['sim_id']);
+				$unit->unitStatus = UnitStatus::select($row['e_status_unit_id']);
+				$unit->unitType = UnitType::select($row['unit_type_id']);
+				$unit->company = Company::select($row['company_id']);
+				$unit->unitData = UnitData::select($unit->imei, $unit->company);
 				
 				array_push($result, $unit);
 			}
@@ -118,16 +134,20 @@ class Unit implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$unit = new Unit();
-			$unit->Id = (int) $row['id'];
-			$unit->Imei = $row['unit_imei'];
-			$unit->DtCreated = $row['unit_dt_created'];
-			$unit->SerialNumber = $row['unit_serial_number'];
+			$unit->id = (int) $row['id'];
+			$unit->imei = $row['unit_imei'];
+			
+			$unit->dtCreated = $row['unit_dt_created'];
+			$unit->dtExpired = $row['unit_dt_expired'];
+			$unit->dtSubscribed = $row['unit_dt_subscribed'];
 
-			$unit->Sim = Sim::select($row['sim_id']);
-			$unit->UnitStatus = UnitStatus::select($row['e_status_unit_id']);
-			$unit->UnitType = UnitType::select($row['unit_type_id']);
-			$unit->Company = Company::select($row['company_id']);
-			$unit->UnitData = UnitData::select($row['unit_imei']);
+			$unit->serial = $row['unit_serial_number'];
+
+			$unit->sim = Sim::select($row['sim_id']);
+			$unit->unitStatus = UnitStatus::select($row['e_status_unit_id']);
+			$unit->unitType = UnitType::select($row['unit_type_id']);
+			$unit->company = Company::select($row['company_id']);
+			$unit->unitData = UnitData::select($unit->imei, $unit->company);
 
 			return $unit;
 
@@ -161,36 +181,39 @@ class Unit implements IQuery {
 
 			$sql = "
 			INSERT INTO unit 
-			(unit_imei, unit_serial_number, sim_id, unit_type_id, company_id, e_status_unit_id, unit_dt_created)
+			(unit_imei, unit_serial_number, sim_id, unit_type_id, company_id, e_status_unit_id, unit_dt_created, unit_dt_subscribed, unit_dt_expired)
 			VALUES
-			(:unit_imei, :unit_serial_number, :sim_id, :unit_type_id, :company_id, :e_status_unit_id, :unit_dt_created);";
+			(:unit_imei, :unit_serial_number, :sim_id, :unit_type_id, :company_id, :e_status_unit_id, :unit_dt_created, :unit_dt_subscribed, :unit_dt_expired);";
 
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':unit_imei', $unit->Imei, PDO::PARAM_INT);
-			$query->bindParam(':unit_serial_number', $unit->SerialNumber, PDO::PARAM_STR);
-			$query->bindParam(':sim_id', $unit->Sim->Id, PDO::PARAM_INT);
-			$query->bindParam(':unit_type_id', $unit->UnitType->Id, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $unit->Company->Id, PDO::PARAM_INT);
-			$query->bindParam(':e_status_unit_id', $unit->UnitStatus->Id, PDO::PARAM_INT);
+			$query->bindParam(':unit_imei', $unit->imei, PDO::PARAM_INT);
+			$query->bindParam(':unit_serial_number', $unit->serial, PDO::PARAM_STR);
+			$query->bindParam(':sim_id', $unit->sim->id, PDO::PARAM_INT);
+			$query->bindParam(':unit_type_id', $unit->unitType->id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $unit->company->id, PDO::PARAM_INT);
+			$query->bindParam(':e_status_unit_id', $unit->unitStatus->id, PDO::PARAM_INT);
+
 			$query->bindParam(':unit_dt_created',$dateTime, PDO::PARAM_STR);
+			$query->bindParam(':unit_dt_subscribed',$unit->dtSubscribed, PDO::PARAM_STR);
+			$query->bindParam(':unit_dt_expired',$unit->dtExpired, PDO::PARAM_STR);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			//Query 2 //=================================
 
 			$year = date('Y');
 			$schema = "app_data_$year";
 
-			// $tableName = "data_id_" .  $result->Id;
+			// $tableName = "data_id_" .  $result->id;
 			
-			$imei = $unit->Imei;
+			$imei = $unit->imei;
 			$tableName = "data_$imei";
 
 
@@ -246,9 +269,9 @@ class Unit implements IQuery {
 			$connection->commit();
 
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Message = 'Done';
-			$result->Id = $connection->lastInsertId();
+			$result->status = Result::INSERTED;
+			$result->message = 'Done';
+			$result->id = $connection->lastInsertid();
 
 			return $result;
 
@@ -289,23 +312,31 @@ class Unit implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$unitOld = new Unit();
-			$unitOld->Id = (int) $row['id'];
-			$unitOld->Imei = $row['unit_imei'];
-			$unitOld->DtCreated = $row['unit_dt_created'];
-			$unitOld->SerialNumber = $row['unit_serial_number'];
+			$unitOld->id = (int) $row['id'];
+			$unitOld->imei = $row['unit_imei'];
+			$unitOld->serial = $row['unit_serial_number'];
+
+			$unitOld->dtCreated = $row['unit_dt_created'];
+			$unitOld->dtSubscribed = $row['unit_dt_subscribed'];
+			$unitOld->dtExpired = $row['unit_dt_expired'];
+
 			
-			$unitOld->Sim = Sim::select($row['sim_id']);
-			$unitOld->UnitStatus = UnitStatus::select($row['e_status_unit_id']);
-			$unitOld->UnitType = UnitType::select($row['unit_type_id']);
-			$unitOld->Company = Company::select($row['company_id']);
+			$unitOld->sim = Sim::select($row['sim_id']);
+			$unitOld->unitStatus = UnitStatus::select($row['e_status_unit_id']);
+			$unitOld->unitType = UnitType::select($row['unit_type_id']);
+			$unitOld->company = Company::select($row['company_id']);
 
 			/*Query 2 Update unit*/
 			$sql = "
 			UPDATE unit 
 			SET 
 			unit_imei = :unit_imei,
-			unit_dt_created = :unit_dt_created, 
 			unit_serial_number = :unit_serial_number,
+
+			unit_dt_created = :unit_dt_created, 
+			unit_dt_subscribed = :unit_dt_subscribed, 
+			unit_dt_expired = :unit_dt_expired, 
+
 			sim_id = :sim_id, 
 			unit_type_id = :unit_type_id,
 			company_id = :company_id,
@@ -314,15 +345,18 @@ class Unit implements IQuery {
 			id = :id;";
 
 			$query = $connection->prepare($sql);
-			$query->bindParam(':unit_imei', $unitNew->Imei, PDO::PARAM_INT);
-			$query->bindParam(':unit_dt_created', $unitNew->DtCreated, PDO::PARAM_STR);
-			$query->bindParam(':unit_serial_number', $unitNew->SerialNumber, PDO::PARAM_STR);
-			$query->bindParam(':sim_id', $unitNew->Sim->Id, PDO::PARAM_INT);
-			$query->bindParam(':unit_type_id', $unitNew->UnitType->Id, PDO::PARAM_BOOL);
-			$query->bindParam(':company_id', $unitNew->Company->Id, PDO::PARAM_INT);
-			$query->bindParam(':e_status_unit_id', $unitNew->UnitStatus->Id, PDO::PARAM_INT);
-
+			$query->bindParam(':unit_imei', $unitNew->imei, PDO::PARAM_INT);
+			$query->bindParam(':unit_serial_number', $unitNew->serial, PDO::PARAM_STR);
 			
+			$query->bindParam(':unit_dt_created', $unitNew->dtCreated, PDO::PARAM_STR);
+			$query->bindParam(':unit_dt_expired',$unitNew->dtExpired, PDO::PARAM_STR);
+			$query->bindParam(':unit_dt_subscribed',$unitNew->dtSubscribed, PDO::PARAM_STR);
+
+			$query->bindParam(':sim_id', $unitNew->sim->id, PDO::PARAM_INT);
+			$query->bindParam(':unit_type_id', $unitNew->unitType->id, PDO::PARAM_BOOL);
+			$query->bindParam(':company_id', $unitNew->company->id, PDO::PARAM_INT);
+			$query->bindParam(':e_status_unit_id', $unitNew->unitStatus->id, PDO::PARAM_INT);
+
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
@@ -332,28 +366,30 @@ class Unit implements IQuery {
 			$year = date('Y');
 			$schema = "app_data_$year";
 
-			$imeiOld = $unitOld->Imei;
-			$imeiNew = $unitNew->Imei;
+			$imeiOld = $unitOld->imei;
+			$imeiNew = $unitNew->imei;
 
-			$tableNameOld = "data_$imeiOld";
-			$tableNameNew = "data_$imeiNew";
+			if (strcmp($imeiOld,$imeiNew) != 0) {
+				$tableNameOld = "data_$imeiOld";
+				$tableNameNew = "data_$imeiNew";
 
-			$sql = "
-			ALTER TABLE 
-			$schema.$tableNameOld
-			RENAME TO 
-			$schema.$tableNameNew;
-			";
+				$sql = "
+				ALTER TABLE 
+				$schema.$tableNameOld
+				RENAME TO 
+				$schema.$tableNameNew;
+				";
 
-			$query = $connection->prepare($sql);
-			$query->execute();
+				$query = $connection->prepare($sql);
+				$query->execute();
+			}
 
 			$connection->commit();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::UPDATED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 
@@ -388,15 +424,15 @@ class Unit implements IQuery {
 			$row = $rows[0];
 
 			$unit = new Unit();
-			$unit->Id = (int) $row['id'];
-			$unit->Imei = $row['unit_imei'];
-			$unit->DtCreated = $row['unit_dt_created'];
-			$unit->SerialNumber = $row['unit_serial_number'];
+			$unit->id = (int) $row['id'];
+			$unit->imei = $row['unit_imei'];
+			$unit->dtCreated = $row['unit_dt_created'];
+			$unit->serial = $row['unit_serial_number'];
 			
-			$unit->Sim = Sim::select($row['sim_id']);
-			$unit->UnitStatus = UnitStatus::select($row['e_status_unit_id']);
-			$unit->UnitType = UnitType::select($row['unit_type_id']);
-			$unit->Company = Company::select($row['company_id']);
+			$unit->sim = Sim::select($row['sim_id']);
+			$unit->unitStatus = UnitStatus::select($row['e_status_unit_id']);
+			$unit->unitType = UnitType::select($row['unit_type_id']);
+			$unit->company = Company::select($row['company_id']);
 
 
 
@@ -414,7 +450,7 @@ class Unit implements IQuery {
 			$year = date('Y');
 			$schema = "app_data_$year";
 
-			$imei = $unit->Imei;
+			$imei = $unit->imei;
 
 			$tableName = "data_$imei";
 
@@ -431,9 +467,9 @@ class Unit implements IQuery {
 
 			
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

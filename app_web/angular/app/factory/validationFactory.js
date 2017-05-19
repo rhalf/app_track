@@ -1,4 +1,14 @@
-﻿var app = angular.module('app');
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Factory for validationFactory. 
+                            Used for accessing validation globally.
+*/
+var app = angular.module('app');
 
 
 app.factory('validationFactory', function () {
@@ -34,13 +44,26 @@ app.factory('validationFactory', function () {
         var str1 = new String(pass1);
         if (str1.length < 1) {
             return true;
-        } else if (pass1 == null){
+        } else if (pass1 == null) {
             return true;
         } else {
             return false;
         }
     };
 
+
+    validationFactory.isObject = function (variable) {
+        var result = (typeof (variable) == 'object' || typeof (variable) == 'undefined');
+        return result;
+    };
+
+    validationFactory.isExpired = function (dateTime) {
+        var dateExpired = new Date(dateTime);
+        var dateNow = new Date();
+        var result = dateNow.getTime() > dateExpired.getTime();
+        //console.log(result);
+        return result;
+    };
 
     return validationFactory;
 });

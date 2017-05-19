@@ -1,10 +1,18 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Supplies the request of the class field such as select, insert, update & delete.
+*/
 class Field implements IQuery {
 
-	public $Id;
-	public $Name;
-	public $Desc;
+	public $id;
+	public $name;
+	public $desc;
 	
 	public function __construct() {
 	}
@@ -26,9 +34,9 @@ class Field implements IQuery {
 
 			foreach ($rows as $row) {	
 				$field = new Field();
-				$field->Id = (int) $row['id'];
-				$field->Name = $row['field_name'];
-				$field->Desc = $row['field_desc'];
+				$field->id = (int) $row['id'];
+				$field->name = $row['field_name'];
+				$field->desc = $row['field_desc'];
 				
 				array_push($result, $field);
 			}
@@ -62,9 +70,9 @@ class Field implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$field = new Field();
-			$field->Id = (int) $row['id'];
-			$field->Name = $row['field_name'];
-			$field->Desc = $row['field_desc'];
+			$field->id = (int) $row['id'];
+			$field->name = $row['field_name'];
+			$field->desc = $row['field_desc'];
 
 			return $field;
 
@@ -98,15 +106,15 @@ class Field implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':field_name', $field->Name, PDO::PARAM_STR);
-			$query->bindParam(':field_desc', $field->Desc, PDO::PARAM_STR);
+			$query->bindParam(':field_name', $field->name, PDO::PARAM_STR);
+			$query->bindParam(':field_desc', $field->desc, PDO::PARAM_STR);
 
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -142,17 +150,17 @@ class Field implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':field_name', $field->Name, PDO::PARAM_STR);
-			$query->bindParam(':field_desc', $field->Desc, PDO::PARAM_STR);
+			$query->bindParam(':field_name', $field->name, PDO::PARAM_STR);
+			$query->bindParam(':field_desc', $field->desc, PDO::PARAM_STR);
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -183,9 +191,9 @@ class Field implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

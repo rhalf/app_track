@@ -9,16 +9,16 @@
         <div class="row">
             <div class="modal-header">
                 <div class="col-md-12">
-                    <h4 class="pull-left">{{appNote.Name}} </h4>
-                    <h4 class="pull-right">{{appNote.DtCreated | dateFilter : 'date' }} </h4>
+                    <h4 class="pull-left">{{appNote.name}} </h4>
+                    <h4 class="pull-right">{{appNote.dtCreated | dateFilter : 'date' }} </h4>
                 </div>
             </div>
             <div class="modal-body">
-               {{appNote.Message}}
+               {{appNote.message}}
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+                
             </div>
         </div>
     </div>

@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div ng-controller="usersOnlineController">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="modal-header">
+                    <div class="col-md-4">
+                        <h3 class="modal-title">UsersOnline ({{usersOnline.length}})</h3>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" ng-model="selected" placeholder="Search" />
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" ng-click="selected = ''">
+                                    <span class="glyphicon glyphicon-remove" />
+                                </button>
+                                <button class="btn btn-default" type="button" ng-click="add()">
+                                    <span class="glyphicon glyphicon-plus" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <table class="table table-responsive table-condensed table-hover small">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>dateTime</th>
+                                    <th>name</th>
+                                    <th>company</th>
+                                    <th>ip</th>
+                                    <!--<th>Options</th>-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="userOnline in usersOnline | filter : selected  | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize | limitTo : ui.pagination.pageSize">
+                                    <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize }}</td>
+                                    <td>{{userOnline.dt | dateFilter}}</td>
+                                    <td>{{userOnline.user.name}}</td>
+                                    <td>{{userOnline.user.company.name}}</td>
+                                    <td>{{userOnline.ip }}</td>
+                                    <!--<td>
+                                        <button ng-click="select(userOnline)"><span class="glyphicon glyphicon-cog" /></button>
+                                        <button ng-click="delete(userOnline)"><span class="glyphicon glyphicon-trash" /></button>
+                                        <button ng-click="credential(userOnline)"><span class="glyphicon glyphicon-asterisk" /></button>
+                                    </td>-->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <ul uib-pagination
+                            boundary-links="true"
+                            force-ellipses="true"
+                            total-items="usersOnline.length"
+                            ng-model="ui.pagination.currentPage"
+                            max-size="ui.pagination.maxSize"
+                            items-per-page="ui.pagination.pageSize"
+                            class="pagination-sm"
+                            style="padding:0px;margin:0px;"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,5 +1,13 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class appDatabase and supplies the requests such as select, insert, update & delete.
+*/
 class AppDatabase implements IQuery {
 
 	public $id;

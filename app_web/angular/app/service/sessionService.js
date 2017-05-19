@@ -1,4 +1,14 @@
-﻿var app = angular.module('app');
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Service for sessionService. 
+                            Used for check user privilege.
+*/
+var app = angular.module('app');
 
 
 app.service('sessionService', function (authFactory) {
@@ -6,7 +16,7 @@ app.service('sessionService', function (authFactory) {
     this.isUserSuper = function () {
         var user = authFactory.getUser();
         if (user) {
-            return (user.Privilege.Value == 1) ? true : false;
+            return (user.privilege.value == 1) ? true : false;
         } else {
             return false;
         }
@@ -15,7 +25,7 @@ app.service('sessionService', function (authFactory) {
     this.isUserPower = function () {
         var user = authFactory.getUser();
         if (user) {
-            return (user.Privilege.Value == 2) ? true : false;
+            return (user.privilege.value == 2) ? true : false;
         } else {
             return false;
         }
@@ -24,7 +34,7 @@ app.service('sessionService', function (authFactory) {
     this.isUserTech = function () {
         var user = authFactory.getUser();
         if (user) {
-            return (user.Privilege.Value == 3) ? true : false;
+            return (user.privilege.value == 3) ? true : false;
         } else {
             return false;
         }
@@ -33,7 +43,7 @@ app.service('sessionService', function (authFactory) {
     this.isUserAdmin = function () {
         var user = authFactory.getUser();
         if (user) {
-            return (user.Privilege.Value == 4) ? true : false;
+            return (user.privilege.value == 4) ? true : false;
         } else {
             return false;
         }
@@ -42,16 +52,7 @@ app.service('sessionService', function (authFactory) {
     this.isUserWatcher = function () {
         var user = authFactory.getUser();
         if (user) {
-            return (user.Privilege.Value == 5) ? true : false;
-        } else {
-            return false;
-        }
-    };
-
-    this.isUserDemo = function () {
-        var user = authFactory.getUser();
-        if (user) {
-            return (user.Privilege.Value == 6) ? true : false;
+            return (user.privilege.value == 5) ? true : false;
         } else {
             return false;
         }

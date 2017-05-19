@@ -7,120 +7,140 @@
 <body>
     <!-- Sidebar -->
     <div id="left-side-wrapper">
-        <div class="container-fluid">
-            <br />
-            <!--<hr />-->
-            <!--<div class="label">
-                <div class="h4">Options</div>
-            </div>-->
+        <div class="fill">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
 
-            <div class="row">
-                <div class="col-md-12">
-
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-list-alt"></span>
-                            </div>
-                            <select class="form-control" ng-init="selectedProperty = 'Name'" ng-model="selectedProperty">
-                                <option>Name</option>
-                                <option>Plate</option>
-                                <option>Imei</option>
-                                <option>Sim</option>
-                                <option>Driver</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-search"></span>
-                            </div>
-                            <input type="text" class="form-control" ng-model="selected" placeholder="Search" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="label">
-                <div class="h4">Collections</div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <uib-accordion close-others="true">
-                        <!--<uib-accordion-group is-open="accordion[0]" ng-hide="authUser.Privilege.Value > 4">
-                            <uib-accordion-heading>
-                                All
-                                <span class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accordion[0], 'glyphicon-chevron-right': !accordion[0]}"></span>
-                                <span class="pull-right badge"> {{ fleet.vehicles.length }} </span>
-                            </uib-accordion-heading>
-                            <uib-accordion-body>
-                                <div ng-repeat="vehicle in fleet.vehicles | filter : selected">
-                                    <ul class="list-inline">
-                                        <li><input type="checkbox" class="checkbox" ng-model="vehicle.Tracked" ng-change="check(vehicle)" /></li>
-                                        <li>
-                                            <div ng-show="selectedProperty == 'Plate'">{{vehicle.Plate}}</div>
-                                            <div ng-show="selectedProperty == 'Name'">{{vehicle.Name}}</div>
-                                            <div ng-show="selectedProperty == 'Imei'">{{vehicle.Unit.Imei}}</div>
-                                            <div ng-show="selectedProperty == 'Sim'">{{vehicle.Unit.Sim.Number}}</div>
-                                            <div ng-show="selectedProperty == 'Driver'">{{vehicle.Driver.Name}}</div>
-                                        </li>
-                                        <li class="pull-right">
-                                            <span class="glyphicon glyphicon-cog">
-
-                                            </span>
-                                        </li>
-                                    </ul>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-list-alt"></span>
                                 </div>
-
-                            </uib-accordion-body>
-                        </uib-accordion-group>-->
-                        <uib-accordion-group ng-repeat="collection in fleet.collections" is-open="accordion[$index + 1]">
-                            <uib-accordion-heading>
-                                {{ collection.Name  | limitTo : 15 }}
-
-                                <span class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': accordion[$index + 1], 'glyphicon-chevron-right': !accordion[$index + 1]}"></span>
-                                <span class="pull-right">&nbsp</span>
-                                <span class="pull-right badge"> {{ collection.Vehicles.length }} </span>
-                            </uib-accordion-heading>
-
-                            <div ng-repeat="vehicle in collection.Vehicles | filter : selected track by vehicle.Id">
-                                <ul class="list-inline">
-
-                                    <li><input type="checkbox" class="checkbox" ng-model="vehicle.Tracked" ng-change="check(this.vehicle)" /></li>
-                                    <li>
-                                        <div ng-show="selectedProperty == 'Plate'">{{vehicle.Plate}}</div>
-                                        <div ng-show="selectedProperty == 'Name'">{{vehicle.Name}}</div>
-                                        <div ng-show="selectedProperty == 'Imei'">{{vehicle.Unit.Imei}}</div>
-                                        <div ng-show="selectedProperty == 'Sim'">{{vehicle.Unit.Sim.Number}}</div>
-                                        <div ng-show="selectedProperty == 'Driver'">{{vehicle.Driver.Name}}</div>
-                                    </li>
-                                    <li class="pull-right">
-                                        <span class="glyphicon glyphicon-cog">
-
-                                        </span>
-                                    </li>
-                                </ul>
+                                <select class="form-control" ng-model="selectedProperty">
+                                    <option>Name</option>
+                                    <option>Plate</option>
+                                    <option>UnitImei</option>
+                                    <option>SimNumber</option>
+                                    <option>DriverName</option>
+                                </select>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </div>
+                                <input type="text" class="form-control" ng-model="selected" placeholder="Search" />
+                                <div class="input-group-addon" ng-click="ui.panelBottom = !ui.panelBottom">
+                                    <span class="glyphicon glyphicon glyphicon-th-list"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="input-group">
+                            <input type="button" class="form-control" value="Vehicles" />
+                            <span class="input-group-addon">
+                                <span>{{auth.getUser().privilege.value < 5 ? fleet.vehicles.length : '?'}}</span>
+                            </span>
+                            <input type="button" class="form-control" value="Collections" />
+                            <span class="input-group-addon">
+                                <span>{{auth.getUser().privilege.value < 5 ? fleet.collections.length: '?'}}</span>
+                            </span>
+                        </div>
+                        <hr />
+                    </div>
+                </div>
 
 
-                        </uib-accordion-group>
-                    </uib-accordion>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <uib-accordion close-others="true">
+                                <div uib-accordion-group ng-repeat="collection in fleet.collections" is-open="collection.isOpen" ng-hide="hide(collection)">
+                                    <uib-accordion-heading>
+                                        {{ collection.name  | limitTo : 15 }}
+                                        <span class="pull-right">&nbsp</span>
+                                        <span class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': collection.isOpen, 'glyphicon-chevron-right': !collection.isOpen}"></span>
+                                        <span class="pull-right">&nbsp</span>
+                                        <span class="pull-right badge"> {{ collection.vehiclesIds.length }} </span>
+                                    </uib-accordion-heading>
 
-                    <br />
-                    <br />
-                    <br />
+                                    <div class="row">
+                                        <div class="col-xs-7">
+                                            <strong>ALL</strong>
+                                        </div>
+                                        <div class="col-xs-5">
+                                            <div class="btn-group pull-right">
+                                                <button class="btn btn-default btn-xs" ng-click="checkBox.tracked = !checkBox.tracked ; checkByCollection(collection)">
+                                                    <span ng-class="checkBox.tracked ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-unchecked'"></span>
+                                                </button>
+                                                <button class="btn btn-default btn-xs">
+                                                    <span class="glyphicon glyphicon-align-justify"></span>
+                                                </button>
+                                                <button class="btn btn-default btn-xs">
+                                                    <span class="glyphicon glyphicon-align-justify"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
 
+                                    <div ng-repeat="vehicle in fleet.getVehiclesByCollection(collection) | filter : selected track by vehicle.id">
+                                        <div class="row">
+
+                                            <div class="col-xs-7">
+                                                <strike ng-show="valid.isExpired(vehicle.unit.dtExpired)">
+                                                    <strong>
+                                                        {{getProperty(vehicle)| limitTo : 15}}
+                                                    </strong>
+                                                </strike>
+                                                <div ng-show="!valid.isExpired(vehicle.unit.dtExpired)">
+                                                    {{getProperty(vehicle)| limitTo : 15}}
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-5">
+                                                <div class="btn-group pull-right" ng-disabled="valid.isExpired(vehicle.unit.dtExpired)">
+                                                    <button class="btn btn-default btn-xs" ng-click="vehicle.tracked = !vehicle.tracked"
+                                                            ng-disabled="valid.isExpired(vehicle.unit.dtExpired)">
+                                                        <span ng-class="vehicle.tracked ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-unchecked'"></span>
+                                                    </button>
+                                                    <button class="btn btn-default btn-xs" ng-click="setFocus(vehicle)"
+                                                            ng-disabled="valid.isExpired(vehicle.unit.dtExpired)">
+                                                        <span class="glyphicon glyphicon-screenshot"></span>
+                                                    </button>
+                                                    <button class="btn btn-default btn-xs" ng-click="showReports(vehicle)"
+                                                            ng-disabled="valid.isExpired(vehicle.unit.dtExpired)">
+                                                        <span class="glyphicon glyphicon-stats"></span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </uib-accordion>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <br />
         </div>
     </div>
-
+    <style type="text/css">
+        .fill {
+            height: 100%;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            overflow-y: auto;
+        }
+    </style>
 </body>
 </html>

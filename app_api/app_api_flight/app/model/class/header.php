@@ -1,5 +1,13 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Class definition of header.
+*/
 class Header {
 	public $dtServer;
 	public $dtClient;

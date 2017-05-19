@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="modal-title">{{report.type}}</h3>
+                <h6>{{report.vehicle.name}}</h6>
+            </div>
+            <div class="col-md-4">
+                <h6>Imei : {{report.vehicle.unit.imei}}</h6>
+                <h6>From : {{report.dateFrom | dateFilter }}</h6>
+                <h6>To : {{report.dateTo | dateFilter}}</h6>
+            </div>
+            <div class="col-md-4">
+                <h6>Distance : {{report.totalDistance / 1000  | limitTo : 5}} kilometers</h6>
+                <h6>Time : {{ report.totalDistance  | limitTo : 5}} seconds</h6>
+                <h6>Fuel : {{ report.totalDistance / 11000  | limitTo : 5}} liters</h6>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="scrollable">
+            <table class="table table-condensed table-striped" id="report">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>status</th>
+                        <th>coordinateFrom</th>
+                        <th>coordinateTo</th>
+                        <th>datetimeFrom</th>
+                        <th>datetimeTo</th>
+                        <th>time(s)</th>
+                        <th>distance(km)</th>
+                        <th>speedMax(kph)</th>
+                        <th>speedAve(kph)</th>
+                        <th>geofenceFrom</th>
+                        <th>geofenceTo</th>
+                        <th>areaFrom</th>
+                        <th>areaTo</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr ng-repeat="data in report.datas track by data.id" ng-dblclick="showReplay(data)">
+                        <td>{{data.id}}</td>
+                        <!--<td><input type="checkbox" ng-model="data.status" disabled></td>-->
+                        <td>{{data.status}}</td>
+                        <td>{{data.coordinateFrom.latitude}}-{{data.coordinateFrom.longitude}}</td>
+                        <td>{{data.coordinateTo.latitude}}-{{data.coordinateTo.longitude}}</td>
+                        <td>{{data.dtFrom | dateFilter : 'full'}}</td>
+                        <td>{{data.dtTo | dateFilter : 'full'}}</td>
+                        <td>{{data.time}}</td>
+                        <td>{{(data.distance / 1000) | number : 2}}</td>
+                        <td>{{data.speedMax}}</td>
+                        <td>{{data.speedAve | number : 2}}</td>
+                        <td>{{data.geofenceFrom.name}}</td>
+                        <td>{{data.geofenceTo.name}}</td>
+                        <td>{{data.areaFrom.name}}</td>
+                        <td>{{data.areaTo.name}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="download()">Download</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Close</button>
+    </div>
+</body>
+</html>

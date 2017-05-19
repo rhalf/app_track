@@ -1,13 +1,21 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class collection and supplies the requests such as select, insert, update & delete.
+*/
 class Collection implements IQuery {
 
-	public $Id;
-	public $Name;
-	public $Desc;
-	public $User;
-	public $Company;
-	public $Vehicles;
+	public $id;
+	public $name;
+	public $desc;
+	public $user;
+	public $company;
+	public $vehiclesIds;
 
 	public function __construct() {
 	}
@@ -29,18 +37,13 @@ class Collection implements IQuery {
 
 			foreach ($rows as $row) {	
 				$collection = new Collection();
-				$collection->Id = (int) $row['id'];
-				$collection->Name = $row['collection_name'];
-				$collection->Desc = $row['collection_desc'];
-				// $collection->User = $row['user_id'] == null ? null : (int)$row['user_id'];
-				// $collection->Company = (int)$row['company_id'];
-				$collection->User = User::select($row['user_id']);
-				$collection->Company = Company::select($row['company_id']);
-				// $collection->Vehicles = array();
-				// $vehicleCollections = VehicleCollection::selectByCollection($collection->Id);
-				// foreach ($vehicleCollections as $vehicleCollection) {
-				// 	array_push($collection->Vehicles, $vehicleCollection->Vehicle);
-				// }
+				$collection->id = (int) $row['id'];
+				$collection->name = $row['collection_name'];
+				$collection->desc = $row['collection_desc'];
+				$collection->user = User::select($row['user_id']);
+				$collection->company = Company::select($row['company_id']);
+				$collection->vehiclesIds = VehicleCollection::selectByCollection($collection->id);
+			
 
 				array_push($result, $collection);
 			}
@@ -75,18 +78,14 @@ class Collection implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$collection = new Collection();
-			$collection->Id = (int) $row['id'];
-			$collection->Name = $row['collection_name'];
-			$collection->Desc = $row['collection_desc'];
-			// $collection->User = $row['user_id'] == null ? null : (int)$row['user_id'];
-			// $collection->Company = (int)$row['company_id'];
-			$collection->User = User::select($row['user_id']);
-			$collection->Company = Company::select($row['company_id']);
-			// $collection->Vehicles = array();
-			// $vehicleCollections = VehicleCollection::selectByCollection($collection->Id);
-			// foreach ($vehicleCollections as $vehicleCollection) {
-			// 	array_push($collection->Vehicles, $vehicleCollection->Vehicle);
-			// }
+			$collection->id = (int) $row['id'];
+			$collection->name = $row['collection_name'];
+			$collection->desc = $row['collection_desc'];
+			// $collection->user = $row['user_id'] == null ? null : (int)$row['user_id'];
+			// $collection->company = (int)$row['company_id'];
+			$collection->user = User::select($row['user_id']);
+			$collection->company = Company::select($row['company_id']);
+			$collection->vehiclesIds = VehicleCollection::selectByCollection($collection->id);
 
 			return $collection;
 
@@ -118,17 +117,12 @@ class Collection implements IQuery {
 			foreach ($rows as $row) {	
 
 				$collection = new Collection();
-				$collection->Id = (int) $row['id'];
-				$collection->Name = $row['collection_name'];
-				$collection->Desc = $row['collection_desc'];
-				// $collection->User = $row['user_id'] == null ? null : (int)$row['user_id'];
-				// $collection->Company = (int)$row['company_id'];
-				$collection->User = User::select($row['user_id']);
-				$collection->Company = Company::select($row['company_id']);
-				// $vehicleCollections = VehicleCollection::selectByCollection($collection->Id);
-				// foreach ($vehicleCollections as $vehicleCollection) {
-				// 	array_push($collection->Vehicles, $vehicleCollection->Vehicle);
-				// }
+				$collection->id = (int) $row['id'];
+				$collection->name = $row['collection_name'];
+				$collection->desc = $row['collection_desc'];
+				$collection->user = User::select($row['user_id']);
+				$collection->company = Company::select($row['company_id']);
+				$collection->vehiclesIds = VehicleCollection::selectByCollection($collection->id);
 
 				array_push($result, $collection);
 			}
@@ -165,19 +159,19 @@ class Collection implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':collection_name', $collection->Name, PDO::PARAM_STR);
-			$query->bindParam(':collection_desc', $collection->Desc, PDO::PARAM_STR);
-			// $query->bindParam(':user_id', $collection->User, PDO::PARAM_INT);
-			// $query->bindParam(':company_id', $collection->Company, PDO::PARAM_INT);
-			$query->bindParam(':user_id', $collection->User->Id, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $collection->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':collection_name', $collection->name, PDO::PARAM_STR);
+			$query->bindParam(':collection_desc', $collection->desc, PDO::PARAM_STR);
+			// $query->bindParam(':user_id', $collection->user, PDO::PARAM_INT);
+			// $query->bindParam(':company_id', $collection->company, PDO::PARAM_INT);
+			$query->bindParam(':user_id', $collection->user->id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $collection->company->id, PDO::PARAM_INT);
 
 			$query->execute();  
 
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -189,6 +183,8 @@ class Collection implements IQuery {
 			$connection = null;
 		}
 	}
+
+
 	public static function update($id) {
 
 		$connection = Flight::dbMain();
@@ -214,12 +210,12 @@ class Collection implements IQuery {
 			
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':collection_name', $collection->Name, PDO::PARAM_STR);
-			$query->bindParam(':collection_desc', $collection->Desc, PDO::PARAM_STR);
-			// $query->bindParam(':user_id', $collection->User, PDO::PARAM_INT);
-			// $query->bindParam(':company_id', $collection->Company, PDO::PARAM_INT);
-			$query->bindParam(':user_id', $collection->User->Id, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $collection->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':collection_name', $collection->name, PDO::PARAM_STR);
+			$query->bindParam(':collection_desc', $collection->desc, PDO::PARAM_STR);
+			// $query->bindParam(':user_id', $collection->user, PDO::PARAM_INT);
+			// $query->bindParam(':company_id', $collection->company, PDO::PARAM_INT);
+			$query->bindParam(':user_id', $collection->user->id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $collection->company->id, PDO::PARAM_INT);
 
 
 
@@ -228,9 +224,9 @@ class Collection implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -260,9 +256,9 @@ class Collection implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

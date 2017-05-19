@@ -1,10 +1,18 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class vehicleCollection and supplies the requests such as select, insert, update & delete.
+*/
 class VehicleCollection implements IQuery {
 
-	public $Id;
-	public $Vehicle;
-	public $Collection;
+	public $id;
+	public $vehicleId;
+	public $collectionId;
 
 
 	public function __construct() {
@@ -26,9 +34,9 @@ class VehicleCollection implements IQuery {
 
 			foreach ($rows as $row) {	
 				$vehicleCollection = new VehicleCollection();
-				$vehicleCollection->Id = (int) $row['id'];
-				$vehicleCollection->Vehicle =  Vehicle::select($row['vehicle_id']);
-				$vehicleCollection->Collection =  Collection::select($row['collection_id']);
+				$vehicleCollection->id = (int) $row['id'];
+				$vehicleCollection->vehicleId =  (int)$row['vehicle_id'];
+				$vehicleCollection->collectionId =  (int)$row['collection_id'];
 
 				array_push($result, $vehicleCollection);
 			}
@@ -63,9 +71,9 @@ class VehicleCollection implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$vehicleCollection = new VehicleCollection();
-			$vehicleCollection->Id = (int) $row['id'];
-			$vehicleCollection->Vehicle =  Vehicle::select($row['vehicle_id']);
-			$vehicleCollection->Collection =  Collection::select($row['collection_id']);
+			$vehicleCollection->id = (int) $row['id'];
+			$vehicleCollection->vehicleId = (int)$row['vehicle_id'];
+			$vehicleCollection->collectionId = (int)$row['collection_id'];
 
 			return $vehicleCollection;
 
@@ -97,9 +105,9 @@ class VehicleCollection implements IQuery {
 
 			foreach ($rows as $row) {	
 				$vehicleCollection = new VehicleCollection();
-				$vehicleCollection->Id = (int) $row['id'];
-				$vehicleCollection->Vehicle =  Vehicle::select($row['vehicle_id']);
-				$vehicleCollection->Collection =  Collection::select($row['collection_id']);
+				$vehicleCollection->id = (int) $row['id'];
+				$vehicleCollection->vehicleId =  (int)$row['vehicle_id'];
+				$vehicleCollection->collectionId =  (int)$row['collection_id'];
 				array_push($result, $vehicleCollection);
 			}
 
@@ -134,16 +142,16 @@ class VehicleCollection implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':vehicle_id', $vehicleCollection->Vehicle->Id, PDO::PARAM_STR);
-			$query->bindParam(':collection_id', $vehicleCollection->Collection->Id, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_id', $vehicleCollection->vehicleId, PDO::PARAM_STR);
+			$query->bindParam(':collection_id', $vehicleCollection->collectionId, PDO::PARAM_INT);
 
 
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -181,17 +189,18 @@ class VehicleCollection implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':vehicle_id', $vehicleCollection->Vehicle->Id, PDO::PARAM_STR);
-			$query->bindParam(':collection_id', $vehicleCollection->Collection->Id, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_id', $vehicleCollection->vehicleId, PDO::PARAM_STR);
+			$query->bindParam(':collection_id', $vehicleCollection->collectionId, PDO::PARAM_INT);
+
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -222,9 +231,9 @@ class VehicleCollection implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 
@@ -237,7 +246,7 @@ class VehicleCollection implements IQuery {
 		}
 	}
 
-	public static function deleteByCollection($id) {
+	public static function deleteBycollection($id) {
 
 		$connection = Flight::dbMain();
 
@@ -255,9 +264,9 @@ class VehicleCollection implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

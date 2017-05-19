@@ -1,5 +1,13 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class area and supplies the requests such as select, insert, update & delete.
+*/
 class Area implements IQuery {
 
 	public $id;
@@ -315,6 +323,46 @@ class Area implements IQuery {
 			$connection = null;
 		}
 	}
+
+
+	public static function selectByUnitData($areas, $unitData){
+
+			$coordinate = $unitData->gps->coordinate;
+
+			$result = null;
+			//$result = array();
+
+			foreach ($areas as $index => $area) {
+				if(Area::checkPoint($area, $coordinate) == true) {
+					//array_push($result, $area);
+					$result =  $area->id;
+				}
+			}
+
+			return $result;
+	}
+
+
+	private static function checkPoint($area, $coordinate) {
+
+            
+			 $coordinates = $area->coordinates;
+			 $count = sizeof($area->coordinates);
+
+            $result = false;
+
+
+            for ($index1 = 0, $index2 = $count - 1; $index1 < $count; $index2 = $index1++) {
+                if (((($coordinates[$index1]->latitude <= $coordinate->latitude) && ($coordinate->latitude < $coordinates[$index2]->latitude))
+                        || (($coordinates[$index2]->latitude <= $coordinate->latitude) && ($coordinate->latitude < $coordinates[$index1]->latitude)))
+                        && ($coordinate->longitude < ($coordinates[$index2]->longitude - $coordinates[$index1]->longitude) * ($coordinate->latitude - $coordinates[$index1]->latitude)
+                            / ($coordinates[$index2]->latitude - $coordinates[$index1]->latitude) + $coordinates[$index1]->longitude)) {
+                    $result = !$result;
+                }
+            }
+
+            return $result;
+    }
 }
 
 ?>

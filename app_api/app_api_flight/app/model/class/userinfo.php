@@ -1,11 +1,19 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class userInfo and supplies the requests such as select, insert, update & delete.
+*/
 class UserInfo implements IQuery {
 
-	public $Id;
-	public $Email;
-	public $Telephone;
-	public $User;
+	public $id;
+	public $email;
+	public $telephone;
+	public $user;
 
 
 	
@@ -29,10 +37,10 @@ class UserInfo implements IQuery {
 
 			foreach ($rows as $row) {	
 				$userInfo = new UserInfo();
-				$userInfo->Id = (int) $row['id'];
-				$userInfo->Email = $row['info_email'];
-				$userInfo->Telephone = $row['info_telephone'];
-				$userInfo->User = User::select($row['user_id']);
+				$userInfo->id = (int) $row['id'];
+				$userInfo->email = $row['info_email'];
+				$userInfo->telephone = $row['info_telephone'];
+				$userInfo->user = User::select($row['user_id']);
 
 				array_push($result, $userInfo);
 			}
@@ -68,10 +76,10 @@ class UserInfo implements IQuery {
 
 
 			$userInfo = new UserInfo();
-			$userInfo->Id = (int) $row['id'];
-			$userInfo->Email = $row['info_email'];
-			$userInfo->Telephone = $row['info_telephone'];
-			$userInfo->User = User::select($row['user_id']);
+			$userInfo->id = (int) $row['id'];
+			$userInfo->email = $row['info_email'];
+			$userInfo->telephone = $row['info_telephone'];
+			$userInfo->user = User::select($row['user_id']);
 			
 			
 			return $userInfo;
@@ -105,10 +113,10 @@ class UserInfo implements IQuery {
 
 
 			$userInfo = new UserInfo();
-			$userInfo->Id = (int) $row['id'];
-			$userInfo->Email = $row['info_email'];
-			$userInfo->Telephone = $row['info_telephone'];
-			$userInfo->User = User::select($row['user_id']);
+			$userInfo->id = (int) $row['id'];
+			$userInfo->email = $row['info_email'];
+			$userInfo->telephone = $row['info_telephone'];
+			$userInfo->user = User::select($row['user_id']);
 			
 			
 			return $userInfo;
@@ -134,26 +142,24 @@ class UserInfo implements IQuery {
 				throw new Exception(json_get_error());
 			}
 
-
 			$sql = "
 			INSERT INTO user_info 
 			(info_email, info_telephone, user_id)
 			VALUES
 			(:info_email, :info_telephone, :user_id);";
 
-
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':info_email', $userInfo->Email, PDO::PARAM_STR);
-			$query->bindParam(':info_telephone', $userInfo->Telephone, PDO::PARAM_STR);
-			$query->bindParam(':user_id', $userInfo->User->Id, PDO::PARAM_INT);
+			$query->bindParam(':info_email', $userInfo->email, PDO::PARAM_STR);
+			$query->bindParam(':info_telephone', $userInfo->telephone, PDO::PARAM_STR);
+			$query->bindParam(':user_id', $userInfo->user->id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = (int)$connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = (int)$connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -190,9 +196,9 @@ class UserInfo implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':info_email', $userInfo->Email, PDO::PARAM_STR);
-			$query->bindParam(':info_telephone', $userInfo->Telephone, PDO::PARAM_STR);
-			$query->bindParam(':user_id', $userInfo->User->Id, PDO::PARAM_INT);
+			$query->bindParam(':info_email', $userInfo->email, PDO::PARAM_STR);
+			$query->bindParam(':info_telephone', $userInfo->telephone, PDO::PARAM_STR);
+			$query->bindParam(':user_id', $userInfo->user->id, PDO::PARAM_INT);
 
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
@@ -200,9 +206,9 @@ class UserInfo implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = (int)$id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = (int)$id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -233,9 +239,9 @@ class UserInfo implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = (int)$id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = (int)$id;
 
 			return $result;
 

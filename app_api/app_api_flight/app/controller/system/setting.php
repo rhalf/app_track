@@ -1,14 +1,23 @@
-<?php 
+<?php
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Main declation of settings.
+*/
+ini_set('memory_limit', '256M');
 date_default_timezone_set('UTC');
 
 //Database
-Flight::register('dbMain', 'PDO', array('mysql:host=184.107.179.178;dbname=app_main','admin','admin'), function($dbMain){
+Flight::register('dbMain', 'PDO', array('mysql:host=184.107.175.154;dbname=app_main','gaia','gaia'), function($dbMain){
 	$dbMain->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$dbMain->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 });
 
-Flight::register('dbData', 'PDO', array('mysql:host=184.107.179.178;dbname=app_data_2016','admin','admin'), function($dbData){
+Flight::register('dbData', 'PDO', array('mysql:host=184.107.175.154;dbname=app_data_2017','gaia','gaia'), function($dbData){
 	$dbData->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$dbData->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 });

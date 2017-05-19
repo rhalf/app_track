@@ -1,4 +1,14 @@
-﻿var app = angular.module('app');
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Directive for datetimeDirective. 
+                            Used for converting dateTime from local to utc vice versa.
+*/
+var app = angular.module('app');
 
 app.directive('datetimeDirective', function ($filter) {
     return {
@@ -32,12 +42,12 @@ app.directive('datetimeDirective', function ($filter) {
 
             ngModelController.$formatters.push(function (value) {
                 // Do to view conversion, possibly using $filter('date')
-                var datetime = null
-                if (value == null || value == 'undefined') {
-                    datetime = new Date();
-                } else {
-                    datetime = new Date(value);
-                }
+                //var datetime = null
+                //if (value == null || value == 'undefined') {
+                //    datetime = new Date();
+                //} else {
+                    var datetime = new Date(value);
+                //}
 
                 var dtUtc = new Date(
                     Date.UTC(

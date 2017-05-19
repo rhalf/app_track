@@ -1,222 +1,116 @@
-﻿var app = angular.module('app');
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Controller for panelMenuController.
+*/
+var app = angular.module('app');
 
 
 app.controller('panelMenuController', function (
     $scope,
     $location,
-    $uibModal,
+     $uibModal,
 
     uiFactory,
     authFactory,
     flagFactory,
     systemFactory,
+    toolFactory,
 
     sessionService,
 
     Company
     ) {
 
-    $scope.setToggle = function () {
-        uiFactory.panelLeft = !uiFactory.panelLeft;
-    };
-
     $scope.logout = function () {
-        authFactory.remove();
+        authFactory.clear();
         $location.path('/')
     };
 
 
     //System
-    $scope.showCompanies = function () {
-        $scope.ui.panelModeTemplate = 'app/view/form/system/companies.html';
-    };
-
-    $scope.showUsers = function () {
-        $scope.ui.panelModeTemplate = 'app/view/form/system/users.html';
-    };
-
-
-    $scope.showSims = function () {
-        $scope.ui.panelModeTemplate = 'app/view/form/system/sims.html';
-    };
-
-    $scope.showUnits = function () {
-        $scope.ui.panelModeTemplate = 'app/view/form/system/units.html';
-    };
-
-    $scope.showDrivers = function () {
-        $scope.ui.panelModeTemplate = 'app/view/form/system/drivers.html';
-    };
-
-    $scope.showVehicles = function () {
-        $scope.ui.panelModeTemplate = 'app/view/form/system/vehicles.html';
-    };
-
-    $scope.showUserOnlines = function () {
-        $scope.ui.panelModeTemplate = 'app/view/form/system/useronlines.html';
-    };
-
-
-    //client
-    $scope.showClientCompany = function () {
+    $scope.showSystem = function () {
         $uibModal.open({
             animation: true,
-            templateUrl: 'app/view/form/client/ct_company_update.html',
-            controller: 'ctCompanyUpdateController',
+            templateUrl: 'app/view/form/system.html',
+            controller: 'systemController',
             keyboard: true,
-            size: 'md',
+            size: 'lg'
+        });
+    };
+    $scope.showPreferences = function () {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'app/view/form/preferences.html',
+            controller: 'preferencesController',
+            keyboard: true,
+            size: 'lg',
             resolve: {
-                company: $scope.authCompany
+                company: $scope.auth.getCompany()
             }
         });
     };
-
-    $scope.showClientUnits = function () {
+    $scope.showMapTools = function () {
         $uibModal.open({
             animation: true,
-            templateUrl: 'app/view/form/client/ct_units.html',
-            controller: 'ctUnitsController',
+            templateUrl: 'app/view/map/map_tools.html',
+            controller: 'mapToolsController',
             keyboard: true,
             size: 'lg'
         });
     };
-
-    $scope.showClientUsers = function () {
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'app/view/form/client/ct_users.html',
-            controller: 'ctUsersController',
-            keyboard: true,
-            size: 'lg'
-        });
-    };
-
-    $scope.showClientSims = function () {
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'app/view/form/client/ct_sims.html',
-            controller: 'ctSimsController',
-            keyboard: true,
-            size: 'lg'
-        });
-    };
-
-    $scope.showClientDrivers = function () {
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'app/view/form/client/ct_drivers.html',
-            controller: 'ctDriversController',
-            keyboard: true,
-            size: 'lg'
-        });
-    };
-
-    $scope.showClientVehicles = function () {
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'app/view/form/client/ct_vehicles.html',
-            controller: 'ctVehiclesController',
-            keyboard: true,
-            size: 'lg'
-        });
-    };
-
-
-    $scope.showClientCollections = function () {
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'app/view/form/client/ct_collections.html',
-            controller: 'ctCollectionsController',
-            keyboard: true,
-            size: 'lg'
-        });
-    };
-
-
-    $scope.showClientDistribute = function () {
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'app/view/form/client/ct_distribute.html',
-            controller: 'ctDistributeController',
-            keyboard: true,
-            size: 'lg'
-        });
-    };
-
-    //Map
-    $scope.showClientPois = function () {
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'app/view/form/map/ct_pois.html',
-            controller: 'ctPoisController',
-            keyboard: true,
-            size: 'lg'
-        });
-    };
-    $scope.showClientGeofences = function () {
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'app/view/form/map/ct_geofences.html',
-            controller: 'ctGeofencesController',
-            keyboard: true,
-            size: 'lg'
-        });
-    };
-    $scope.showClientAreas = function () {
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'app/view/form/map/ct_areas.html',
-            controller: 'ctAreasController',
-            keyboard: true,
-            size: 'lg'
-        });
-    };
-
-    $scope.showClientRoutes = function () {
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'app/view/form/map/ct_routes.html',
-            controller: 'ctRoutesController',
-            keyboard: true,
-            size: 'lg'
-        });
-    };
+   
     //About
-    $scope.showAbout = function () {
+    $scope.showAbouts = function () {
         $uibModal.open({
             animation: true,
-            templateUrl: 'app/view/form/about.html',
-            controller: 'aboutController',
+            templateUrl: 'app/view/help/abouts.html',
+            controller: 'aboutsController',
             keyboard: true,
             size: 'md'
         });
     };
-
+    //Icons
+    $scope.showIcons = function () {
+        $uibModal.open({
+            animation: true,
+            templateUrl: 'app/view/help/icons.html',
+            controller: 'iconsController',
+            keyboard: true,
+            size: 'md'
+        });
+    };
     $scope.init = function () {
-        $scope.authUser = authFactory.getUser();
-        $scope.session = sessionService;
+        $scope.auth = authFactory;
         $scope.flag = flagFactory;
         $scope.ui = uiFactory;
         $scope.system = systemFactory;
+        $scope.tool = toolFactory;
+
     };
 
 
-    $scope.openNote = function (appNote) {
-        $uibModal.open({
-            animation: true,
-            templateUrl: 'app/view/form/app_note.html',
-            controller: 'appNoteController',
-            keyboard: true,
-            size: 'md',
-            resolve: {
-                appNote: appNote
-            }
-        });
-    };
 
-    $scope.panelModeSelect = function (index) {
-        $scope.ui.panelMode= index;
-    };
+    //$scope.openNote = function (appNote) {
+    //    $uibModal.open({
+    //        animation: true,
+    //        templateUrl: 'app/view/form/app_note.html',
+    //        controller: 'appNoteController',
+    //        keyboard: true,
+    //        size: 'md',
+    //        resolve: {
+    //            appNote: appNote
+    //        }
+    //    });
+    //};
+
+    //$scope.panelModeSelect = function (index) {
+    //    $scope.ui.panelMode= index;
+    //};
 
     $scope.init();
 });

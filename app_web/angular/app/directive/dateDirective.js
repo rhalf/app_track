@@ -1,4 +1,14 @@
-﻿var app = angular.module('app');
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Directive for dateDirective. 
+                            Used for converting date from local to utc vice versa.
+*/
+var app = angular.module('app');
 
 app.directive('dateDirective', function ($filter) {
     return {

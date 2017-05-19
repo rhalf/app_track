@@ -1,4 +1,13 @@
 <?php
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Declaration of included classes.
+*/
 $root = $_SERVER['DOCUMENT_ROOT'];
 
 //Framework
@@ -26,8 +35,8 @@ require_once('/app/model/class/simvendor.php');
 require_once('/app/model/class/company.php');
 require_once('/app/model/class/user.php');
 require_once('/app/model/class/vehicle.php');
-require_once('/app/model/class/trackeetype.php');
-require_once('/app/model/class/companyaddress.php');
+require_once('/app/model/class/type.php');
+require_once('/app/model/class/address.php');
 require_once('/app/model/class/unit.php');
 
 require_once('/app/model/class/driver.php');
@@ -64,6 +73,20 @@ require_once('app/model/class/io.php');
 require_once('app/model/session/session.php');
 
 
+//Reports
+require_once('app/model/class/command.php');
+require_once('app/model/class/report.php');
+
+require_once('app/model/class/data/historical.php');
+require_once('app/model/class/data/running.php');
+require_once('app/model/class/data/idling.php');
+require_once('app/model/class/data/geofencing.php');
+require_once('app/model/class/data/areaing.php');
+require_once('app/model/class/data/ignition.php');
+require_once('app/model/class/data/speeding.php');
+require_once('app/model/class/data/powercutting.php');
+
+
 //System Functions
 // require_once('app/controller/method/get.php');
 // require_once('app/controller/method/post.php');
@@ -72,6 +95,7 @@ require_once('app/model/session/session.php');
 // require_once('app/controller/method/options.php');
 // require_once('app/controller/method/patch.php');
 
+// require_once 'app/model/external/polygon.php';
 
 require_once('app/controller/system/function.php');
 require_once 'app/controller/system/statuscode.php';

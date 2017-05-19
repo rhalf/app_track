@@ -1,11 +1,19 @@
 <?php
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class url.
+*/
 class Url {
 	
-	public $Version = null;
-	public $Category = null;
-	public $Class = null;
-	public $Id = null;
+	public $version = null;
+	public $category = null;
+	public $class = null;
+	public $id = null;
 	
 	public function __construct() {
 	}

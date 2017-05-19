@@ -24,22 +24,11 @@ namespace GaiaWatcher {
 
             try {
                 using (NetworkStream networkStream = client.tcpClient.GetStream()) {
-                    networkStream.ReadTimeout = 2 * 60 * 1000;
-                    networkStream.WriteTimeout = 2 * 60 * 1000;
+                    networkStream.ReadTimeout = 1000 * 60 * 5;
+                    networkStream.WriteTimeout = 1000 * 60 * 5;
 
                     do {
                         Array.Clear(buffer, 0, buffer.Length);
-                        if (!networkStream.CanRead) {
-                            return;
-                        }
-                        if (!networkStream.DataAvailable) {
-                            TimeSpan timeSpan = DateTime.Now.Subtract(client.dateTime);
-                            if (timeSpan.Minutes > 1) {
-                                return;
-                            }
-                            Thread.Sleep(1000);
-                            continue;
-                        }
 
                         int count = networkStream.Read(buffer, 0, buffer.Length);
 
@@ -49,10 +38,21 @@ namespace GaiaWatcher {
 
                         if (base.serviceProfile.socket == Service.COMMAND) {
                             commandData = Command.getInstance().parseCommandData(buffer);
+
                         }
 
 
 
+                        if (commandData != null) {
+                            while (!this.bufferCommands.ContainsKey(commandData.imei)) {
+                                this.bufferCommands.TryAdd(commandData.imei, commandData);
+                            }
+                        } else {
+                            throw new Exception("Data format is not a Command.");
+                        }
+
+
+                        client.dateTime = new DateTime(DateTime.Now.Ticks);
                     } while (client.tcpClient.Connected);
                 }
             } catch (Exception exception) {

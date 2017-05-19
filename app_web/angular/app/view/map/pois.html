@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div ng-controller="poisController">
+        <div class="modal-header">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 class="modal-title">Poi</h3>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" ng-model="selected" placeholder="Search" />
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" ng-click="selected = ''">
+                                <span class="glyphicon glyphicon-ban-circle" />
+                            </button>
+                            <button class="btn btn-default" type="button" ng-click="add()">
+                                <span class="glyphicon glyphicon-plus" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal-body">
+            <table class="table  table-responsive table-hover table-condensed small">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>name</th>
+                        <th>desc</th>
+                        <th>isVisible</th>
+                        <th>option</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="poi in pois | filter : selected | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize | limitTo : ui.pagination.pageSize">
+                        <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize }}</td>
+                        <td>{{poi.name}}</td>
+                        <td>{{poi.desc}}</td>
+                        <td>{{poi.isVisible}}</td>
+                        <td>
+                            <button ng-click="select(poi)"><span class="glyphicon glyphicon-cog" /></button>
+                            <button ng-click="delete(poi)"><span class="glyphicon glyphicon-trash" /></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal-footer">
+            <div class="text-center">
+                <ul uib-pagination
+                    boundary-links="true"
+                    force-ellipses="true"
+                    total-items="pois.length"
+                    ng-model="ui.pagination.currentPage"
+                    max-size="ui.pagination.maxSize"
+                    items-per-page="ui.pagination.pageSize"
+                    class="pagination-sm"
+                    style="padding:0px;margin:0px;"></ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

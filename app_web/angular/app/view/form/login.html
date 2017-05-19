@@ -7,9 +7,9 @@
 <body>
     <div panel-loading ng-cloak ng-show="ui.isLoading"></div>
 
-    <div class="noty">
-        <uib-alert ng-repeat="alert in ui.alert.items" type="{{alert.type}}" close="closeAlert($index)" dismiss-on-timeout="{{ui.alert.timeout}}">{{alert.message}} </uib-alert>
-    </div>
+ 
+
+  
 
     <div class="content">
         <div class="container-fluid">
@@ -28,7 +28,7 @@
                                 <div class="input-group-addon">
                                     <span class="glyphicon glyphicon-user"></span>
                                 </div>
-                                <input type="text" class="form-control" name="userName" ng-model="authUser.Name" placeholder="Username" required="required" />
+                                <input type="text" class="form-control" name="userName" ng-model="authUser.name" placeholder="Username" required="required" />
                             </div>
                         </div>
 
@@ -37,7 +37,7 @@
                                 <div class="input-group-addon">
                                     <span class="glyphicon glyphicon-lock"></span>
                                 </div>
-                                <input type="Password" class="form-control" name="userPassword" ng-model="authUser.Password" placeholder="Password" required="required" />
+                                <input type="Password" class="form-control" name="userPassword" ng-model="authUser.password" placeholder="Password" required="required" />
                             </div>
                         </div>
                     </form>
@@ -64,12 +64,7 @@
             background-size: 16px 16px;
         }
 
-        .noty {
-            position: fixed;
-            height: 100%;
-            width: 100%;
-            padding: 5px;
-        }
+
 
         .content {
             position: absolute;

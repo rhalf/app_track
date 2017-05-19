@@ -1,5 +1,13 @@
 <?php
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Definition of a helper functions.
+*/
 function json_indent($json) {
 	$result = '';
 	$pos = 0;
@@ -65,7 +73,6 @@ function json_get_error() {
 	}
 }
 
-
 function getRemoteIp() {
 	$ip = getenv('HTTP_CLIENT_IP')?:
 	getenv('HTTP_X_FORWARDED_FOR')?:
@@ -78,6 +85,14 @@ function getRemoteIp() {
 
 Flight::map('dateTime', function(){
 	$dateTime = new DateTime();
+	return $dateTime->format('Y-m-d H:i:s');
+});
+
+Flight::map('DateTimeToString', function($dateTime){
+	return $dateTime->format('Y-m-d H:i:s');
+});
+Flight::map('stringToDateTime', function($string){
+	$dateTime = DateTime::createFromFormat('Y-m-d H:i:s', $string);
 	return $dateTime->format('Y-m-d H:i:s');
 });
 

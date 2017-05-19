@@ -1,17 +1,25 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class driver and supplies the requests such as select, insert, update & delete.
+*/
 class Driver implements IQuery {
 
-	public $Id;
-	public $DriverId;
-	public $Name;
-	public $NameFirst;
-	public $NameMiddle;
-	public $NameLast;
-	public $DtCreated;
-	public $Rfid;
-	public $Company;
-	public $Status;
+	public $id;
+	public $driverId;
+	public $name;
+	public $nameFirst;
+	public $nameMiddle;
+	public $nameLast;
+	public $dtCreated;
+	public $rfid;
+	public $company;
+	public $status;
 
 
 	public function __construct() {
@@ -34,17 +42,17 @@ class Driver implements IQuery {
 
 			foreach ($rows as $row) {	
 				$driver = new Driver();
-				$driver->Id = (int) $row['id'];
-				$driver->DriverId = $row['driver_id'];
-				$driver->Name = $row['driver_name'];
-				$driver->NameFirst = $row['driver_name_f'];
-				$driver->NameMiddle = $row['driver_name_m'];
-				$driver->NameLast = $row['driver_name_l'];
-				$driver->Rfid = $row['driver_rfid'];
-				$driver->DtCreated = $row['driver_dt_created'];
+				$driver->id = (int) $row['id'];
+				$driver->driverId = $row['driver_id'];
+				$driver->name = $row['driver_name'];
+				$driver->nameFirst = $row['driver_name_f'];
+				$driver->nameMiddle = $row['driver_name_m'];
+				$driver->nameLast = $row['driver_name_l'];
+				$driver->rfid = $row['driver_rfid'];
+				$driver->dtCreated = $row['driver_dt_created'];
 				
-				$driver->Status = Status::select($row['e_status_id']);
-				$driver->Company = Company::select($row['company_id']);
+				$driver->status = Status::select($row['e_status_id']);
+				$driver->company = Company::select($row['company_id']);
 
 				array_push($result, $driver);
 			}
@@ -78,17 +86,17 @@ class Driver implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$driver = new Driver();
-			$driver->Id = (int) $row['id'];
-			$driver->DriverId = $row['driver_id'];
-			$driver->Name = $row['driver_name'];
-			$driver->NameFirst = $row['driver_name_f'];
-			$driver->NameMiddle = $row['driver_name_m'];
-			$driver->NameLast = $row['driver_name_l'];
-			$driver->Rfid = $row['driver_rfid'];
-			$driver->DtCreated = $row['driver_dt_created'];
+			$driver->id = (int) $row['id'];
+			$driver->driverId = $row['driver_id'];
+			$driver->name = $row['driver_name'];
+			$driver->nameFirst = $row['driver_name_f'];
+			$driver->nameMiddle = $row['driver_name_m'];
+			$driver->nameLast = $row['driver_name_l'];
+			$driver->rfid = $row['driver_rfid'];
+			$driver->dtCreated = $row['driver_dt_created'];
 
-			$driver->Status = Status::select($row['e_status_id']);
-			$driver->Company = Company::select($row['company_id']);
+			$driver->status = Status::select($row['e_status_id']);
+			$driver->company = Company::select($row['company_id']);
 
 			return $driver;
 
@@ -119,16 +127,16 @@ class Driver implements IQuery {
 
 			foreach ($rows as $row) {	
 				$driver = new Driver();
-				$driver->Id = (int) $row['id'];
-				$driver->DriverId = $row['driver_id'];
-				$driver->Name = $row['driver_name'];
-				$driver->NameFirst = $row['driver_name_f'];
-				$driver->NameMiddle = $row['driver_name_m'];
-				$driver->NameLast = $row['driver_name_l'];
-				$driver->Rfid = $row['driver_rfid'];
-				$driver->DtCreated = $row['driver_dt_created'];
-				$driver->Status = Status::select($row['e_status_id']);
-				$driver->Company = Company::select($row['company_id']);
+				$driver->id = (int) $row['id'];
+				$driver->driverId = $row['driver_id'];
+				$driver->name = $row['driver_name'];
+				$driver->nameFirst = $row['driver_name_f'];
+				$driver->nameMiddle = $row['driver_name_m'];
+				$driver->nameLast = $row['driver_name_l'];
+				$driver->rfid = $row['driver_rfid'];
+				$driver->dtCreated = $row['driver_dt_created'];
+				$driver->status = Status::select($row['e_status_id']);
+				$driver->company = Company::select($row['company_id']);
 				array_push($result, $driver);
 			}
 
@@ -165,22 +173,22 @@ class Driver implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':driver_id', $driver->DriverId, PDO::PARAM_STR);
-			$query->bindParam(':driver_name', $driver->Name, PDO::PARAM_STR);
-			$query->bindParam(':driver_name_f', $driver->NameFirst, PDO::PARAM_STR);
-			$query->bindParam(':driver_name_m', $driver->NameMiddle, PDO::PARAM_STR);
-			$query->bindParam(':driver_name_l', $driver->NameLast, PDO::PARAM_STR);
-			$query->bindParam(':driver_rfid', $driver->Rfid, PDO::PARAM_STR);
-			$query->bindParam(':e_status_id', $driver->Status->Id, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $driver->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':driver_id', $driver->driverId, PDO::PARAM_STR);
+			$query->bindParam(':driver_name', $driver->name, PDO::PARAM_STR);
+			$query->bindParam(':driver_name_f', $driver->nameFirst, PDO::PARAM_STR);
+			$query->bindParam(':driver_name_m', $driver->nameMiddle, PDO::PARAM_STR);
+			$query->bindParam(':driver_name_l', $driver->nameLast, PDO::PARAM_STR);
+			$query->bindParam(':driver_rfid', $driver->rfid, PDO::PARAM_STR);
+			$query->bindParam(':e_status_id', $driver->status->id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $driver->company->id, PDO::PARAM_INT);
 			$query->bindParam(':driver_dt_created', $dateTime, PDO::PARAM_STR);
 
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -223,23 +231,23 @@ class Driver implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':driver_id', $driver->DriverId, PDO::PARAM_STR);
-			$query->bindParam(':driver_name', $driver->Name, PDO::PARAM_STR);
-			$query->bindParam(':driver_name_f', $driver->NameFirst, PDO::PARAM_STR);
-			$query->bindParam(':driver_name_m', $driver->NameMiddle, PDO::PARAM_STR);
-			$query->bindParam(':driver_name_l', $driver->NameLast, PDO::PARAM_STR);
-			$query->bindParam(':driver_rfid', $driver->Rfid, PDO::PARAM_STR);
-			$query->bindParam(':e_status_id', $driver->Status->Id, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $driver->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':driver_id', $driver->driverId, PDO::PARAM_STR);
+			$query->bindParam(':driver_name', $driver->name, PDO::PARAM_STR);
+			$query->bindParam(':driver_name_f', $driver->nameFirst, PDO::PARAM_STR);
+			$query->bindParam(':driver_name_m', $driver->nameMiddle, PDO::PARAM_STR);
+			$query->bindParam(':driver_name_l', $driver->nameLast, PDO::PARAM_STR);
+			$query->bindParam(':driver_rfid', $driver->rfid, PDO::PARAM_STR);
+			$query->bindParam(':e_status_id', $driver->status->id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $driver->company->id, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -270,9 +278,9 @@ class Driver implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

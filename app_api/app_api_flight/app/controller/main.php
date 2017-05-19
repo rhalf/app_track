@@ -1,4 +1,13 @@
 <?php
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Main entry point of each crud requests.
+*/
 require_once 'app/controller/system/include.php';
 
 
@@ -570,7 +579,15 @@ Flight::route('GET /v1/main/geofence/@id', function($id) {
 
 Flight::route('POST /v1/main/geofence', function() {
 	try {
-		$object = Geofence::insert();
+
+		$param = json_decode(file_get_contents("php://input"));
+
+		// if ($param) {
+		// 	$object = Geofence::selectByCoordinate($param);
+		// }else {
+			$object = Geofence::insert();
+		//}
+
 		Flight::ok($object);
 	} catch (Exception $exception) {
 		Flight::error($exception);
@@ -699,9 +716,15 @@ Flight::route('DELETE /v1/main/nation/@id', function($id) {
 //Poi
 //=============================================================================
 Flight::route('GET /v1/main/poi', function() {
+	$company = Flight::request()->query->company;
+
 	try {
-		$array = Poi::selectAll();
-		Flight::ok($array);
+		if ($company) {
+			$object = Poi::selectByCompany($company);
+		}else {
+			$object = Poi::selectAll();
+		}
+		Flight::ok($object);
 	} catch (Exception $exception) {
 		Flight::error($exception);
 	}
@@ -992,11 +1015,13 @@ Flight::route('DELETE /v1/main/status/@id', function($id) {
 //Unit
 //=============================================================================
 Flight::route('GET /v1/main/unit', function() {
+
 	$company = Flight::request()->query->company;
+	
 	try {
 		if ($company) {
 			$array = Unit::selectByCompany($company);
-		} else {
+		}else {
 			$array = Unit::selectAll();
 		}
 		Flight::ok($array);
@@ -1137,47 +1162,47 @@ Flight::route('DELETE /v1/main/unitstatus/@id', function($id) {
 	}
 });
 //=============================================================================
-//TrackeeType
+//Type
 //=============================================================================
-Flight::route('GET /v1/main/trackeetype', function() {
+Flight::route('GET /v1/main/type', function() {
 	try {
-		$array = TrackeeType::selectAll();
+		$array = Type::selectAll();
 		Flight::ok($array);
 	} catch (Exception $exception) {
 		Flight::error($exception);
 	}
 });
 
-Flight::route('GET /v1/main/trackeetype/@id', function($id) {
+Flight::route('GET /v1/main/type/@id', function($id) {
 	try {
-		$object = TrackeeType::select($id);
+		$object = Type::select($id);
 		Flight::ok($object);
 	} catch (Exception $exception) {
 		Flight::error($exception);
 	}
 });
 
-Flight::route('POST /v1/main/trackeetype',function() {
+Flight::route('POST /v1/main/type',function() {
 	try {
-		$object = TrackeeType::insert();
+		$object = Type::insert();
 		Flight::ok($object);
 	} catch (Exception $exception) {
 		Flight::error($exception);
 	}
 });
 
-Flight::route('PUT /v1/main/trackeetype/@id', function($id) {
+Flight::route('PUT /v1/main/type/@id', function($id) {
 	try {
-		$object = TrackeeType::update($id);
+		$object = Type::update($id);
 		Flight::ok($object);
 	} catch (Exception $exception) {
 		Flight::error($exception);
 	}
 });
 
-Flight::route('DELETE /v1/main/trackeetype/@id', function($id) {
+Flight::route('DELETE /v1/main/type/@id', function($id) {
 	try {
-		$object = TrackeeType::delete($id);
+		$object = Type::delete($id);
 		Flight::ok($object);
 	} catch (Exception $exception) {
 		Flight::error($exception);
@@ -1301,12 +1326,12 @@ Flight::route('DELETE /v1/main/userinfo/@id', function($id) {
 //=============================================================================
 Flight::route('GET /v1/main/useronline', function() {
 	try {
-			$time = Flight::request()->query->time;
-			if ($time) {
-				$array = UserOnline::selectByTime($time);
-			} else {
-				$array = UserOnline::selectAll();
-			}
+		$time = Flight::request()->query->time;
+		if ($time) {
+			$array = UserOnline::selectByTime($time);
+		} else {
+			$array = UserOnline::selectAll();
+		}
 		Flight::ok($array);
 	} catch (Exception $exception) {
 		Flight::error($exception);
@@ -1328,10 +1353,10 @@ Flight::route('POST /v1/main/useronline', function() {
 
 		$jsonObject = json_decode(file_get_contents("php://input"));
 
-		$userOnline = UserOnline::selectByUser($jsonObject->User->Id);
+		$userOnline = UserOnline::selectByUser($jsonObject->user->id);
 
 		if ($userOnline) {
-			$object =UserOnline::update($userOnline->Id);
+			$object =UserOnline::update($userOnline->id);
 		} else {
 			$object = UserOnline::insert();
 		}
@@ -1504,14 +1529,14 @@ Flight::route('POST /v1/session/logout',function() {
 //=============================================================================
 //UnitData
 //=============================================================================
-Flight::route('GET /v1/data/unitdata/@id', function($id) {
-	try {
-		$object = UnitData::select($id);
-		Flight::ok($object);
-	} catch (Exception $exception) {
-		Flight::error($exception);
-	}
-});
+// Flight::route('GET /v1/data/unitdata/@id', function($id) {
+// 	try {
+// 		$object = UnitData::select($id);
+// 		Flight::ok($object);
+// 	} catch (Exception $exception) {
+// 		Flight::error($exception);
+// 	}
+// });
 //=============================================================================
 //Poi
 //=============================================================================
@@ -1559,6 +1584,60 @@ Flight::route('PUT /v1/main/poi/@id', function($id) {
 Flight::route('DELETE /v1/main/poi/@id', function($id) {
 	try {
 		$object = Poi::delete($id);
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+//=========================================================================
+
+//Report
+Flight::route('POST /v1/data/report', function() {
+	try {
+
+		$param = json_decode(file_get_contents("php://input"));
+
+		$object = null;
+
+		switch ($param->type) {
+			case 'historical':
+			$object = Report::getHistorical($param);
+			break;
+			case 'running':
+			$object = Report::getRunning($param);
+			break;
+			case 'idling':
+			$object = Report::getIdling($param);
+			break;
+			case 'geofencing':
+			$object = Report::getGeofencing($param);
+			break;	
+			case 'areaing':
+			$object = Report::getAreaing($param);
+			break;
+			case 'ignition':
+			$object = Report::getIgnition($param);
+			break;
+			case 'speeding':
+			$object = Report::getSpeeding($param);
+			break;
+			case 'powercutting':
+			$object = Report::getPowercutting($param);
+			break;
+		}
+		
+
+		Flight::ok($object);
+	} catch (Exception $exception) {
+		Flight::error($exception);
+	}
+});
+
+
+//Command
+Flight::route('POST /v1/main/command', function() {
+	try {
+		$object = Command::prepare();
 		Flight::ok($object);
 	} catch (Exception $exception) {
 		Flight::error($exception);

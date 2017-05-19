@@ -1,34 +1,42 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class database and generate connection string.
+*/
 class Database {
-	public $Username;
-	public $Password;
-	public $Ip;
-	public $Port;
-	public $Database;
+	public $username;
+	public $password;
+	public $ip;
+	public $port;
+	public $database;
 
 
 	/*
 	MySQL
 	Standard
-	Server=myServerAddress;Database=myDataBase;Uid=myUsername;Pwd=myPassword;
+	Server=myServerAddress;database=myDataBase;Uid=myusername;Pwd=mypassword;
 
 	Specifying TCP port
-	Server=myServerAddress;Port=1234;Database=myDataBase;Uid=myUsername;Pwd=myPassword;
+	Server=myServerAddress;port=1234;database=myDataBase;Uid=myusername;Pwd=mypassword;
 	The port 3306 is the default MySql port.The value is ignored if Unix socket is used.	
 	*/
 	public function getConnectionString() {
-		$connectionString = "Server=$this->Ip;Port=$this->Port;Database=$this->Database;Uid=$this->Username;Pwd=$this->Password;";
+		$connectionString = "Server=$this->ip;Port=$this->port;database=$this->database;Uid=$this->username;Pwd=$this->password;";
 		return $connectionString;
 	}
 
 	function __construct($ip,  $port, $database, $username, $password) {
-		$this->Username = $username;
-		$this->Ip = $ip;
-		$this->Database = $database;
+		$this->username = $username;
+		$this->ip = $ip;
+		$this->database = $database;
 
-		$this->Password = $password;
-		$this->Port = $port;
+		$this->password = $password;
+		$this->port = $port;
 	}
 }
 ?>

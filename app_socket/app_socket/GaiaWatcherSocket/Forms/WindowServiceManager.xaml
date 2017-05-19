@@ -17,7 +17,6 @@
                     <GridView.Columns>
                         <GridViewColumn Header="id" Width="150" DisplayMemberBinding="{Binding id}"></GridViewColumn>
                         <GridViewColumn Header="ip" Width="150" DisplayMemberBinding="{Binding ip}"></GridViewColumn>
-                        <GridViewColumn Header="imei" Width="150" DisplayMemberBinding="{Binding imei}"></GridViewColumn>
                         <GridViewColumn Header="dateTime" Width="150" DisplayMemberBinding="{Binding dateTime}"></GridViewColumn>
                         <GridViewColumn Header="iBytes" Width="150" DisplayMemberBinding="{Binding iBytes}"></GridViewColumn>
                         <GridViewColumn Header="oBytes" Width="150" DisplayMemberBinding="{Binding oBytes}"></GridViewColumn>

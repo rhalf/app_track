@@ -1,12 +1,20 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class company and supplies the requests such as select, insert, update & delete.
+*/
 class Company implements IQuery {
 
-	public $Id;
-	public $Name;
-	public $Desc;
-	public $DtCreated;
-	public $Status;
+	public $id;
+	public $name;
+	public $desc;
+	public $dtCreated;
+	public $status;
 
 	public function __construct() {
 	}
@@ -28,11 +36,11 @@ class Company implements IQuery {
 
 			foreach ($rows as $row) {	
 				$company = new Company();
-				$company->Id = (int) $row['id'];
-				$company->Name = $row['company_name'];
-				$company->Desc = $row['company_desc'];
-				$company->DtCreated = $row['company_dt_created'];
-				$company->Status = Status::select($row['e_status_id']);
+				$company->id = (int) $row['id'];
+				$company->name = $row['company_name'];
+				$company->desc = $row['company_desc'];
+				$company->dtCreated = $row['company_dt_created'];
+				$company->status = Status::select($row['e_status_id']);
 
 				array_push($result, $company);
 			}
@@ -47,7 +55,6 @@ class Company implements IQuery {
 			$connection = null;
 		}
 	}
-
 	public static function select($id) {
 		
 		$connection = Flight::dbMain();
@@ -68,11 +75,11 @@ class Company implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$company = new Company();
-			$company->Id = (int) $row['id'];
-			$company->Name = $row['company_name'];
-			$company->Desc = $row['company_desc'];
-			$company->DtCreated = $row['company_dt_created'];
-			$company->Status = Status::select($row['e_status_id']);
+			$company->id = (int) $row['id'];
+			$company->name = $row['company_name'];
+			$company->desc = $row['company_desc'];
+			$company->dtCreated = $row['company_dt_created'];
+			$company->status = Status::select($row['e_status_id']);
 
 			return $company;
 
@@ -84,8 +91,6 @@ class Company implements IQuery {
 			$connection = null;
 		}
 	}
-
-
 	public static function insert() {
 
 		$connection = Flight::dbMain();
@@ -108,17 +113,17 @@ class Company implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':company_name', $company->Name, PDO::PARAM_STR);
-			$query->bindParam(':company_desc', $company->Desc, PDO::PARAM_STR);
+			$query->bindParam(':company_name', $company->name, PDO::PARAM_STR);
+			$query->bindParam(':company_desc', $company->desc, PDO::PARAM_STR);
 			$query->bindParam(':company_dt_created', $dateTime, PDO::PARAM_STR);
-			$query->bindParam(':e_status_id', $company->Status->Id, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $company->status->id, PDO::PARAM_INT);
 
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertId();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -156,18 +161,18 @@ class Company implements IQuery {
 			$query = $connection->prepare($sql);
 
 
-			$query->bindParam(':company_name', $company->Name, PDO::PARAM_STR);
-			$query->bindParam(':company_desc', $company->Desc, PDO::PARAM_STR);
-			$query->bindParam(':e_status_id', $company->Status->Id, PDO::PARAM_INT);
+			$query->bindParam(':company_name', $company->name, PDO::PARAM_STR);
+			$query->bindParam(':company_desc', $company->desc, PDO::PARAM_STR);
+			$query->bindParam(':e_status_id', $company->status->id, PDO::PARAM_INT);
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -179,7 +184,6 @@ class Company implements IQuery {
 			$connection = null;
 		}
 	}
-
 	public static function delete($id) {
 
 		$connection = Flight::dbMain();
@@ -198,9 +202,9 @@ class Company implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

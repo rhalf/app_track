@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <h3 class="modal-title">Poi (Add)</h3>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+
+                <form class="form-horizontal" role="form">
+                    <fieldset ng-disabled="form.isDisabled">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" ng-model="poi.name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Desc</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" ng-model="poi.desc" required />
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Company</label>
+                            <div class="col-md-10">
+                                <select class="form-control" ng-model="poi.company" ng-init="poi.company = authUser.company" ng-options="company as company.name for company in companies track by company.id" disabled />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Coordinate</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{object.getPoiCoordinate()}}" disabled/>
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default" ng-click="showMinimap()">Select</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">IsVisible</label>
+                            <div class="col-md-10">
+                                <input type="checkbox" class="form-control" ng-model="poi.isVisible" />
+                            </div>
+                        </div>
+
+                     
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="add()">Add</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+        
+    </div>
+
+    <style type="text/css">
+        form {
+            margin: 20px;
+        }
+    </style>
+</body>
+</html>

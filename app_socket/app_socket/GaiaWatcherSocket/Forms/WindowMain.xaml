@@ -175,7 +175,7 @@
                             </ListView>
                         </GroupBox>-->
                         <GroupBox Grid.Row="2" Header="Services">
-                            <ListView Name="listViewSocketManager" Grid.Row="0" Margin="3"  MouseDoubleClick="listViewSocketManager_MouseDoubleClick">
+                            <ListView Name="listViewSocketManager" Grid.Row="0" Margin="3"  MouseDoubleClick="listViewSocketManager_MouseDoubleClick" >
                                 <ListView.View>
                                     <GridView>
                                         <GridView.Columns>
@@ -188,11 +188,13 @@
                                             <GridViewColumn Header="iBytes" Width="120" DisplayMemberBinding="{Binding iBytesToKiloBytes, StringFormat='{}{0:N0}kb'}"></GridViewColumn>
                                             <GridViewColumn Header="oPackets" Width="60" DisplayMemberBinding="{Binding oPackets, StringFormat='{}{0:N0}'}"></GridViewColumn>
                                             <GridViewColumn Header="iPackets" Width="60" DisplayMemberBinding="{Binding iPackets, StringFormat='{}{0:N0}'}"></GridViewColumn>
-                                            <GridViewColumn Header="clients" Width="50" DisplayMemberBinding="{Binding clients.Count, StringFormat='{}{0:N0}'}"></GridViewColumn>
-                                            <GridViewColumn Header="units" Width="50" DisplayMemberBinding="{Binding units, StringFormat='{}{0:N0}'}"></GridViewColumn>
-                                            <GridViewColumn Header="bufferIn" Width="50" DisplayMemberBinding="{Binding bufferIn.Count, StringFormat='{}{0:N0}'}"></GridViewColumn>
-                                            <GridViewColumn Header="bufferOut" Width="50" DisplayMemberBinding="{Binding bufferOut.Count, StringFormat='{}{0:N0}'}"></GridViewColumn>
-                                            <GridViewColumn Header="task" Width="50" DisplayMemberBinding="{Binding task}"></GridViewColumn>
+                                            <GridViewColumn Header="created" Width="60" DisplayMemberBinding="{Binding clientCreated, StringFormat='{}{0:N0}'}"></GridViewColumn>
+                                            <GridViewColumn Header="destroyed" Width="60" DisplayMemberBinding="{Binding clientDestroyed, StringFormat='{}{0:N0}'}"></GridViewColumn>
+                                            <GridViewColumn Header="clients" Width="60" DisplayMemberBinding="{Binding clients.Count, StringFormat='{}{0:N0}'}"></GridViewColumn>
+                                            <GridViewColumn Header="clientUnits" Width="60" DisplayMemberBinding="{Binding clientUnits.Count, StringFormat='{}{0:N0}'}"></GridViewColumn>
+                                            <GridViewColumn Header="commands" Width="60" DisplayMemberBinding="{Binding bufferCommands.Count, StringFormat='{}{0:N0}'}"></GridViewColumn>
+                                            <GridViewColumn Header="unitDatas" Width="60" DisplayMemberBinding="{Binding bufferUnitDatas.Count, StringFormat='{}{0:N0}'}"></GridViewColumn>
+                                            <GridViewColumn Header="task" Width="60" DisplayMemberBinding="{Binding task}"></GridViewColumn>
 
                                         </GridView.Columns>
                                     </GridView>

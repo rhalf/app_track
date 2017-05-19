@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div ng-controller="companiesController">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="modal-header">
+                    <div class="col-md-4">
+                        <h3 class="modal-title">Companies ({{companies.length}})</h3>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" ng-model="selected" placeholder="Search" />
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" ng-click="selected = ''">
+                                    <span class="glyphicon glyphicon-remove" />
+                                </button>
+                                <button class="btn btn-default" type="button" ng-click="add()">
+                                    <span class="glyphicon glyphicon-plus" />
+                                </button>
+                                <button class="btn btn-default" type="button" ng-click="download()">
+                                    <span class="glyphicon glyphicon-download" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div class="scrollable">
+
+                        <table class="table table-responsive table-condensed table-hover small" id="companies">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>name</th>
+                                    <th>description</th>
+                                    <th>dtCreated</th>
+                                    <th>status</th>
+                                    <th>options</th>
+                            </thead>
+                            <tbody>
+
+                                <tr ng-repeat="company in companies | filter : selected | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize | limitTo : ui.pagination.pageSize">
+                                    <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize }}</td>
+                                    <td>{{company.name}}</td>
+                                    <td>{{company.desc}}</td>
+                                    <td>{{company.dtCreated | dateFilter : 'date'}}</td>
+                                    <td>{{company.status.name }}</td>
+                                    <td>
+                                        <button ng-click="select(company)"><span class="glyphicon glyphicon-edit" /></button>
+                                        <button ng-click="delete(company)"><span class="glyphicon glyphicon-trash" /></button>
+                                        <button ng-click="set(company)"><span class="glyphicon glyphicon-flash" /></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <ul uib-pagination
+                            boundary-links="true"
+                            force-ellipses="true"
+                            total-items="companies.length"
+                            ng-model="ui.pagination.currentPage"
+                            max-size="ui.pagination.maxSize"
+                            items-per-page="ui.pagination.pageSize"
+                            class="pagination-sm"
+                            style="padding:0px;margin:0px;"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

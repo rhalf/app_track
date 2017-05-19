@@ -1,4 +1,13 @@
-﻿using System;
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Controller for the form windowService.
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

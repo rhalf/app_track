@@ -1,11 +1,19 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class unitType and supplies the requests such as select, insert, update & delete.
+*/
 class UnitType implements IQuery {
 
-	public $Id;
-	public $Name;
-	public $Desc;
-	public $Brand;
+	public $id;
+	public $name;
+	public $desc;
+	public $brand;
 	
 	
 	public function __construct() {
@@ -29,10 +37,10 @@ class UnitType implements IQuery {
 
 			foreach ($rows as $row) {	
 				$unitType = new UnitType();
-				$unitType->Id = (int) $row['id'];
-				$unitType->Name = $row['unit_type_name'];
-				$unitType->Desc = $row['unit_type_desc'];
-				$unitType->Brand = $row['unit_type_brand'];
+				$unitType->id = (int) $row['id'];
+				$unitType->name = $row['unit_type_name'];
+				$unitType->desc = $row['unit_type_desc'];
+				$unitType->brand = $row['unit_type_brand'];
 				
 				array_push($result, $unitType);
 			}
@@ -68,10 +76,10 @@ class UnitType implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$unitType = new UnitType();
-			$unitType->Id = (int) $row['id'];
-			$unitType->Name = $row['unit_type_name'];
-			$unitType->Desc = $row['unit_type_desc'];
-			$unitType->Brand = $row['unit_type_brand'];
+			$unitType->id = (int) $row['id'];
+			$unitType->name = $row['unit_type_name'];
+			$unitType->desc = $row['unit_type_desc'];
+			$unitType->brand = $row['unit_type_brand'];
 
 			return $unitType;
 
@@ -104,17 +112,17 @@ class UnitType implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':unit_type_name', $unitType->Name, PDO::PARAM_STR);
-			$query->bindParam(':unit_type_desc', $unitType->Desc, PDO::PARAM_STR);
-			$query->bindParam(':unit_type_brand',$unitType->Brand, PDO::PARAM_STR);
+			$query->bindParam(':unit_type_name', $unitType->name, PDO::PARAM_STR);
+			$query->bindParam(':unit_type_desc', $unitType->desc, PDO::PARAM_STR);
+			$query->bindParam(':unit_type_brand',$unitType->brand, PDO::PARAM_STR);
 			
 			
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -151,18 +159,18 @@ class UnitType implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':unit_type_name', $unitType->Name, PDO::PARAM_STR);
-			$query->bindParam(':unit_type_desc', $unitType->Desc, PDO::PARAM_STR);
-			$query->bindParam(':unit_type_brand', $unitType->Brand, PDO::PARAM_STR);
+			$query->bindParam(':unit_type_name', $unitType->name, PDO::PARAM_STR);
+			$query->bindParam(':unit_type_desc', $unitType->desc, PDO::PARAM_STR);
+			$query->bindParam(':unit_type_brand', $unitType->brand, PDO::PARAM_STR);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -194,9 +202,9 @@ class UnitType implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

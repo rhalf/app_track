@@ -1,4 +1,13 @@
-﻿using System;
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Controller for the form windowMain.
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -122,19 +131,31 @@ namespace GaiaWatcherSocket {
 
         private void toggleButtonServer_Click (object sender, RoutedEventArgs e) {
             if (toggleButtonServer.IsChecked == true) {
+
+                AtsSocketManager asm = null;
                 foreach (SocketProfile sp in listViewSocketProfile.Items) {
                     if (sp.isEnabled) {
                         if (sp.company.name == Company.ATS) {
-                            _application.socketManagers.Add(new AtsSocketManager(sp));
-                        }
-                        if (sp.company.name == Company.MEITRACK) {
-                            _application.socketManagers.Add(new MeitrackSocketManager(sp));
-                        }
-                        if (sp.company.name == Company.TELTONIKA) {
-                            _application.socketManagers.Add(new TeltonikaSocketManager(sp));
+                            asm = new AtsSocketManager(sp);
+                            _application.socketManagers.Add(asm);
                         }
                     }
                 }
+
+                foreach (SocketProfile sp in listViewSocketProfile.Items) {
+                    if (sp.isEnabled)
+                        if (sp.company.name == Company.MEITRACK) {
+                            MeitrackSocketManager msm = new MeitrackSocketManager(sp);
+                            msm.bufferCommands = asm.bufferCommands;
+                            _application.socketManagers.Add(msm);
+                        }
+                    if (sp.company.name == Company.TELTONIKA) {
+                        TeltonikaSocketManager tsm = new TeltonikaSocketManager(sp);
+                        tsm.bufferCommands = asm.bufferCommands;
+                        _application.socketManagers.Add(tsm);
+                    }
+                }
+
                 foreach (SocketManager sm in _application.socketManagers) {
                     sm.start();
                 }

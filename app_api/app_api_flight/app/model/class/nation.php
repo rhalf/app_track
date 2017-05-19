@@ -1,19 +1,27 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class nation and supplies the requests such as select, insert, update & delete.
+*/
 class Nation implements IQuery {
 
-	public $Id;
-	public $NameShort;
-	public $NameLong;
-	public $Iso2;
-	public $Iso3;
-	public $Number;
-	public $Uno;
-	public $CountryCode;
-	public $Account;
-	public $Language;
-	public $Ethnic;
-	public $Currency;
+	public $id;
+	public $nameShort;
+	public $nameLong;
+	public $iso2;
+	public $iso3;
+	public $number;
+	public $uno;
+	public $countryCode;
+	public $account;
+	public $language;
+	public $ethnic;
+	public $currency;
 
 
 	public function __construct() {
@@ -36,18 +44,18 @@ class Nation implements IQuery {
 
 			foreach ($rows as $row) {	
 				$nation = new Nation();
-				$nation->Id = (int) $row['id'];
-				$nation->NameShort = $row['nation_short'];
-				$nation->NameLong = $row['nation_long'];
-				$nation->Iso2 = $row['nation_iso2'];
-				$nation->Iso3 = $row['nation_iso3'];
-				$nation->Number = (int) $row['nation_number'];
-				$nation->Uno = (bool) $row['nation_uno'];
-				$nation->CountryCode = $row['nation_country_code'];
-				$nation->Account = $row['nation_account'];
-				$nation->Language = $row['nation_language'];
-				$nation->Ethnic = $row['nation_ethnic'];
-				$nation->Currency = $row['nation_currency'];
+				$nation->id = (int) $row['id'];
+				$nation->nameShort = $row['nation_short'];
+				$nation->nameLong = $row['nation_long'];
+				$nation->iso2 = $row['nation_iso2'];
+				$nation->iso3 = $row['nation_iso3'];
+				$nation->number = (int) $row['nation_number'];
+				$nation->uno = (bool) $row['nation_uno'];
+				$nation->countryCode = $row['nation_country_code'];
+				$nation->account = $row['nation_account'];
+				$nation->language = $row['nation_language'];
+				$nation->ethnic = $row['nation_ethnic'];
+				$nation->currency = $row['nation_currency'];
 
 				array_push($result, $nation);
 			}
@@ -82,18 +90,18 @@ class Nation implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$nation = new Nation();
-			$nation->Id = (int) $row['id'];
-			$nation->NameShort = $row['nation_short'];
-			$nation->NameLong = $row['nation_long'];
-			$nation->Iso2 = $row['nation_iso2'];
-			$nation->Iso3 = $row['nation_iso3'];
-			$nation->Number = (int) $row['nation_number'];
-			$nation->Uno = (bool) $row['nation_uno'];
-			$nation->CountryCode = $row['nation_country_code'];
-			$nation->Account = $row['nation_account'];
-			$nation->Language = $row['nation_language'];
-			$nation->Ethnic = $row['nation_ethnic'];
-			$nation->Currency = $row['nation_currency'];
+			$nation->id = (int) $row['id'];
+			$nation->nameShort = $row['nation_short'];
+			$nation->nameLong = $row['nation_long'];
+			$nation->iso2 = $row['nation_iso2'];
+			$nation->iso3 = $row['nation_iso3'];
+			$nation->number = (int) $row['nation_number'];
+			$nation->uno = (bool) $row['nation_uno'];
+			$nation->countryCode = $row['nation_country_code'];
+			$nation->account = $row['nation_account'];
+			$nation->language = $row['nation_language'];
+			$nation->ethnic = $row['nation_ethnic'];
+			$nation->currency = $row['nation_currency'];
 
 			return $nation;
 
@@ -128,24 +136,24 @@ class Nation implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':nation_iso2', $nation->Iso2, PDO::PARAM_STR);
-			$query->bindParam(':nation_iso3', $nation->Iso3, PDO::PARAM_STR);
-			$query->bindParam(':nation_short', $nation->NameShort, PDO::PARAM_STR);
-			$query->bindParam(':nation_long', $nation->NameLong, PDO::PARAM_STR);
-			$query->bindParam(':nation_number', $nation->Number, PDO::PARAM_INT);
-			$query->bindParam(':nation_uno', $nation->Uno, PDO::PARAM_BOOL);
-			$query->bindParam(':nation_country_code', $nation->CountryCode, PDO::PARAM_STR);
-			$query->bindParam(':nation_account', $nation->Account, PDO::PARAM_STR);
-			$query->bindParam(':nation_language', $nation->Language, PDO::PARAM_STR);
-			$query->bindParam(':nation_ethnic', $nation->Ethnic, PDO::PARAM_STR);
-			$query->bindParam(':nation_currency', $nation->Currency, PDO::PARAM_STR);
+			$query->bindParam(':nation_iso2', $nation->iso2, PDO::PARAM_STR);
+			$query->bindParam(':nation_iso3', $nation->iso3, PDO::PARAM_STR);
+			$query->bindParam(':nation_short', $nation->nameShort, PDO::PARAM_STR);
+			$query->bindParam(':nation_long', $nation->nameLong, PDO::PARAM_STR);
+			$query->bindParam(':nation_number', $nation->number, PDO::PARAM_INT);
+			$query->bindParam(':nation_uno', $nation->uno, PDO::PARAM_BOOL);
+			$query->bindParam(':nation_country_code', $nation->countryCode, PDO::PARAM_STR);
+			$query->bindParam(':nation_account', $nation->account, PDO::PARAM_STR);
+			$query->bindParam(':nation_language', $nation->language, PDO::PARAM_STR);
+			$query->bindParam(':nation_ethnic', $nation->ethnic, PDO::PARAM_STR);
+			$query->bindParam(':nation_currency', $nation->currency, PDO::PARAM_STR);
 
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -190,26 +198,26 @@ class Nation implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':nation_iso2', $nation->Iso2, PDO::PARAM_STR);
-			$query->bindParam(':nation_iso3', $nation->Iso3, PDO::PARAM_STR);
-			$query->bindParam(':nation_short', $nation->NameShort, PDO::PARAM_STR);
-			$query->bindParam(':nation_long', $nation->NameLong, PDO::PARAM_STR);
-			$query->bindParam(':nation_number', $nation->Number, PDO::PARAM_INT);
-			$query->bindParam(':nation_uno', $nation->Uno, PDO::PARAM_BOOL);
-			$query->bindParam(':nation_country_code', $nation->CountryCode, PDO::PARAM_STR);
-			$query->bindParam(':nation_account', $nation->Account, PDO::PARAM_STR);
-			$query->bindParam(':nation_language', $nation->Language, PDO::PARAM_STR);
-			$query->bindParam(':nation_ethnic', $nation->Ethnic, PDO::PARAM_STR);
-			$query->bindParam(':nation_currency', $nation->Currency, PDO::PARAM_STR);
+			$query->bindParam(':nation_iso2', $nation->iso2, PDO::PARAM_STR);
+			$query->bindParam(':nation_iso3', $nation->iso3, PDO::PARAM_STR);
+			$query->bindParam(':nation_short', $nation->nameShort, PDO::PARAM_STR);
+			$query->bindParam(':nation_long', $nation->nameLong, PDO::PARAM_STR);
+			$query->bindParam(':nation_number', $nation->number, PDO::PARAM_INT);
+			$query->bindParam(':nation_uno', $nation->uno, PDO::PARAM_BOOL);
+			$query->bindParam(':nation_country_code', $nation->countryCode, PDO::PARAM_STR);
+			$query->bindParam(':nation_account', $nation->account, PDO::PARAM_STR);
+			$query->bindParam(':nation_language', $nation->language, PDO::PARAM_STR);
+			$query->bindParam(':nation_ethnic', $nation->ethnic, PDO::PARAM_STR);
+			$query->bindParam(':nation_currency', $nation->currency, PDO::PARAM_STR);
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -240,9 +248,9 @@ class Nation implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

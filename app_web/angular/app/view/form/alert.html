@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+    <div class="modal-body" style="padding:0px;">
+        <div class="alert alert-{{alert.type}}" style="margin-bottom:0px">
+            <button type="button" class="close" ng-click="cancel()">
+                <span class="glyphicon glyphicon-remove-circle"></span>
+            </button>
+            <strong class="capitalize">{{alert.type}}!</strong> {{alert.message}}
+        </div>
+        <!--<div uib-alert ng-repeat="alert in ui.alert.items.getItems()" class="alert alert-{{alert.type}}" close="ui.alert.closeItem($index)" dismiss-on-timeout="{{ui.alert.timeout}}">{{alert.message}}</div>-->
+    </div>
+
+    <style type="text/css">
+        .capitalize{
+            text-transform: uppercase;
+        }
+    </style>
+
+
+</body>
+</html>

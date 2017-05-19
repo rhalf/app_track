@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="modal-title">{{report.type}}</h3>
+                <h6>{{report.vehicle.company.name}}</h6>
+            </div>
+            <div class="col-md-4">
+                <!--<h6>Imei : {{report.vehicle.unit.imei}}</h6>
+                <h6>From : {{report.dateFrom | dateFilter }}</h6>
+                <h6>To : {{report.dateTo | dateFilter}}</h6>-->
+            </div>
+            <div class="col-md-4">
+                <!--<h6>Distance : {{report.totalDistance / 1000  | limitTo : 5}} kilometers</h6>
+                <h6>Time : {{ report.totalDistance  | limitTo : 5}} seconds</h6>
+                <h6>Fuel : {{ report.totalDistance / 11000  | limitTo : 5}} liters</h6>-->
+                <h6>From : {{report.dateFrom | dateFilter }}</h6>
+                <h6>To : {{report.dateTo | dateFilter}}</h6>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="scrollable">
+            <table class="table table-condensed table-striped" id="report">
+                <thead>
+                    <tr>
+                        <th>vehicle.name</th>
+                        <th>vehicle.plate</th>
+                        <th>distance</th>
+                        <th>area</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr ng-repeat="data in report.datas">
+                        <td>{{data.vehicle.name}}</td>
+                        <td>{{data.vehicle.plate}}</td>
+                        <td>{{(data.distance / 1000) | number : 2}}</td>
+                        <td>{{data.areas}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="download()">Download</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Close</button>
+    </div>
+</body>
+</html>

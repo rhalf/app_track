@@ -1,4 +1,14 @@
-﻿var app = angular.module('app');
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Filter for dateFilter. 
+                            Converts Date from local to Utc.
+*/
+var app = angular.module('app');
 
 app.filter('dateFilter', function ($filter) {
     return function (input, option) {

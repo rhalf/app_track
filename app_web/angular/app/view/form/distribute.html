@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="modal-title">Distribute</h3>
+                <h5>Collection : {{collection.name}}</h5>
+                <h5>Vehicles : {{fleet.vehicles.length}}</h5>
+            </div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" ng-model="selected" placeholder="Search" />
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" ng-click="selected = ''">
+                            <span class="glyphicon glyphicon-ban-circle" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-12">
+                <table class="table table-condensed table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>active</th>
+                            <th>plate</th>
+                            <th>name</th>
+                            <th>imei</th>
+                            <th>sim</th>
+                            <th>driver</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="vehicle in fleet.vehicles | filter : selected | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize | limitTo : ui.pagination.pageSize">
+                            <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize }}</td>
+                            <td><input type="checkbox" ng-model="vehicle.checked" /></td>
+                            <td>{{vehicle.plate | limitTo : 16}}</td>
+                            <td>{{vehicle.name | limitTo : 16}}</td>
+                            <td>{{vehicle.unit.imei | limitTo : 16}}</td>
+                            <td>{{vehicle.unit.sim.number | limitTo : 16}}</td>
+                            <td>{{vehicle.driver.name | limitTo : 16}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+
+        <div class="text-center">
+            <ul uib-pagination
+                boundary-links="true"
+                force-ellipses="true"
+                total-items="fleet.vehicles.length"
+                ng-model="ui.pagination.currentPage"
+                max-size="ui.pagination.maxSize"
+                items-per-page="ui.pagination.pageSize"
+                class="pagination-sm"
+                style="padding:0px;margin:0px;"></ul>
+
+            <br />
+
+            <div class="btn btn-group">
+                <button class="btn btn-default" ng-click="checkAll(true)">CheckAll</button>
+                <button class="btn btn-default" ng-click="checkAll(false)">UnCheckAll</button>
+                <button class="btn btn-default" ng-click="save()">Save</button>
+                <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

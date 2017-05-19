@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+
+    <div class="modal-header">
+        <h3 class="modal-title">Area (Add)</h3>
+    </div>
+
+
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+                <form class="form-horizontal" role="form">
+                    <fieldset ng-disabled="form.isDisabled">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" ng-model="area.name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Desc</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" ng-model="area.desc" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Coordinates</label>
+                            <div class="col-md-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="{{area.coordinates}}" disabled />
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default" ng-click="showMinimap()">Select</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">IsVisible</label>
+                            <div class="col-md-10">
+                                <input type="checkbox" class="form-control" ng-model="area.isVisible" ng-true-value="true" ng-false-value="false"/>
+                            </div>
+                        </div>
+                
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Nation</label>
+                            <div class="col-md-10">
+                                <select class="form-control" ng-model="area.nation" ng-init="area.nation = flag.nations[178]"  ng-options="nation as nation.nameShort for nation in flag.nations track by nation.id" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Light Vehicle / Min. Speed</label>
+                            <div class="col-md-10">
+                                <input type="number" class="form-control" ng-model="area.speedMinL" ng-init="area.speedMinL = 0" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Light Vehicle / Max. Speed</label>
+                            <div class="col-md-10">
+                                <input type="number" class="form-control" ng-model="area.speedMaxL" ng-init="area.speedMaxL = 80" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Heavy Vehicle / Min. Speed</label>
+                            <div class="col-md-10">
+                                <input type="number" class="form-control" ng-model="area.speedMinH" ng-init="area.speedMinH = 0" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Heavy Vehicle / Max. Speed</label>
+                            <div class="col-md-10">
+                                <input type="number" class="form-control" ng-model="area.speedMaxH" ng-init="area.speedMaxH = 60" />
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="add()">Adds</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+
+    <style type="text/css">
+        form {
+            margin: 20px;
+        }
+    </style>
+</body>
+</html>

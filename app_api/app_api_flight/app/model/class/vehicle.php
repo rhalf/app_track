@@ -1,22 +1,30 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class vehicle and supplies the requests such as select, insert, update & delete.
+*/
 class Vehicle implements IQuery {
 
-	public $Id;
-	public $DtCreated;
-	public $DtSubscribed;
-	public $Name;
-	public $Plate;
-	public $MaInitial;
-	public $MaLimit;
-	public $MaMaintenance;
-	public $SpeedMax;
-	public $Status;
-	public $FuelMax;
-	public $Driver;
-	public $Unit;
-	public $Company;
-	public $TrackeeType;
+	public $id;
+	public $dtCreated;
+	public $dtExpired;
+	public $name;
+	public $plate;
+	public $maInitial;
+	public $maLimit;
+	public $maMaintenance;
+	public $speedMax;
+	public $status;
+	public $fuelMax;
+	public $driver;
+	public $unit;
+	public $company;
+	public $type;
 
 
 	
@@ -41,29 +49,29 @@ class Vehicle implements IQuery {
 
 			foreach ($rows as $row) {	
 				$vehicle = new Vehicle();
-				$vehicle->Id = (int) $row['id'];
-				$vehicle->DtCreated = $row['vehicle_dt_created'];
-				$vehicle->DtSubscribed = $row['vehicle_dt_subscribed'];
-				$vehicle->Plate = $row['vehicle_plate'];
-				$vehicle->Name = $row['vehicle_name'];
-				$vehicle->Model = $row['vehicle_model'];
+				$vehicle->id = (int) $row['id'];
+				$vehicle->dtCreated = $row['vehicle_dt_created'];
+				$vehicle->dtExpired = $row['vehicle_dt_expired'];
+				$vehicle->plate = $row['vehicle_plate'];
+				$vehicle->name = $row['vehicle_name'];
+				$vehicle->model = $row['vehicle_model'];
 
-				$vehicle->MaInitial = (int)$row['vehicle_ma_initial'];
-				$vehicle->MaLimit = (int)$row['vehicle_ma_limit'];
-				$vehicle->MaMaintenance = (int)$row['vehicle_ma_maintenance'];
-				$vehicle->SpeedMax = (int)$row['vehicle_speed_max'];
-				$vehicle->FuelMax = (int)$row['vehicle_fuel_max'];
-				// $vehicle->Driver =  $row['driver_id'] == null ? null : (int)$row['driver_id'];
-				// $vehicle->Unit = $row['unit_id'] == null ? null : (int)$row['unit_id'];
-				// $vehicle->Company = (int) $row['company_id'];
-				// $vehicle->TrackeeType = (int) $row['e_trackee_type_id'];
-				// $vehicle->Status = (int)$row['e_status_id'];
+				$vehicle->maInitial = (int)$row['vehicle_ma_initial'];
+				$vehicle->maLimit = (int)$row['vehicle_ma_limit'];
+				$vehicle->maMaintenance = (int)$row['vehicle_ma_maintenance'];
+				$vehicle->speedMax = (int)$row['vehicle_speed_max'];
+				$vehicle->fuelMax = (int)$row['vehicle_fuel_max'];
+				// $vehicle->driver =  $row['driver_id'] == null ? null : (int)$row['driver_id'];
+				// $vehicle->unit = $row['unit_id'] == null ? null : (int)$row['unit_id'];
+				// $vehicle->company = (int) $row['company_id'];
+				// $vehicle->type = (int) $row['e_type_id'];
+				// $vehicle->status = (int)$row['e_status_id'];
 
-				$vehicle->Driver =  Driver::select($row['driver_id']);
-				$vehicle->Unit = Unit::select($row['unit_id']);
-				$vehicle->Company = Company::select($row['company_id']);
-				$vehicle->TrackeeType =TrackeeType::select($row['e_trackee_type_id']);
-				$vehicle->Status = Status::select($row['e_status_id']);
+				$vehicle->driver =  Driver::select($row['driver_id']);
+				$vehicle->unit = Unit::select($row['unit_id']);
+				$vehicle->company = Company::select($row['company_id']);
+				$vehicle->type =Type::select($row['e_type_id']);
+				$vehicle->status = Status::select($row['e_status_id']);
 
 				array_push($result, $vehicle);
 			}
@@ -98,29 +106,29 @@ class Vehicle implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$vehicle = new Vehicle();
-			$vehicle->Id = (int) $row['id'];
-			$vehicle->DtCreated = $row['vehicle_dt_created'];
-			$vehicle->DtSubscribed = $row['vehicle_dt_subscribed'];
-			$vehicle->Plate = $row['vehicle_plate'];
-			$vehicle->Name = $row['vehicle_name'];
-			$vehicle->Model = $row['vehicle_model'];
+			$vehicle->id = (int) $row['id'];
+			$vehicle->dtCreated = $row['vehicle_dt_created'];
+			$vehicle->dtExpired = $row['vehicle_dt_expired'];
+			$vehicle->plate = $row['vehicle_plate'];
+			$vehicle->name = $row['vehicle_name'];
+			$vehicle->model = $row['vehicle_model'];
 
-			$vehicle->MaInitial = (int)$row['vehicle_ma_initial'];
-			$vehicle->MaLimit = (int)$row['vehicle_ma_limit'];
-			$vehicle->MaMaintenance = (int)$row['vehicle_ma_maintenance'];
-			$vehicle->SpeedMax = (int)$row['vehicle_speed_max'];
-			$vehicle->FuelMax = (int)$row['vehicle_fuel_max'];
-			// $vehicle->Status = (int)$row['e_status_id'];
-			// $vehicle->Driver =  $row['driver_id'] == null ? null : (int)$row['driver_id'];
-			// $vehicle->Unit = $row['unit_id'] == null ? null : (int)$row['unit_id'];
-			// $vehicle->Company = (int) $row['company_id'];
-			// $vehicle->TrackeeType = (int) $row['e_trackee_type_id'];
-			$vehicle->Status = (int)$row['e_status_id'];
-			$vehicle->Driver =  Driver::select($row['driver_id']);
-			$vehicle->Unit = Unit::select($row['unit_id']);
-			$vehicle->Company = Company::select($row['company_id']);
-			$vehicle->TrackeeType =TrackeeType::select($row['e_trackee_type_id']);
-			$vehicle->Status = Status::select($row['e_status_id']);
+			$vehicle->maInitial = (int)$row['vehicle_ma_initial'];
+			$vehicle->maLimit = (int)$row['vehicle_ma_limit'];
+			$vehicle->maMaintenance = (int)$row['vehicle_ma_maintenance'];
+			$vehicle->speedMax = (int)$row['vehicle_speed_max'];
+			$vehicle->fuelMax = (int)$row['vehicle_fuel_max'];
+			// $vehicle->status = (int)$row['e_status_id'];
+			// $vehicle->driver =  $row['driver_id'] == null ? null : (int)$row['driver_id'];
+			// $vehicle->unit = $row['unit_id'] == null ? null : (int)$row['unit_id'];
+			// $vehicle->company = (int) $row['company_id'];
+			// $vehicle->type = (int) $row['e_type_id'];
+			$vehicle->status = (int)$row['e_status_id'];
+			$vehicle->driver =  Driver::select($row['driver_id']);
+			$vehicle->unit = Unit::select($row['unit_id']);
+			$vehicle->company = Company::select($row['company_id']);
+			$vehicle->type = Type::select($row['e_type_id']);
+			$vehicle->status = Status::select($row['e_status_id']);
 
 
 			return $vehicle;
@@ -152,29 +160,29 @@ class Vehicle implements IQuery {
 
 			foreach ($rows as $row) {	
 				$vehicle = new Vehicle();
-				$vehicle->Id = (int) $row['id'];
-				$vehicle->DtCreated = $row['vehicle_dt_created'];
-				$vehicle->DtSubscribed = $row['vehicle_dt_subscribed'];
-				$vehicle->Plate = $row['vehicle_plate'];
-				$vehicle->Name = $row['vehicle_name'];
-				$vehicle->Model = $row['vehicle_model'];
+				$vehicle->id = (int) $row['id'];
+				$vehicle->dtCreated = $row['vehicle_dt_created'];
+				$vehicle->dtExpired = $row['vehicle_dt_expired'];
+				$vehicle->plate = $row['vehicle_plate'];
+				$vehicle->name = $row['vehicle_name'];
+				$vehicle->model = $row['vehicle_model'];
 
-				$vehicle->MaInitial = (int)$row['vehicle_ma_initial'];
-				$vehicle->MaLimit = (int)$row['vehicle_ma_limit'];
-				$vehicle->MaMaintenance = (int)$row['vehicle_ma_maintenance'];
-				$vehicle->SpeedMax = (int)$row['vehicle_speed_max'];
-				$vehicle->FuelMax = (int)$row['vehicle_fuel_max'];
-				// $vehicle->Status = (int)$row['e_status_id'];
-				// $vehicle->Driver =  $row['driver_id'] == null ? null : (int)$row['driver_id'];
-				// $vehicle->Unit = $row['unit_id'] == null ? null : (int)$row['unit_id'];
-				// $vehicle->Company = (int) $row['company_id'];
-				// $vehicle->TrackeeType = (int) $row['e_trackee_type_id'];
-				$vehicle->Status = (int)$row['e_status_id'];
-				$vehicle->Driver =  Driver::select($row['driver_id']);
-				$vehicle->Unit = Unit::select($row['unit_id']);
-				$vehicle->Company = Company::select($row['company_id']);
-				$vehicle->TrackeeType =TrackeeType::select($row['e_trackee_type_id']);
-				$vehicle->Status = Status::select($row['e_status_id']);
+				$vehicle->maInitial = (int)$row['vehicle_ma_initial'];
+				$vehicle->maLimit = (int)$row['vehicle_ma_limit'];
+				$vehicle->maMaintenance = (int)$row['vehicle_ma_maintenance'];
+				$vehicle->speedMax = (int)$row['vehicle_speed_max'];
+				$vehicle->fuelMax = (int)$row['vehicle_fuel_max'];
+				// $vehicle->status = (int)$row['e_status_id'];
+				// $vehicle->driver =  $row['driver_id'] == null ? null : (int)$row['driver_id'];
+				// $vehicle->unit = $row['unit_id'] == null ? null : (int)$row['unit_id'];
+				// $vehicle->company = (int) $row['company_id'];
+				// $vehicle->type = (int) $row['e_type_id'];
+				$vehicle->status = (int)$row['e_status_id'];
+				$vehicle->driver =  Driver::select($row['driver_id']);
+				$vehicle->unit = Unit::select($row['unit_id']);
+				$vehicle->company = Company::select($row['company_id']);
+				$vehicle->type =Type::select($row['e_type_id']);
+				$vehicle->status = Status::select($row['e_status_id']);
 
 				array_push($result, $vehicle);
 			}
@@ -210,7 +218,7 @@ class Vehicle implements IQuery {
 			INSERT INTO vehicle 
 			(
 			vehicle_dt_created,
-			vehicle_dt_subscribed, 
+			vehicle_dt_expired, 
 			vehicle_plate, 
 			vehicle_ma_initial, 
 			vehicle_ma_limit, 
@@ -223,13 +231,13 @@ class Vehicle implements IQuery {
 			driver_id,
 			unit_id, 
 			company_id,
-			e_trackee_type_id
+			e_type_id
 			)
 			
 			VALUES
 			(
 			:vehicle_dt_created,
-			:vehicle_dt_subscribed, 
+			:vehicle_dt_expired, 
 			:vehicle_plate, 
 			:vehicle_ma_initial, 
 			:vehicle_ma_limit, 
@@ -242,37 +250,37 @@ class Vehicle implements IQuery {
 			:driver_id,
 			:unit_id, 
 			:company_id,
-			:e_trackee_type_id
+			:e_type_id
 			);";
 
 
 			$query = $connection->prepare($sql);
 
 			$query->bindParam(':vehicle_dt_created', $dateTime, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_dt_subscribed', $vehicle->DtSubscribed, PDO::PARAM_STR);
+			$query->bindParam(':vehicle_dt_expired', $vehicle->dtExpired, PDO::PARAM_STR);
 
-			$query->bindParam(':vehicle_plate', $vehicle->Plate, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_ma_initial', $vehicle->MaInitial, PDO::PARAM_INT);
-			$query->bindParam(':vehicle_ma_limit', $vehicle->MaLimit, PDO::PARAM_INT);
-			$query->bindParam(':vehicle_ma_maintenance', $vehicle->MaMaintenance, PDO::PARAM_INT);
-			$query->bindParam(':vehicle_speed_max', $vehicle->SpeedMax, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $vehicle->Status->Id, PDO::PARAM_INT);
-			$query->bindParam(':vehicle_name', $vehicle->Name, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_model', $vehicle->Model, PDO::PARAM_STR);
+			$query->bindParam(':vehicle_plate', $vehicle->plate, PDO::PARAM_STR);
+			$query->bindParam(':vehicle_ma_initial', $vehicle->maInitial, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_ma_limit', $vehicle->maLimit, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_ma_maintenance', $vehicle->maMaintenance, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_speed_max', $vehicle->speedMax, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $vehicle->status->id, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_name', $vehicle->name, PDO::PARAM_STR);
+			$query->bindParam(':vehicle_model', $vehicle->model, PDO::PARAM_STR);
 
-			$query->bindParam(':vehicle_fuel_max', $vehicle->FuelMax, PDO::PARAM_INT);
-			$query->bindParam(':driver_id', $vehicle->Driver->Id, PDO::PARAM_INT);
-			$query->bindParam(':unit_id', $vehicle->Unit->Id, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $vehicle->Company->Id, PDO::PARAM_INT);
-			$query->bindParam(':e_trackee_type_id', $vehicle->TrackeeType->Id, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_fuel_max', $vehicle->fuelMax, PDO::PARAM_INT);
+			$query->bindParam(':driver_id', $vehicle->driver->id, PDO::PARAM_INT);
+			$query->bindParam(':unit_id', $vehicle->unit->id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $vehicle->company->id, PDO::PARAM_INT);
+			$query->bindParam(':e_type_id', $vehicle->type->id, PDO::PARAM_INT);
 
 
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -301,7 +309,7 @@ class Vehicle implements IQuery {
 			$sql = "
 			UPDATE vehicle 
 			SET 
-			vehicle_dt_subscribed = :vehicle_dt_subscribed,
+			vehicle_dt_expired = :vehicle_dt_expired,
 			vehicle_plate = :vehicle_plate, 
 			vehicle_ma_initial = :vehicle_ma_initial,
 			vehicle_ma_limit = :vehicle_ma_limit,
@@ -315,7 +323,7 @@ class Vehicle implements IQuery {
 			driver_id = :driver_id,
 			unit_id = :unit_id,
 			company_id = :company_id,
-			e_trackee_type_id = :e_trackee_type_id
+			e_type_id = :e_type_id
 
 			WHERE
 			id = :id;";
@@ -323,22 +331,22 @@ class Vehicle implements IQuery {
 			$query = $connection->prepare($sql);
 
 
-			$query->bindParam(':vehicle_dt_subscribed', $vehicle->DtSubscribed, PDO::PARAM_STR);
+			$query->bindParam(':vehicle_dt_expired', $vehicle->dtExpired, PDO::PARAM_STR);
 
-			$query->bindParam(':vehicle_plate', $vehicle->Plate, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_ma_initial', $vehicle->MaInitial, PDO::PARAM_INT);
-			$query->bindParam(':vehicle_ma_limit', $vehicle->MaLimit, PDO::PARAM_INT);
-			$query->bindParam(':vehicle_ma_maintenance', $vehicle->MaMaintenance, PDO::PARAM_INT);
-			$query->bindParam(':vehicle_speed_max', $vehicle->SpeedMax, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $vehicle->Status->Id, PDO::PARAM_INT);
-			$query->bindParam(':vehicle_name', $vehicle->Name, PDO::PARAM_STR);
-			$query->bindParam(':vehicle_model', $vehicle->Model, PDO::PARAM_STR);
+			$query->bindParam(':vehicle_plate', $vehicle->plate, PDO::PARAM_STR);
+			$query->bindParam(':vehicle_ma_initial', $vehicle->maInitial, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_ma_limit', $vehicle->maLimit, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_ma_maintenance', $vehicle->maMaintenance, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_speed_max', $vehicle->speedMax, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $vehicle->status->id, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_name', $vehicle->name, PDO::PARAM_STR);
+			$query->bindParam(':vehicle_model', $vehicle->model, PDO::PARAM_STR);
 
-			$query->bindParam(':vehicle_fuel_max', $vehicle->FuelMax, PDO::PARAM_INT);
-			$query->bindParam(':driver_id', $vehicle->Driver->Id, PDO::PARAM_INT);
-			$query->bindParam(':unit_id', $vehicle->Unit->Id, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $vehicle->Company->Id, PDO::PARAM_INT);
-			$query->bindParam(':e_trackee_type_id', $vehicle->TrackeeType->Id, PDO::PARAM_INT);
+			$query->bindParam(':vehicle_fuel_max', $vehicle->fuelMax, PDO::PARAM_INT);
+			$query->bindParam(':driver_id', $vehicle->driver->id, PDO::PARAM_INT);
+			$query->bindParam(':unit_id', $vehicle->unit->id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $vehicle->company->id, PDO::PARAM_INT);
+			$query->bindParam(':e_type_id', $vehicle->type->id, PDO::PARAM_INT);
 
 
 
@@ -347,9 +355,9 @@ class Vehicle implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -380,9 +388,9 @@ class Vehicle implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

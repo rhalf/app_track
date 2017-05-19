@@ -1,4 +1,14 @@
-﻿var app = angular.module('app');
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Controller for loginController. 
+                            Used for logging in authenticated user.
+*/
+var app = angular.module('app');
 
 app.controller('loginController', function (
     $scope,
@@ -8,6 +18,7 @@ app.controller('loginController', function (
     authFactory,
     uiFactory,
     flagFactory,
+    validationFactory,
 
     Session,
 
@@ -16,102 +27,100 @@ app.controller('loginController', function (
 
     $scope.init = function () {
         $scope.ui = uiFactory;
+        $scope.valid = validationFactory;
         $scope.ui.isLoading = false;
 
-        $scope.authUser = { Name: "", Password: "" };
+        $scope.authUser = { name: "", password: "" };
 
-        var user = authFactory.getUser();
 
-        if (user) {
+        if (authFactory.getUser()) {
             $location.path('/form');
         }
     }
-
-    $scope.closeAlert = function (index) {
-        $scope.ui.alert.closeItem(index);
-    }
-
 
 
     $scope.login = function () {
         if (!$scope.loginForm.userName.$valid) {
             var alert = { type: 'danger', message: 'Username is empty or null.' };
-            $scope.ui.alert.addItem(alert);
+            $scope.ui.alert.show(alert);
             return;
         }
         if (!$scope.loginForm.userPassword.$valid) {
             var alert = { type: 'danger', message: 'Password is empty or null.' };
-            $scope.ui.alert.addItem(alert);
+            $scope.ui.alert.show(alert);
             return;
         }
 
         $scope.ui.isLoading = true;
 
         Session.login({
-            Name: $scope.authUser.Name,
-            Password: $scope.authUser.Password,
+            name: $scope.authUser.name,
+            password: $scope.authUser.password,
         },
         function (user) {
 
-            if (user.Privilege.Value > 1) {
+            if (user.privilege.value > 1) {
 
-                var dateExp = new Date(user.DtExpired);
-                var dateNow = new Date();
-
-                if (dateNow.getTime() > dateExp.getTime()) {
-                    var alert = { type: 'danger', message: 'Your account is EXPIRED.' };
-                    $scope.ui.alert.addItem(alert);
+                if ($scope.valid.isExpired(user.dtExpired)) {
                     $scope.ui.isLoading = false;
+
+                    var alert = { type: 'danger', message: 'Your account is EXPIRED.' };
+                    $scope.ui.alert.show(alert);
                     return;
                 }
             }
 
-            switch (user.Status.Value) {
+            switch (user.status.value) {
                 case 0:
-                    var alert = { type: 'danger', message: 'Your account is DISABLED.' };
-                    $scope.ui.alert.addItem(alert);
                     $scope.ui.isLoading = false;
+
+                    var alert = { type: 'danger', message: 'Your account is DISABLED.' };
+                    $scope.ui.alert.show(alert);
                     return;
                 case 1:
                     //Enabled
                     break;
                 case 2:
-                    var alert = { type: 'danger', message: 'Your account is SUSPENDED.' };
-                    $scope.ui.alert.addItem(alert);
                     $scope.ui.isLoading = false;
+                    var alert = { type: 'danger', message: 'Your account is SUSPENDED.' };
+                    $scope.ui.alert.show(alert);
                     return
             }
 
 
-            switch (user.Company.Status.Value) {
+            switch (user.company.status.value) {
                 case 0:
-                    var alert = { type: 'danger', message: 'Your company account is DISABLED.' };
-                    $scope.ui.alert.addItem(alert);
                     $scope.ui.isLoading = false;
+
+                    var alert = { type: 'danger', message: 'Your company account is DISABLED.' };
+                    $scope.ui.alert.show(alert);
                     return;
                 case 1:
                     //Enabled
-                    authFactory.setUser(user);
-                    authFactory.save();
+                    authFactory.clear();
 
-                    $scope.ui.panelAdmin = false;
+                    authFactory.setUser(user);
+                    authFactory.setCompany(user.company);
+
                     $scope.ui.isLoading = false;
 
-              
+
                     $location.path('/form');
                     break;
                 case 2:
-                    var alert = { type: 'danger', message: 'Your company account is SUSPENDED.' };
-                    $scope.ui.alert.addItem(alert);
                     $scope.ui.isLoading = false;
+
+                    var alert = { type: 'danger', message: 'Your company account is SUSPENDED.' };
+                    $scope.ui.alert.show(alert);
                     return;
             }
 
         },
         function (result) {
-            var alert = { type: 'danger', message: result.data.Message };
-            $scope.ui.alert.addItem(alert);
             $scope.ui.isLoading = false;
+
+            var alert = { type: 'danger', message: result.data.message };
+            $scope.ui.alert.show(alert);
         });
     };
 

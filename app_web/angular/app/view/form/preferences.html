@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="modal-header">
+                <div class="col-md-6">
+                    <h3 class="modal-title">Preferences</h3>
+                    <h5 class="modal-title">Gaia Watcher</h5>
+                </div>
+                <div class="col-md-6">
+                    <h3 class="modal-title text-right">{{authCompany.name }}</h3>
+                    <h5 class="modal-title text-right">{{authCompany.desc }}</h5>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <uib-tabset active="active">
+                    <uib-tab index="0" heading="Users" ng-click="showUsers()"></uib-tab>
+                    <uib-tab index="1" heading="Drivers" ng-click="showDrivers()"></uib-tab>
+                    <uib-tab index="2" heading="Sims" ng-click="showSims()" ng-hide="auth.getUser().privilege.value > 3"></uib-tab>
+                    <uib-tab index="3" heading="Units" ng-click="showUnits()" ng-hide="auth.getUser().privilege.value > 3"></uib-tab>
+                    <uib-tab index="4" heading="Vehicles" ng-click="showVehicles()"></uib-tab>
+                    <uib-tab index="5" heading="Collections" ng-click="showCollections()"></uib-tab>
+                </uib-tabset>
+                <div ng-include src="path"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

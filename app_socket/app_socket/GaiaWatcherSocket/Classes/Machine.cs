@@ -1,4 +1,13 @@
-﻿using System;
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Definition of class Machine.
+*/
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;

@@ -1,4 +1,13 @@
-﻿using System;
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Definition of class gaiaWatcher. Reference to all instances inside the namespace.
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

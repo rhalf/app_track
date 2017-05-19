@@ -1,14 +1,22 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class poi and supplies the requests such as select, insert, update & delete.
+*/
 class Poi implements IQuery {
 
-	public $Id;
-	public $Company;
-	public $Name;
-	public $Desc;
-	public $Coordinate;
-	public $IsVisible;
-	public $Image;
+	public $id;
+	public $company;
+	public $name;
+	public $desc;
+	public $coordinate;
+	public $isVisible;
+	public $image;
 
 	public function __construct() {
 	}
@@ -32,13 +40,13 @@ class Poi implements IQuery {
 
 			foreach ($rows as $row) {	
 				$poi = new Poi();
-				$poi->Id = (int) $row['id'];
-				$poi->Company = Company::select($row['company_id']);
-				$poi->Name = $row['poi_name'];
-				$poi->Desc = $row['poi_desc'];
-				$poi->Coordinate = new Coordinate($row['poi_latitude'],$row['poi_longitude'], null, null);
-				$poi->IsVisible = (bool) $row['poi_is_visible'];
-				$poi->Image = $row['poi_image'];
+				$poi->id = (int) $row['id'];
+				$poi->company = Company::select($row['company_id']);
+				$poi->name = $row['poi_name'];
+				$poi->desc = $row['poi_desc'];
+				$poi->coordinate = new Coordinate($row['poi_latitude'],$row['poi_longitude'], null, null);
+				$poi->isVisible = (bool) $row['poi_is_visible'];
+				$poi->image = $row['poi_image'];
 				
 				array_push($result, $poi);
 			}
@@ -72,13 +80,13 @@ class Poi implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$poi = new Poi();
-			$poi->Id = (int) $row['id'];
-			$poi->Company = Company::select($row['company_id']);
-			$poi->Name = $row['poi_name'];
-			$poi->Desc = $row['poi_desc'];
-			$poi->Coordinate = new Coordinate($row['poi_latitude'],$row['poi_longitude']);
-			$poi->IsVisible = (bool) $row['poi_is_visible'];
-			$poi->Image = $row['poi_image'];
+			$poi->id = (int) $row['id'];
+			$poi->company = Company::select($row['company_id']);
+			$poi->name = $row['poi_name'];
+			$poi->desc = $row['poi_desc'];
+			$poi->coordinate = new Coordinate($row['poi_latitude'],$row['poi_longitude']);
+			$poi->isVisible = (bool) $row['poi_is_visible'];
+			$poi->image = $row['poi_image'];
 
 			return $poi;
 
@@ -98,9 +106,8 @@ class Poi implements IQuery {
 		try {
 
 			$sql = "SELECT * FROM poi WHERE company_id = :company_id;";
-			$query->bindParam(':company_id',$id, PDO::PARAM_INT);
-
 			$query = $connection->prepare($sql);
+			$query->bindParam(':company_id',$id, PDO::PARAM_INT);
 
 			$query->execute();
 
@@ -111,13 +118,13 @@ class Poi implements IQuery {
 
 			foreach ($rows as $row) {	
 				$poi = new Poi();
-				$poi->Id = (int) $row['id'];
-				$poi->Company = Company::select($row['company_id']);
-				$poi->Name = $row['poi_name'];
-				$poi->Desc = $row['poi_desc'];
-				$poi->Coordinate = new Coordinate($row['poi_latitude'],$row['poi_longitude']);
-				$poi->IsVisible = (bool) $row['poi_is_visible'];
-				$poi->Image = $row['poi_image'];
+				$poi->id = (int) $row['id'];
+				$poi->company = Company::select($row['company_id']);
+				$poi->name = $row['poi_name'];
+				$poi->desc = $row['poi_desc'];
+				$poi->coordinate = new Coordinate($row['poi_latitude'],$row['poi_longitude'], null, null);
+				$poi->isVisible = (bool) $row['poi_is_visible'];
+				$poi->image = $row['poi_image'];
 				
 				array_push($result, $poi);
 			}
@@ -154,21 +161,21 @@ class Poi implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':company_id', $poi->Company->Id, PDO::PARAM_INT);
-			$query->bindParam(':poi_name', $poi->Name, PDO::PARAM_STR);
-			$query->bindParam(':poi_desc', $poi->Desc, PDO::PARAM_STR);
-			$query->bindParam(':poi_latitude', $poi->Coordinate->Latitude, PDO::PARAM_INT);
-			$query->bindParam(':poi_longitude', $poi->Coordinate->Longitude, PDO::PARAM_INT);
-			$query->bindParam(':poi_is_visible', $poi->IsVisible, PDO::PARAM_BOOL);
-			$query->bindParam(':poi_image', $poi->Image, PDO::PARAM_STR);
+			$query->bindParam(':company_id', $poi->company->id, PDO::PARAM_INT);
+			$query->bindParam(':poi_name', $poi->name, PDO::PARAM_STR);
+			$query->bindParam(':poi_desc', $poi->desc, PDO::PARAM_STR);
+			$query->bindParam(':poi_latitude', $poi->coordinate->latitude, PDO::PARAM_INT);
+			$query->bindParam(':poi_longitude', $poi->coordinate->longitude, PDO::PARAM_INT);
+			$query->bindParam(':poi_is_visible', $poi->isVisible, PDO::PARAM_BOOL);
+			$query->bindParam(':poi_image', $poi->image, PDO::PARAM_STR);
 
 
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -209,13 +216,13 @@ class Poi implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':company_id', $poi->Company->Id, PDO::PARAM_INT);
-			$query->bindParam(':poi_name', $poi->Name, PDO::PARAM_STR);
-			$query->bindParam(':poi_desc', $poi->Desc, PDO::PARAM_STR);
-			$query->bindParam(':poi_latitude', $poi->Coordinate->Latitude, PDO::PARAM_INT);
-			$query->bindParam(':poi_longitude', $poi->Coordinate->Longitude, PDO::PARAM_INT);
-			$query->bindParam(':poi_is_visible', $poi->IsVisible, PDO::PARAM_BOOL);
-			$query->bindParam(':poi_image', $poi->Image, PDO::PARAM_STR);
+			$query->bindParam(':company_id', $poi->company->id, PDO::PARAM_INT);
+			$query->bindParam(':poi_name', $poi->name, PDO::PARAM_STR);
+			$query->bindParam(':poi_desc', $poi->desc, PDO::PARAM_STR);
+			$query->bindParam(':poi_latitude', $poi->coordinate->latitude, PDO::PARAM_INT);
+			$query->bindParam(':poi_longitude', $poi->coordinate->longitude, PDO::PARAM_INT);
+			$query->bindParam(':poi_is_visible', $poi->isVisible, PDO::PARAM_BOOL);
+			$query->bindParam(':poi_image', $poi->image, PDO::PARAM_STR);
 
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
@@ -223,9 +230,9 @@ class Poi implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -256,9 +263,9 @@ class Poi implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

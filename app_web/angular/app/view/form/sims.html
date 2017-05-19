@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+    <div ng-controller="simsController">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="modal-header">
+                    <div class="col-md-4">
+                        <h3 class="modal-title">Sims ({{sims.length}})</h3>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" ng-model="selected" placeholder="Search" />
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" ng-click="selected = ''">
+                                    <span class="glyphicon glyphicon-ban-circle" />
+                                </button>
+                                <button class="btn btn-default" type="button" ng-click="add()">
+                                    <span class="glyphicon glyphicon-plus" />
+                                </button>
+                                <button class="btn btn-default" type="button" ng-click="download()">
+                                    <span class="glyphicon glyphicon-download" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal-body">
+                    <div class="scrollable">
+                        <table class="table table-responsive table-condensed table-hover small" id="sims">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>imei</th>
+                                    <th>number</th>
+                                    <th>roaming</th>
+                                    <th>dtCreated</th>
+                                    <th>vendor</th>
+                                    <th>status</th>
+                                    <th>options</th>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="sim in sims | filter : selected | startFromFilter : (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize | limitTo : ui.pagination.pageSize">
+                                    <td>{{$index + 1 + (ui.pagination.currentPage - 1 ) * ui.pagination.pageSize }}</td>
+                                    <td>{{sim.imei}}</td>
+                                    <td>{{sim.number}}</td>
+                                    <td>{{sim.roaming}}</td>
+                                    <td>{{sim.dtCreated | dateFilter : 'date'}}</td>
+                                    <td>{{sim.simVendor.name}}</td>
+                                    <td>{{sim.status.name}}</td>
+                                    <td>
+                                        <button ng-click="select(sim)"><span class="glyphicon glyphicon-cog" /></button>
+                                        <button ng-click="delete(sim)"><span class="glyphicon glyphicon-trash" /></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <ul uib-pagination
+                            boundary-links="true"
+                            force-ellipses="true"
+                            total-items="sims.length"
+                            ng-model="ui.pagination.currentPage"
+                            max-size="ui.pagination.maxSize"
+                            items-per-page="ui.pagination.pageSize"
+                            class="pagination-sm"
+                            style="padding:0px;margin:0px;"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

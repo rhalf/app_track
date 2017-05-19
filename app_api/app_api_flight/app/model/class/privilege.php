@@ -1,11 +1,19 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class privilege and supplies the requests such as select, insert, update & delete.
+*/
 class Privilege implements IQuery {
 
-	public $Id;
-	public $Name;
-	public $Desc;
-	public $Value;
+	public $id;
+	public $name;
+	public $desc;
+	public $value;
 	
 	public function __construct() {
 	}
@@ -28,10 +36,10 @@ class Privilege implements IQuery {
 
 			foreach ($rows as $row) {	
 				$privilege = new Privilege();
-				$privilege->Id = (int) $row['id'];
-				$privilege->Name = $row['privilege_name'];
-				$privilege->Desc = $row['privilege_desc'];
-				$privilege->Value = (int) $row['privilege_value'];
+				$privilege->id = (int) $row['id'];
+				$privilege->name = $row['privilege_name'];
+				$privilege->desc = $row['privilege_desc'];
+				$privilege->value = (int) $row['privilege_value'];
 				
 				array_push($result, $privilege);
 			}
@@ -67,10 +75,10 @@ class Privilege implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$privilege = new Privilege();
-			$privilege->Id = (int) $row['id'];
-			$privilege->Name = $row['privilege_name'];
-			$privilege->Desc = $row['privilege_desc'];
-			$privilege->Value = (int) $row['privilege_value'];
+			$privilege->id = (int) $row['id'];
+			$privilege->name = $row['privilege_name'];
+			$privilege->desc = $row['privilege_desc'];
+			$privilege->value = (int) $row['privilege_value'];
 			
 			return $privilege;
 
@@ -103,16 +111,16 @@ class Privilege implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':privilege_name', $privilege->Name, PDO::PARAM_STR);
-			$query->bindParam(':privilege_desc', $privilege->Desc, PDO::PARAM_STR);
-			$query->bindParam(':privilege_value', $privilege->Value, PDO::PARAM_STR);
+			$query->bindParam(':privilege_name', $privilege->name, PDO::PARAM_STR);
+			$query->bindParam(':privilege_desc', $privilege->desc, PDO::PARAM_STR);
+			$query->bindParam(':privilege_value', $privilege->value, PDO::PARAM_STR);
 
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -149,18 +157,18 @@ class Privilege implements IQuery {
 			
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':privilege_name', $privilege->Name, PDO::PARAM_STR);
-			$query->bindParam(':privilege_desc', $privilege->Desc, PDO::PARAM_STR);
-			$query->bindParam(':privilege_value', $privilege->Value, PDO::PARAM_INT);
+			$query->bindParam(':privilege_name', $privilege->name, PDO::PARAM_STR);
+			$query->bindParam(':privilege_desc', $privilege->desc, PDO::PARAM_STR);
+			$query->bindParam(':privilege_value', $privilege->value, PDO::PARAM_INT);
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -191,9 +199,9 @@ class Privilege implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

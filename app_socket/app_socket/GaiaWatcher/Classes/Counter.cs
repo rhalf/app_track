@@ -32,17 +32,27 @@ namespace GaiaWatcher.Classes {
             set;
         }
 
-        public virtual UnitDatas bufferIn {
+        public virtual ClientUnits clientUnits {
             get;
             set;
         }
 
-        public virtual UnitDatas bufferOut {
+        public virtual BufferQueue bufferUnitDatas {
+            get;
+            set;
+        }
+        public virtual BufferDictionary bufferCommands {
+            get;
+            set;
+        }
+       
+
+        public long clientCreated {
             get;
             set;
         }
 
-        public long units {
+        public long clientDestroyed {
             get;
             set;
         }

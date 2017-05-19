@@ -1,5 +1,13 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class session and supplies the requests such as select, insert, update & delete.
+*/
 class Session implements IQuery {
 
 
@@ -23,9 +31,9 @@ class Session implements IQuery {
 			$sql = "SELECT * FROM user WHERE user.user_name = :name and user.user_password = :password;";
 			$query = $connection->prepare($sql);
 
-			$password = hash('sha256', $session->Password);
+			$password = hash('sha256', $session->password);
 
-			$query->bindParam(':name', $session->Name, PDO::PARAM_STR);
+			$query->bindParam(':name', $session->name, PDO::PARAM_STR);
 			$query->bindParam(':password', $password , PDO::PARAM_STR);
 
 			$query->execute();
@@ -33,22 +41,22 @@ class Session implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			if ($query->rowCount() < 1) {
-				throw new Exception("Username or Password is not exist");
+				throw new Exception("Username or password does not exist");
 			}
 
 			$user = new User();
-			$user->Id = (int) $row['id'];
-			$user->Name = $row['user_name'];
-			$user->DtCreated = $row['user_dt_created'];
-			$user->DtExpired = $row['user_dt_expired'];
+			$user->id = (int) $row['id'];
+			$user->name = $row['user_name'];
+			$user->dtCreated = $row['user_dt_created'];
+			$user->dtExpired = $row['user_dt_expired'];
 			// $user->Privilege = (int) $row['e_privilege_id'];
 			// $user->Status = (int) $row['e_status_id'];
 			// $user->Company = (int) $row['company_id'];
 			// $user->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
-			$user->Privilege = Privilege::select($row['e_privilege_id']);
-			$user->Status = Status::select($row['e_status_id']);
-			$user->Company = Company::select($row['company_id']);
-			$user->Sim = Sim::select($row['sim_id']);
+			$user->privilege = Privilege::select($row['e_privilege_id']);
+			$user->status = Status::select($row['e_status_id']);
+			$user->company = Company::select($row['company_id']);
+			$user->sim = Sim::select($row['sim_id']);
 
 
 			Flight::ok($user);
@@ -80,8 +88,8 @@ class Session implements IQuery {
 			// $query->execute();
 
 			$result = new Result();
-			$result->Status = Result::SUCCESS;
-			$result->Message = 'Done';
+			$result->status = Result::SUCCESS;
+			$result->message = 'Done';
 			//$result->Id = $id;
 
 			Flight::ok($result);

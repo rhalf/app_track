@@ -1,11 +1,19 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class simVendor and supplies the requests such as select, insert, update & delete.
+*/
 class SimVendor implements IQuery {
 
-	public $Id;
-	public $Name;
-	public $Desc;
-	public $Nation;
+	public $id;
+	public $name;
+	public $desc;
+	public $nation;
 	
 	
 	public function __construct() {
@@ -28,10 +36,10 @@ class SimVendor implements IQuery {
 
 			foreach ($rows as $row) {	
 				$simVendor = new SimVendor();
-				$simVendor->Id = (int) $row['id'];
-				$simVendor->Name = $row['sim_vendor_name'];
-				$simVendor->Desc = $row['sim_vendor_desc'];
-				$simVendor->Nation = Nation::select($row['e_nation_id']);
+				$simVendor->id = (int) $row['id'];
+				$simVendor->name = $row['sim_vendor_name'];
+				$simVendor->desc = $row['sim_vendor_desc'];
+				$simVendor->nation = Nation::select($row['e_nation_id']);
 				
 
 				array_push($result, $simVendor);
@@ -67,10 +75,10 @@ class SimVendor implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$simVendor = new SimVendor();
-			$simVendor->Id = (int) $row['id'];
-			$simVendor->Name = $row['sim_vendor_name'];
-			$simVendor->Desc = $row['sim_vendor_desc'];
-			$simVendor->Nation = Nation::select($row['e_nation_id']);
+			$simVendor->id = (int) $row['id'];
+			$simVendor->name = $row['sim_vendor_name'];
+			$simVendor->desc = $row['sim_vendor_desc'];
+			$simVendor->nation = Nation::select($row['e_nation_id']);
 
 			return $simVendor;
 
@@ -103,16 +111,16 @@ class SimVendor implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':sim_vendor_name', $simVendor->Name, PDO::PARAM_STR);
-			$query->bindParam(':sim_vendor_desc', $simVendor->Desc, PDO::PARAM_STR);
-			$query->bindParam(':e_nation_id', $simVendor->Nation->Id, PDO::PARAM_INT);
+			$query->bindParam(':sim_vendor_name', $simVendor->name, PDO::PARAM_STR);
+			$query->bindParam(':sim_vendor_desc', $simVendor->desc, PDO::PARAM_STR);
+			$query->bindParam(':e_nation_id', $simVendor->nation->id, PDO::PARAM_INT);
 			
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -148,18 +156,18 @@ class SimVendor implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':sim_vendor_name', $simVendor->Name, PDO::PARAM_STR);
-			$query->bindParam(':sim_vendor_desc', $simVendor->Desc, PDO::PARAM_STR);
-			$query->bindParam(':e_nation_id', $simVendor->Nation->Id, PDO::PARAM_INT);
+			$query->bindParam(':sim_vendor_name', $simVendor->name, PDO::PARAM_STR);
+			$query->bindParam(':sim_vendor_desc', $simVendor->desc, PDO::PARAM_STR);
+			$query->bindParam(':e_nation_id', $simVendor->nation->id, PDO::PARAM_INT);
 			
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -190,9 +198,9 @@ class SimVendor implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 

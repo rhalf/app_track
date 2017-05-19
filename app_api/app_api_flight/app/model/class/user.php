@@ -1,22 +1,29 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class user and supplies the requests such as select, insert, update & delete.
+*/
 class User implements IQuery {
 
-	public $Id;
-	public $Name;
-	public $Password;
-	public $Hash;
-	public $DtCreated;
-	public $DtExpired;
-	public $Privilege;
-	public $Status;
-	public $Company;
-	public $Sim;
-
-
-
+	public $id;
+	public $name;
+	public $password;
+	public $hash;
+	public $dtCreated;
+	public $dtExpired;
+	public $privilege;
+	public $status;
+	public $company;
+	public $sim;
+	
 	
 	public function __construct() {
+
 	}
 
 	public static function selectAll() {
@@ -36,18 +43,18 @@ class User implements IQuery {
 
 			foreach ($rows as $row) {	
 				$user = new User();
-				$user->Id = (int) $row['id'];
-				$user->Name = $row['user_name'];
-				$user->DtCreated = $row['user_dt_created'];
-				$user->DtExpired = $row['user_dt_expired'];
-				// $user->Privilege = (int) $row['e_privilege_id'];
-				// $user->Status = (int) $row['e_status_id'];
+				$user->id = (int) $row['id'];
+				$user->name = $row['user_name'];
+				$user->dtCreated = $row['user_dt_created'];
+				$user->dtExpired = $row['user_dt_expired'];
+				// $user->privilege = (int) $row['e_privilege_id'];
+				// $user->status = (int) $row['e_status_id'];
 				// $user->Company = (int) $row['company_id'];
 				// $user->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
-				$user->Privilege = Privilege::select($row['e_privilege_id']);
-				$user->Status = Status::select($row['e_status_id']);
-				$user->Company = Company::select($row['company_id']);
-				$user->Sim = Sim::select($row['sim_id']);
+				$user->privilege = Privilege::select($row['e_privilege_id']);
+				$user->status = Status::select($row['e_status_id']);
+				$user->company = Company::select($row['company_id']);
+				$user->sim = Sim::select($row['sim_id']);
 
 
 				array_push($result, $user);
@@ -82,18 +89,18 @@ class User implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$user = new User();
-			$user->Id = (int) $row['id'];
-			$user->Name = $row['user_name'];
-			$user->DtCreated = $row['user_dt_created'];
-			$user->DtExpired = $row['user_dt_expired'];
-			// $user->Privilege = (int) $row['e_privilege_id'];
-			// $user->Status = (int) $row['e_status_id'];
+			$user->id = (int) $row['id'];
+			$user->name = $row['user_name'];
+			$user->dtCreated = $row['user_dt_created'];
+			$user->dtExpired = $row['user_dt_expired'];
+			// $user->privilege = (int) $row['e_privilege_id'];
+			// $user->status = (int) $row['e_status_id'];
 			// $user->Company = (int) $row['company_id'];
 			// $user->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
-			$user->Privilege = Privilege::select($row['e_privilege_id']);
-			$user->Status = Status::select($row['e_status_id']);
-			$user->Company = Company::select($row['company_id']);
-			$user->Sim = Sim::select($row['sim_id']);
+			$user->privilege = Privilege::select($row['e_privilege_id']);
+			$user->status = Status::select($row['e_status_id']);
+			$user->company = Company::select($row['company_id']);
+			$user->sim = Sim::select($row['sim_id']);
 
 			return $user;
 
@@ -125,18 +132,18 @@ class User implements IQuery {
 
 			foreach ($rows as $row) {	
 				$user = new User();
-				$user->Id = (int) $row['id'];
-				$user->Name = $row['user_name'];
-				$user->DtCreated = $row['user_dt_created'];
-				$user->DtExpired = $row['user_dt_expired'];
-				// $user->Privilege = (int) $row['e_privilege_id'];
-				// $user->Status = (int) $row['e_status_id'];
+				$user->id = (int) $row['id'];
+				$user->name = $row['user_name'];
+				$user->dtCreated = $row['user_dt_created'];
+				$user->dtExpired = $row['user_dt_expired'];
+				// $user->privilege = (int) $row['e_privilege_id'];
+				// $user->status = (int) $row['e_status_id'];
 				// $user->Company = (int) $row['company_id'];
 				// $user->Sim = $row['sim_id'] == null ? null : (int) $row['sim_id'];
-				$user->Privilege = Privilege::select($row['e_privilege_id']);
-				$user->Status = Status::select($row['e_status_id']);
-				$user->Company = Company::select($row['company_id']);
-				$user->Sim = Sim::select($row['sim_id']);
+				$user->privilege = Privilege::select($row['e_privilege_id']);
+				$user->status = Status::select($row['e_status_id']);
+				$user->company = Company::select($row['company_id']);
+				$user->sim = Sim::select($row['sim_id']);
 
 				array_push($result, $user);
 			}
@@ -175,28 +182,28 @@ class User implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':user_name', $user->Name, PDO::PARAM_STR);
+			$query->bindParam(':user_name', $user->name, PDO::PARAM_STR);
 
-			$password = hash('sha256', $user->Password);
+			$password = hash('sha256', $user->password);
 			$query->bindParam(':user_password', $password, PDO::PARAM_STR);
 
 			$query->bindParam(':user_dt_created', $dateTime, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_expired', $user->DtExpired, PDO::PARAM_STR);
-			// $query->bindParam(':e_privilege_id', $user->Privilege, PDO::PARAM_INT);
-			// $query->bindParam(':e_status_id', $user->Status, PDO::PARAM_INT);
+			$query->bindParam(':user_dt_expired', $user->dtExpired, PDO::PARAM_STR);
+			// $query->bindParam(':e_privilege_id', $user->privilege, PDO::PARAM_INT);
+			// $query->bindParam(':e_status_id', $user->status, PDO::PARAM_INT);
 			// $query->bindParam(':company_id', $user->Company, PDO::PARAM_INT);
 			// $query->bindParam(':sim_id', $user->Sim, PDO::PARAM_INT);
-			$query->bindParam(':e_privilege_id', $user->Privilege->Id, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $user->Status->Id, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $user->Company->Id, PDO::PARAM_INT);
-			$query->bindParam(':sim_id', $user->Sim->Id, PDO::PARAM_INT);
+			$query->bindParam(':e_privilege_id', $user->privilege->id, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $user->status->id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $user->company->id, PDO::PARAM_INT);
+			$query->bindParam(':sim_id', $user->sim->id, PDO::PARAM_INT);
 
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = (int)$connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = (int)$connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -238,25 +245,25 @@ class User implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':user_name', $user->Name, PDO::PARAM_STR);
-			$query->bindParam(':user_dt_expired', $user->DtExpired, PDO::PARAM_STR);
-			// $query->bindParam(':e_privilege_id', $user->Privilege, PDO::PARAM_INT);
-			// $query->bindParam(':e_status_id', $user->Status, PDO::PARAM_INT);
+			$query->bindParam(':user_name', $user->name, PDO::PARAM_STR);
+			$query->bindParam(':user_dt_expired', $user->dtExpired, PDO::PARAM_STR);
+			// $query->bindParam(':e_privilege_id', $user->privilege, PDO::PARAM_INT);
+			// $query->bindParam(':e_status_id', $user->status, PDO::PARAM_INT);
 			// $query->bindParam(':company_id', $user->Company, PDO::PARAM_INT);
 			// $query->bindParam(':sim_id', $user->Sim, PDO::PARAM_INT);
-			$query->bindParam(':e_privilege_id', $user->Privilege->Id, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $user->Status->Id, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $user->Company->Id, PDO::PARAM_INT);
-			$query->bindParam(':sim_id', $user->Sim->Id, PDO::PARAM_INT);
+			$query->bindParam(':e_privilege_id', $user->privilege->id, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $user->status->id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $user->company->id, PDO::PARAM_INT);
+			$query->bindParam(':sim_id', $user->Sim->id, PDO::PARAM_INT);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = (int)$id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = (int)$id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -294,7 +301,7 @@ class User implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$password = hash('sha256', $user->Password);
+			$password = hash('sha256', $user->password);
 			$query->bindParam(':user_password', $password, PDO::PARAM_STR);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
@@ -302,9 +309,9 @@ class User implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = (int)$id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = (int)$id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -335,9 +342,9 @@ class User implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = (int)$id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = (int)$id;
 
 			return $result;
 

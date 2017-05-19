@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+        <div class="modal-header">
+            <div class="col-md-6">
+                <h3 class="modal-title">Option</h3>
+                <h5 class="modal-title">{{vehicle.unit.imei}}</h5>
+
+            </div>
+
+            <div class="col-md-6">
+                <div class="modal-title text-right">{{vehicle.name}}</div>
+                <div class="modal-title text-right">{{vehicle.plate}}</div>
+                <div class="modal-title text-right">{{vehicle.model}}</div>
+            </div>
+        </div>
+
+
+        <div class="modal-body">
+
+            <uib-tabset active="active">
+                <uib-tab index="0" heading="Replay">
+                    <br />
+                    <form class="form-horizontal" role="form">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">From</label>
+                                <div class="col-sm-10">
+                                    <p class="input-group">
+                                        <input type="text" class="form-control"
+                                               uib-datepicker-popup="{{ui.dateTimePicker.format[0]}}"
+                                               ng-model="dtReplay.from"
+                                               is-open="ui.dateTimePicker.isOpen[0]"
+                                               datepicker-options="ui.dateTimePicker.options"
+                                               ng-required="true"
+                                               close-text="Close" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="ui.dateTimePicker.toggle(0)">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">To</label>
+                                <div class="col-sm-10">
+                                    <p class="input-group">
+                                        <input type="text" class="form-control"
+                                               uib-datepicker-popup="{{ui.dateTimePicker.format[0]}}"
+                                               ng-model="dtReplay.to"
+                                               is-open="ui.dateTimePicker.isOpen[1]"
+                                               datepicker-options="ui.dateTimePicker.options"
+                                               ng-required="true"
+                                               close-text="Close" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="ui.dateTimePicker.toggle(1)">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <button class="btn btn-default col-sm-12" type="button" ng-click="showReplay()">Show</button>
+                        </fieldset>
+                    </form>
+                </uib-tab>
+                <uib-tab index="1" heading="Reports">
+                    <br />
+                    <form class="form-horizontal" role="form">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Type</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" ng-model="report.type">
+                                        <option>running</option>
+                                        <option>idling</option>
+                                        <option>geofencing</option>
+                                        <option>ignition</option>
+                                        <option>speeding</option>
+                                        <option>powercutting</option>
+                                        <option>trackers</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">From</label>
+                                <div class="col-sm-10">
+                                    <p class="input-group">
+                                        <input type="text" class="form-control"
+                                               uib-datepicker-popup="{{ui.dateTimePicker.format[0]}}"
+                                               ng-model="dtReport.from"
+                                               is-open="ui.dateTimePicker.isOpen[2]"
+                                               datepicker-options="ui.dateTimePicker.options"
+                                               ng-required="true"
+                                               close-text="Close" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="ui.dateTimePicker.toggle(2)">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">To</label>
+                                <div class="col-sm-10">
+                                    <p class="input-group">
+                                        <input type="text" class="form-control"
+                                               uib-datepicker-popup="{{ui.dateTimePicker.format[0]}}"
+                                               ng-model="dtReport.to"
+                                               is-open="ui.dateTimePicker.isOpen[3]"
+                                               datepicker-options="ui.dateTimePicker.options"
+                                               ng-required="true"
+                                               close-text="Close" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="ui.dateTimePicker.toggle(3)">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <button class="btn btn-default col-sm-12" type="button" ng-click="showReport()">Show</button>
+                        </fieldset>
+                    </form>
+                </uib-tab>
+                <uib-tab index="2" heading="Commands">
+                    <br />
+                    <form class="form-horizontal" role="form">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">Type</label>
+                                <div class="col-sm-10">
+                                    <p class="input-group">
+                                        <select class="form-control" ng-model="command.type">
+                                            <option>vehicle_locate</option>
+                                            <option>vehicle_disable</option>
+                                            <option>vehicle_enable</option>
+                                            <option>device_gsm_reboot</option>
+                                            <option>device_gprs_reboot</option>
+                                            <option>device_cache_clear</option>
+                                            <option>device_sleep_disable</option>
+                                            <option>device_sleep_normal</option>
+                                            <option>device_sleep_deep</option>
+                                        </select>
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default">
+                                                <i class="glyphicon glyphicon-search"></i>
+                                            </button>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <button class="btn btn-default col-sm-12" ng-click="sendCommand()">Send</button>
+                        </fieldset>
+                    </form>
+
+                </uib-tab>
+            </uib-tabset>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+
+</body>
+</html>

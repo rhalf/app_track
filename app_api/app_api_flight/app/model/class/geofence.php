@@ -1,17 +1,25 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class geofence and supplies the requests such as select, insert, update & delete.
+*/
 class Geofence implements IQuery {
 
-	public $Id;
-	public $Company;
-	public $Name;
-	public $Desc;
-	public $Coordinates;
-	public $SpeedMinL;
-	public $SpeedMaxL;
-	public $SpeedMinH;
-	public $SpeedMaxH;
-	public $IsVisible;
+	public $id;
+	public $company;
+	public $name;
+	public $desc;
+	public $coordinates;
+	public $speedMinL;
+	public $speedMaxL;
+	public $speedMinH;
+	public $speedMaxH;
+	public $isVisible;
 	
 
 	public function __construct() {
@@ -35,16 +43,16 @@ class Geofence implements IQuery {
 
 			foreach ($rows as $row) {	
 				$geofence = new Geofence();
-				$geofence->Id = (int) $row['id'];
-				$geofence->Company = Company::select($row['company_id']);
-				$geofence->Name = $row['geofence_name'];
-				$geofence->Desc = $row['geofence_desc'];
-				$geofence->Coordinates = json_decode($row['geofence_coordinates']);
-				$geofence->SpeedMinL =  (int) $row['geofence_speed_min_l'];
-				$geofence->SpeedMaxL = (int) $row['geofence_speed_max_l'];
-				$geofence->SpeedMinH = (int) $row['geofence_speed_min_h'];
-				$geofence->SpeedMaxH = (int) $row['geofence_speed_max_h'];
-				$geofence->IsVisible = (bool)  $row['geofence_is_visible'];
+				$geofence->id = (int) $row['id'];
+				$geofence->company = Company::select($row['company_id']);
+				$geofence->name = $row['geofence_name'];
+				$geofence->desc = $row['geofence_desc'];
+				$geofence->coordinates = json_decode($row['geofence_coordinates']);
+				$geofence->speedMinL =  (int) $row['geofence_speed_min_l'];
+				$geofence->speedMaxL = (int) $row['geofence_speed_max_l'];
+				$geofence->speedMinH = (int) $row['geofence_speed_min_h'];
+				$geofence->speedMaxH = (int) $row['geofence_speed_max_h'];
+				$geofence->isVisible = (bool)  $row['geofence_is_visible'];
 
 				
 				array_push($result, $geofence);
@@ -82,16 +90,16 @@ class Geofence implements IQuery {
 
 			
 			$geofence = new Geofence();
-			$geofence->Id = (int) $row['id'];
-			$geofence->Company = Company::select($row['company_id']);
-			$geofence->Name = $row['geofence_name'];
-			$geofence->Desc = $row['geofence_desc'];
-			$geofence->Coordinates = json_decode($row['geofence_coordinates']);
-			$geofence->SpeedMinL =  (int) $row['geofence_speed_min_l'];
-			$geofence->SpeedMaxL = (int) $row['geofence_speed_max_l'];
-			$geofence->SpeedMinH = (int) $row['geofence_speed_min_h'];
-			$geofence->SpeedMaxH = (int) $row['geofence_speed_max_h'];
-			$geofence->IsVisible = (bool) $row['geofence_is_visible'];
+			$geofence->id = (int) $row['id'];
+			$geofence->company = Company::select($row['company_id']);
+			$geofence->name = $row['geofence_name'];
+			$geofence->desc = $row['geofence_desc'];
+			$geofence->coordinates = json_decode($row['geofence_coordinates']);
+			$geofence->speedMinL =  (int) $row['geofence_speed_min_l'];
+			$geofence->speedMaxL = (int) $row['geofence_speed_max_l'];
+			$geofence->speedMinH = (int) $row['geofence_speed_min_h'];
+			$geofence->speedMaxH = (int) $row['geofence_speed_max_h'];
+			$geofence->isVisible = (bool) $row['geofence_is_visible'];
 
 			return $geofence;
 
@@ -123,16 +131,16 @@ class Geofence implements IQuery {
 
 			foreach ($rows as $row) {	
 				$geofence = new Geofence();
-				$geofence->Id = (int) $row['id'];
-				$geofence->Company = Company::select($row['company_id']);
-				$geofence->Name = $row['geofence_name'];
-				$geofence->Desc = $row['geofence_desc'];
-				$geofence->Coordinates = json_decode($row['geofence_coordinates']);
-				$geofence->SpeedMinL =  (int) $row['geofence_speed_min_l'];
-				$geofence->SpeedMaxL = (int) $row['geofence_speed_max_l'];
-				$geofence->SpeedMinH = (int) $row['geofence_speed_min_h'];
-				$geofence->SpeedMaxH = (int) $row['geofence_speed_max_h'];
-				$geofence->IsVisible = (bool) $row['geofence_is_visible'];
+				$geofence->id = (int) $row['id'];
+				$geofence->company = Company::select($row['company_id']);
+				$geofence->name = $row['geofence_name'];
+				$geofence->desc = $row['geofence_desc'];
+				$geofence->coordinates = json_decode($row['geofence_coordinates']);
+				$geofence->speedMinL =  (int) $row['geofence_speed_min_l'];
+				$geofence->speedMaxL = (int) $row['geofence_speed_max_l'];
+				$geofence->speedMinH = (int) $row['geofence_speed_min_h'];
+				$geofence->speedMaxH = (int) $row['geofence_speed_max_h'];
+				$geofence->isVisible = (bool) $row['geofence_is_visible'];
 
 				
 				array_push($result, $geofence);
@@ -168,16 +176,16 @@ class Geofence implements IQuery {
 
 			foreach ($rows as $row) {	
 				$geofence = new Geofence();
-				$geofence->Id = (int) $row['id'];
-				$geofence->Company = Company::select($row['company_id']);
-				$geofence->Name = $row['geofence_name'];
-				$geofence->Desc = $row['geofence_desc'];
-				$geofence->Coordinates = json_decode($row['geofence_coordinates']);
-				$geofence->SpeedMinL =  (int) $row['geofence_speed_min_l'];
-				$geofence->SpeedMaxL = (int) $row['geofence_speed_max_l'];
-				$geofence->SpeedMinH = (int) $row['geofence_speed_min_h'];
-				$geofence->SpeedMaxH = (int) $row['geofence_speed_max_h'];
-				$geofence->IsVisible = (bool) $row['geofence_is_visible'];
+				$geofence->id = (int) $row['id'];
+				$geofence->company = Company::select($row['company_id']);
+				$geofence->name = $row['geofence_name'];
+				$geofence->desc = $row['geofence_desc'];
+				$geofence->coordinates = json_decode($row['geofence_coordinates']);
+				$geofence->speedMinL =  (int) $row['geofence_speed_min_l'];
+				$geofence->speedMaxL = (int) $row['geofence_speed_max_l'];
+				$geofence->speedMinH = (int) $row['geofence_speed_min_h'];
+				$geofence->speedMaxH = (int) $row['geofence_speed_max_h'];
+				$geofence->isVisible = (bool) $row['geofence_is_visible'];
 
 				
 				array_push($result, $geofence);
@@ -235,25 +243,25 @@ class Geofence implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':company_id', $geofence->Company->Id, PDO::PARAM_INT);
-			$query->bindParam(':geofence_name', $geofence->Name, PDO::PARAM_STR);
-			$query->bindParam(':geofence_desc', $geofence->Desc, PDO::PARAM_STR);
+			$query->bindParam(':company_id', $geofence->company->id, PDO::PARAM_INT);
+			$query->bindParam(':geofence_name', $geofence->name, PDO::PARAM_STR);
+			$query->bindParam(':geofence_desc', $geofence->desc, PDO::PARAM_STR);
 			
-			$json = json_encode($geofence->Coordinates);
+			$json = json_encode($geofence->coordinates);
 			$query->bindParam(':geofence_coordinates', $json, PDO::PARAM_STR);
 			
-			$query->bindParam(':geofence_speed_min_l', $geofence->SpeedMinL, PDO::PARAM_INT);
-			$query->bindParam(':geofence_speed_max_l', $geofence->SpeedMaxL, PDO::PARAM_INT);
-			$query->bindParam(':geofence_speed_min_h', $geofence->SpeedMinH, PDO::PARAM_INT);
-			$query->bindParam(':geofence_speed_max_h', $geofence->SpeedMaxH, PDO::PARAM_INT);
-			$query->bindParam(':geofence_is_visible', $geofence->IsVisible, PDO::PARAM_BOOL);
+			$query->bindParam(':geofence_speed_min_l', $geofence->speedMinL, PDO::PARAM_INT);
+			$query->bindParam(':geofence_speed_max_l', $geofence->speedMaxL, PDO::PARAM_INT);
+			$query->bindParam(':geofence_speed_min_h', $geofence->speedMinH, PDO::PARAM_INT);
+			$query->bindParam(':geofence_speed_max_h', $geofence->speedMaxH, PDO::PARAM_INT);
+			$query->bindParam(':geofence_is_visible', $geofence->isVisible, PDO::PARAM_BOOL);
 
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = $connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = $connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -294,27 +302,27 @@ class Geofence implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':company_id', $geofence->Company->Id, PDO::PARAM_INT);
-			$query->bindParam(':geofence_name', $geofence->Name, PDO::PARAM_STR);
-			$query->bindParam(':geofence_desc', $geofence->Desc, PDO::PARAM_STR);
+			$query->bindParam(':company_id', $geofence->company->id, PDO::PARAM_INT);
+			$query->bindParam(':geofence_name', $geofence->name, PDO::PARAM_STR);
+			$query->bindParam(':geofence_desc', $geofence->desc, PDO::PARAM_STR);
 
-			$json = json_encode($geofence->Coordinates);
+			$json = json_encode($geofence->coordinates);
 			$query->bindParam(':geofence_coordinates', $json, PDO::PARAM_STR);
 
-			$query->bindParam(':geofence_speed_min_l', $geofence->SpeedMinL, PDO::PARAM_INT);
-			$query->bindParam(':geofence_speed_max_l', $geofence->SpeedMaxL, PDO::PARAM_INT);
-			$query->bindParam(':geofence_speed_min_h', $geofence->SpeedMinH, PDO::PARAM_INT);
-			$query->bindParam(':geofence_speed_max_h', $geofence->SpeedMaxH, PDO::PARAM_INT);
-			$query->bindParam(':geofence_is_visible', $geofence->IsVisible, PDO::PARAM_BOOL);
+			$query->bindParam(':geofence_speed_min_l', $geofence->speedMinL, PDO::PARAM_INT);
+			$query->bindParam(':geofence_speed_max_l', $geofence->speedMaxL, PDO::PARAM_INT);
+			$query->bindParam(':geofence_speed_min_h', $geofence->speedMinH, PDO::PARAM_INT);
+			$query->bindParam(':geofence_speed_max_h', $geofence->speedMaxH, PDO::PARAM_INT);
+			$query->bindParam(':geofence_is_visible', $geofence->isVisible, PDO::PARAM_BOOL);
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
 
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = $id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = $id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -345,9 +353,9 @@ class Geofence implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = $id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = $id;
 
 			return $result;
 
@@ -359,6 +367,48 @@ class Geofence implements IQuery {
 			$connection = null;
 		}
 	}
+
+
+
+	public static function selectByUnit($geofences, $unitData){
+
+			$coordinate = $unitData->gps->coordinate;
+
+			$result = null;
+			//$result = array();
+
+			foreach ($geofences as $index => $geofence) {
+				if(Geofence::checkPoint($geofence, $coordinate) == true) {
+					//array_push($result, $geofence);
+					$result =  $geofence->id;
+				}
+			}
+
+			return $result;
+	}
+
+
+	private static function checkPoint($geofence, $coordinate) {
+
+            
+			 $coordinates = $geofence->coordinates;
+			 $count = sizeof($geofence->coordinates);
+
+            $result = false;
+
+
+            for ($index1 = 0, $index2 = $count - 1; $index1 < $count; $index2 = $index1++) {
+                if (((($coordinates[$index1]->latitude <= $coordinate->latitude) && ($coordinate->latitude < $coordinates[$index2]->latitude))
+                        || (($coordinates[$index2]->latitude <= $coordinate->latitude) && ($coordinate->latitude < $coordinates[$index1]->latitude)))
+                        && ($coordinate->longitude < ($coordinates[$index2]->longitude - $coordinates[$index1]->longitude) * ($coordinate->latitude - $coordinates[$index1]->latitude)
+                            / ($coordinates[$index2]->latitude - $coordinates[$index1]->latitude) + $coordinates[$index1]->longitude)) {
+                    $result = !$result;
+                }
+            }
+
+            return $result;
+    }
+	
 }
 
 ?>

@@ -1,4 +1,13 @@
-﻿using GaiaWatcher.Classes;
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Definition of class service. This includes types of the service that the socketManager is going to offer.
+*/
+using GaiaWatcher.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +19,13 @@ namespace GaiaWatcher {
 
         public static string COMMAND {
             get {
-                return "Command";
+                return "COMMAND";
             }
         }
 
         public static string MVT100 {
             get {
-                return "Mvt100";
+                return "MVT100";
             }
         }
         public static string T1 {
@@ -26,7 +35,7 @@ namespace GaiaWatcher {
         }
         public static string FM1100 {
             get {
-                return "Fm1100";
+                return "FM1100";
 
             }
         }

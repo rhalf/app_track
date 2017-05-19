@@ -1,4 +1,13 @@
-﻿using GaiaWatcher;
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Definition of class Application.
+*/
+using GaiaWatcher;
 using GaiaWatcher.Database;
 using System;
 using System.Collections.Generic;

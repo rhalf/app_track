@@ -1,10 +1,18 @@
 <?php
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class result
+*/
 class Result {
 
-	public $Status = null;		//State Error or Success
-	public $Id = null;			//Affected Id
-	public $Message = null;		//Details
+	public $status = null;		//State Error or Success
+	public $id = null;			//Affected id
+	public $message = null;		//Details
 	
 
 

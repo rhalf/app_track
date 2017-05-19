@@ -55,8 +55,7 @@ namespace GaiaWatcher.Classes {
             if (client == null) {
                 title = "UnitData";
             } else {
-                IPEndPoint remote = (IPEndPoint)client.tcpClient.Client.RemoteEndPoint;
-                title = remote.Address.ToString();
+                title = client.ip;
             }
 
             string path = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\\" + System.AppDomain.CurrentDomain.FriendlyName + "\\logs";

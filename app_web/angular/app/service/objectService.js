@@ -1,4 +1,14 @@
-﻿var app = angular.module('app');
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Service for objectService. 
+                            Use to set and unset to variables those leaflet components.
+*/
+var app = angular.module('app');
 
 
 app.service('objectService', function () {
@@ -29,6 +39,7 @@ app.service('objectService', function () {
         setAreaCoordinates: function (areaCoordinates) {
             object.areaCoordinates = areaCoordinates;
         },
+
         getAreaCoordinates: function () {
             return object.areaCoordinates;
         }

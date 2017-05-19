@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="modal-header">
+                    <div class="col-md-6">
+                        <h3 class="modal-title">System</h3>
+                        <h6 class="modal-title">Gaia Watcher</h6>
+                    </div>
+                    <div class="col-md-6">
+                       
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <uib-tabset active="active">
+                        <uib-tab index="0" heading="Companies" ng-click="showCompanies()"></uib-tab>
+                        <uib-tab index="1" heading="UsersOnline" ng-click="showUsersOnline()"></uib-tab>
+                    </uib-tabset>
+                    <div ng-include src="path"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </div>
+</body>
+</html>
+
+

@@ -6,26 +6,27 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace GaiaWatcher.Database {
     public class Query {
 
-        MySqlConnection _mySqlConnection;
+
+        private DatabaseProfile _databaseProfile = null;
 
 
-        public Query (MySqlConnection mySqlConnection) {
-            this._mySqlConnection = mySqlConnection;
+        public Query (DatabaseProfile databaseProfile) {
+            this._databaseProfile = databaseProfile;
         }
 
 
         public Unit getUnit (string imei) {
 
-
-            _mySqlConnection.Open();
-
             Unit unit = null;
 
-            try {
+            using (MySqlConnection mySqlConnection = new MySqlConnection(_databaseProfile.connectionString)) {
+
+                mySqlConnection.Open();
 
                 string sql =
                "SELECT * " +
@@ -33,7 +34,7 @@ namespace GaiaWatcher.Database {
                "WHERE app_main.unit.unit_imei = @imei " +
                "LIMIT 1;";
 
-                using (MySqlCommand mySqlCommand = new MySqlCommand(sql, this._mySqlConnection)) {
+                using (MySqlCommand mySqlCommand = new MySqlCommand(sql, mySqlConnection)) {
 
                     mySqlCommand.Parameters.AddWithValue("@imei", imei);
 
@@ -51,12 +52,7 @@ namespace GaiaWatcher.Database {
                             mySqlDataReader.Close();
                         }
                     }
-                }
-
-            } catch (Exception exception) {
-                unit = null;
-            } finally {
-                _mySqlConnection.Close();
+                }   
             }
 
             return unit;
@@ -64,11 +60,11 @@ namespace GaiaWatcher.Database {
 
         public void setUnitData (UnitData unitData) {
 
-            _mySqlConnection.Open();
+            using (MySqlConnection mySqlConnection = new MySqlConnection(_databaseProfile.connectionString)) {
 
-            try {
+                mySqlConnection.Open();
 
-                string databaseName = "app_data_2016";
+                string databaseName = "app_data_2017";
                 string tableName = "data_" + unitData.header.imei;
 
                 string sql =
@@ -108,8 +104,7 @@ namespace GaiaWatcher.Database {
 
                    ");";
 
-                using (MySqlCommand mySqlCommand = new MySqlCommand(sql, this._mySqlConnection)) {
-
+                using (MySqlCommand mySqlCommand = new MySqlCommand(sql, mySqlConnection)) {
 
                     mySqlCommand.Parameters.AddWithValue("@h_server", unitData.header.server);
                     mySqlCommand.Parameters.AddWithValue("@h_client", unitData.header.client);
@@ -158,11 +153,6 @@ namespace GaiaWatcher.Database {
 
                     mySqlCommand.ExecuteNonQuery();
                 }
-
-            } catch (Exception exception) {
-                throw exception;
-            } finally {
-                _mySqlConnection.Close();
             }
         }
     }

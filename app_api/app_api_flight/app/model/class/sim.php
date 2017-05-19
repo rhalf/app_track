@@ -1,16 +1,24 @@
 <?php 
+/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
 
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Defines the class sim and supplies the requests such as select, insert, update & delete.
+*/
 class Sim implements IQuery {
 
-	public $Id;
-	public $Imei;
-	public $Number;
-	public $Roaming;
-	public $CountryCode;
-	public $SimVendor;
-	public $Status;
-	public $DtCreated;
-	public $Company;
+	public $id;
+	public $imei;
+	public $number;
+	public $roaming;
+	public $countryCode;
+	public $simVendor;
+	public $status;
+	public $dtCreated;
+	public $company;
 
 
 	public function __construct() {
@@ -33,15 +41,15 @@ class Sim implements IQuery {
 
 			foreach ($rows as $row) {	
 				$sim = new Sim();
-				$sim->Id = (int) $row['id'];
-				$sim->Imei = $row['sim_imei'];
-				$sim->Number = $row['sim_number'];
-				$sim->Roaming = (bool) $row['sim_roaming'];
-				$sim->DtCreated = $row['sim_dt_created'];
+				$sim->id = (int) $row['id'];
+				$sim->imei = $row['sim_imei'];
+				$sim->number = $row['sim_number'];
+				$sim->roaming = (bool) $row['sim_roaming'];
+				$sim->dtCreated = $row['sim_dt_created'];
 
-				$sim->SimVendor = SimVendor::select($row['e_sim_vendor_id']);
-				$sim->Status = Status::select($row['e_status_id']);
-				$sim->Company = Company::select($row['company_id']);
+				$sim->simVendor = SimVendor::select($row['e_sim_vendor_id']);
+				$sim->status = Status::select($row['e_status_id']);
+				$sim->company = Company::select($row['company_id']);
 
 				array_push($result, $sim);
 			}
@@ -76,15 +84,15 @@ class Sim implements IQuery {
 			$row = $query->fetch(PDO::FETCH_ASSOC);
 
 			$sim = new Sim();
-			$sim->Id =  (int) $row['id'];
-			$sim->Imei = $row['sim_imei'];
-			$sim->Number =  $row['sim_number'];
-			$sim->Roaming = (bool) $row['sim_roaming'];
-			$sim->SimVendor = SimVendor::select($row['e_sim_vendor_id']);
-			$sim->DtCreated = $row['sim_dt_created'];
+			$sim->id =  (int) $row['id'];
+			$sim->imei = $row['sim_imei'];
+			$sim->number =  $row['sim_number'];
+			$sim->roaming = (bool) $row['sim_roaming'];
+			$sim->simVendor = SimVendor::select($row['e_sim_vendor_id']);
+			$sim->dtCreated = $row['sim_dt_created'];
 			
-			$sim->Status = Status::select($row['e_status_id']);
-			$sim->Company = Company::select($row['company_id']);
+			$sim->status = Status::select($row['e_status_id']);
+			$sim->company = Company::select($row['company_id']);
 
 			return $sim;
 
@@ -116,15 +124,15 @@ class Sim implements IQuery {
 			foreach ($rows as $row) {	
 
 				$sim = new Sim();
-				$sim->Id = (int) $row['id'];
-				$sim->Imei =  $row['sim_imei'];
-				$sim->Number = $row['sim_number'];
-				$sim->Roaming = (bool) $row['sim_roaming'];
-				$sim->SimVendor = SimVendor::select($row['e_sim_vendor_id']);
-				$sim->DtCreated = $row['sim_dt_created'];
+				$sim->id = (int) $row['id'];
+				$sim->imei =  $row['sim_imei'];
+				$sim->number = $row['sim_number'];
+				$sim->roaming = (bool) $row['sim_roaming'];
+				$sim->simVendor = SimVendor::select($row['e_sim_vendor_id']);
+				$sim->dtCreated = $row['sim_dt_created'];
 
-				$sim->Status = Status::select($row['e_status_id']);
-				$sim->Company = Company::select($row['company_id']);
+				$sim->status = Status::select($row['e_status_id']);
+				$sim->company = Company::select($row['company_id']);
 
 
 				array_push($result, $sim);
@@ -163,22 +171,22 @@ class Sim implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':sim_imei', $sim->Imei, PDO::PARAM_STR);
-			$query->bindParam(':sim_number', $sim->Number, PDO::PARAM_STR);
-			$query->bindParam(':sim_roaming', $sim->Roaming, PDO::PARAM_BOOL);
-			$query->bindParam(':e_sim_vendor_id', $sim->SimVendor->Id, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $sim->Status->Id, PDO::PARAM_INT);
+			$query->bindParam(':sim_imei', $sim->imei, PDO::PARAM_STR);
+			$query->bindParam(':sim_number', $sim->number, PDO::PARAM_STR);
+			$query->bindParam(':sim_roaming', $sim->roaming, PDO::PARAM_BOOL);
+			$query->bindParam(':e_sim_vendor_id', $sim->simVendor->id, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $sim->status->id, PDO::PARAM_INT);
 			$query->bindParam(':sim_dt_created', $dateTime, PDO::PARAM_STR);
-			$query->bindParam(':company_id', $sim->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $sim->company->id, PDO::PARAM_INT);
 
 
 
 			$query->execute();
 			
 			$result = new Result();
-			$result->Status = Result::INSERTED;
-			$result->Id = (int)$connection->lastInsertId();
-			$result->Message = 'Done';
+			$result->status = Result::INSERTED;
+			$result->id = (int)$connection->lastInsertid();
+			$result->message = 'Done';
 
 			return $result;
 
@@ -219,12 +227,12 @@ class Sim implements IQuery {
 
 			$query = $connection->prepare($sql);
 
-			$query->bindParam(':sim_imei', $sim->Imei, PDO::PARAM_STR);
-			$query->bindParam(':sim_number', $sim->Number, PDO::PARAM_STR);
-			$query->bindParam(':sim_roaming', $sim->Roaming, PDO::PARAM_BOOL);
-			$query->bindParam(':e_sim_vendor_id', $sim->SimVendor->Id, PDO::PARAM_INT);
-			$query->bindParam(':e_status_id', $sim->Status->Id, PDO::PARAM_INT);
-			$query->bindParam(':company_id', $sim->Company->Id, PDO::PARAM_INT);
+			$query->bindParam(':sim_imei', $sim->imei, PDO::PARAM_STR);
+			$query->bindParam(':sim_number', $sim->number, PDO::PARAM_STR);
+			$query->bindParam(':sim_roaming', $sim->roaming, PDO::PARAM_BOOL);
+			$query->bindParam(':e_sim_vendor_id', $sim->simVendor->id, PDO::PARAM_INT);
+			$query->bindParam(':e_status_id', $sim->status->id, PDO::PARAM_INT);
+			$query->bindParam(':company_id', $sim->company->id, PDO::PARAM_INT);
 
 
 			$query->bindParam(':id', $id, PDO::PARAM_INT);
@@ -232,9 +240,9 @@ class Sim implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::UPDATED;
-			$result->Id = (int)$id;
-			$result->Message = 'Done.';
+			$result->status = Result::UPDATED;
+			$result->id = (int)$id;
+			$result->message = 'Done.';
 
 			return $result;
 
@@ -265,9 +273,9 @@ class Sim implements IQuery {
 			$query->execute();
 
 			$result = new Result();
-			$result->Status = Result::DELETED;
-			$result->Message = 'Done';
-			$result->Id = (int)$id;
+			$result->status = Result::DELETED;
+			$result->message = 'Done';
+			$result->id = (int)$id;
 
 			return $result;
 

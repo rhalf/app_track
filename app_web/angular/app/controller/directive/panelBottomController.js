@@ -1,4 +1,13 @@
-﻿var app = angular.module('app');
+﻿/*
+	Created by 		:		Rhalf Wendel D Caacbay
+	Created on 		:		20170430
+
+	Modified by 	:		#
+	Modified on 	:		#
+
+	functions 		:		Controller for panelBottomController.
+*/
+var app = angular.module('app');
 
 
 app.controller('panelBottomController', function (
@@ -12,19 +21,36 @@ app.controller('panelBottomController', function (
     fleetFactory,
     systemFactory,
     leafletFactory,
-
-    UnitData
+    toolFactory
     ) {
 
-    $scope.fleetFactory = null;
+    $scope.fleet = null;
 
 
     $scope.init = function () {
-        $scope.fleetFactory = fleetFactory
+        $scope.fleet = fleetFactory
+        $scope.tool = toolFactory;
     };
 
-    $scope.load = function () {
 
+    $scope.onClick = function (vehicle) {
+
+        angular.forEach($scope.fleet.vehicles, function (fleetVehicle, index) {
+            if (fleetVehicle.id == vehicle.id) {
+                fleetVehicle.selected = true;
+            } else {
+                fleetVehicle.selected = false;
+            }
+        });
+
+        leafletFactory.findVehicle(vehicle);
+        leafletFactory.refresh();
+    };
+    $scope.onDoubleClick = function (vehicle) {
+        $scope.tool.getAddress(vehicle.unit.unitData.gps.coordinate,
+            function (address) {
+                vehicle.address = address;
+            });
     };
 
     $scope.init();
